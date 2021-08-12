@@ -83,6 +83,10 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.checkTodo(id);
     }
 
+    clickSortProject(sortName){
+        this.#todoController.sortProject(sortName);
+    }
+
 
     /**
      * Substribe to all of the topics.

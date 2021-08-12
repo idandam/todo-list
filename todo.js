@@ -8,12 +8,13 @@ export default class Todo {
     #containingProject;
     
     static #priorities = { Low: 1, Medium: 2, High: 3 };
+
     static #runNum = 0;
     static #fetchUniqueId(){
         return Todo.#runNum++;
     }
 
-    constructor(containingProject, title, priority = Todo.priorities['LOW'], dueDate = 'No Date') {
+    constructor(containingProject, title, priority = 'LOW', dueDate = 'No Date') {
         this.#id = Todo.#fetchUniqueId();
         this.#title = title;
         this.#dueDate = dueDate;
@@ -43,7 +44,7 @@ export default class Todo {
     }
 
     get priority() {
-        return Todo.#priorities[this.#priority];
+        return this.#priority;
     }
     set priority(priority) {
         if (priority in Object.keys(Todo.#priorities)) {
@@ -56,10 +57,6 @@ export default class Todo {
     }
     set isChecked(isChecked) {
         this.#isChecked = isChecked;
-    }
-
-    getPriorityNumVal() {
-        return Todo.#priorities[this.#priority];
     }
 
     get containingProject() {
@@ -75,5 +72,9 @@ export default class Todo {
 
     static get priorities() {
         return this.#priorities;
+    }
+
+    valueOf(){
+        return Todo.#priorities[this.#priority];
     }
 }

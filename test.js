@@ -25,12 +25,21 @@ todoView.clickAddTodo(todoModel.projects[2], "see a movie", "Low", "11/11/2021")
 console.log("after adding todo to project 3, projects state now: ",todoModel.projects);
 
 todoView.clickChangeCurrentProject("project 1");
-todoView.clickRemoveTodo(1);
-console.log("after delete todo with id 1, projects state now: ",todoModel.projects);
 
-todoView.clickChangeCurrentProject("project 3");
 
-todoView.clickCheckTodo(2);
+todoView.clickAddTodo(todoModel.getCurrentProject, "todo 3", "Medium");
+console.log("after adding todo  to project 1");
+
+todoView.clickAddTodo(todoModel.getCurrentProject, "todo 4", "Low");
+console.log("after adding todo 4  to project 1");
+
+todoView.clickAddTodo(todoModel.getCurrentProject, "todo 5", "High");
+console.log("after adding todo 5 to project 1");
+
+todoView.clickSortProject("priority");
+console.log("sort todos of project 1 by priority");
+
+
 
 
 

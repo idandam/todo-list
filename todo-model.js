@@ -49,7 +49,8 @@ export default class TodoModel extends AbstractTodoModel {
 
     sortProject(sortName) {
         if (this.#currProject.sort(sortName)) {
-            this.publish(TOPICS.projectSorted, { sortName });
+            let newSortName = this.#currProject.sortName;
+            this.publish(TOPICS.projectSorted, { newSortName, currProject: this.#currProject });
         }
     }
 

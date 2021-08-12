@@ -6,10 +6,10 @@ export default class TodoProject {
     static #sortByDateName = 'date';;
     static #sortByPriorityName = 'priority';
 
-    static #sortByPriority(t1, t2) {
-        return t1.getPriority() - t2.getPriority();
+    static #sortByPriority(todo1, todo2) {
+        return todo2 - todo1;
     }
-    static #sortByDate(t1, t2) {
+    static #sortByDate(todo1, todo2) {
         // TODO
     }
 
@@ -35,7 +35,8 @@ export default class TodoProject {
     }
 
     sort(sortName) {
-        if (this.#sortName !== sortName && TodoProject.#sortMethods.has(sortName)) {
+        // TODO replace true with this.#sortName !== sortName
+        if ( true && TodoProject.#sortMethods.has(sortName)) {
             this.#todos.sort(TodoProject.#sortMethods.get(sortName));
             this.#sortName = sortName;
             return true;

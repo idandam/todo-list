@@ -32,8 +32,12 @@ export default class TodoController extends AbstractController {
         this.#todoModel.removeTodo(id);
     }
     
-    updateTodo(todo, properties) {
-        this.#todoModel.updateTodo(todo, properties);
+    checkTodo(id){
+        this.#todoModel.checkTodo(id);
+    }
+    
+    updateTodo(id, properties) {
+        this.#todoModel.updateTodo(id, properties);
     }
     changeCurrentProject(project) {
         if (project !== this.#todoModel.currentProject)
@@ -44,5 +48,8 @@ export default class TodoController extends AbstractController {
         .forEach(todo => {
             model.removeTodo(todo.id);
         });
+    }
+    changeCurrentProject(projectName){
+        this.#todoModel.changeCurrentProject(projectName);
     }
 }

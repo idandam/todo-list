@@ -2,20 +2,20 @@ export default class TodoProject {
     #name;
     #todos;
     #sortName;
-    
+
     static #sortByDateName = 'date';;
     static #sortByPriorityName = 'priority';
 
     static #sortByPriority(t1, t2) {
         return t1.getPriority() - t2.getPriority();
     }
-    static #sortByDate(t1, t2){
+    static #sortByDate(t1, t2) {
         // TODO
     }
 
-    static #sortMethods = new Map([[TodoProject.#sortByDateName, TodoProject.#sortByDate], 
-                                      [TodoProject.#sortByPriorityName, TodoProject.#sortByPriority]]);
-    
+    static #sortMethods = new Map([[TodoProject.#sortByDateName, TodoProject.#sortByDate],
+    [TodoProject.#sortByPriorityName, TodoProject.#sortByPriority]]);
+
 
     constructor(name) {
         this.#name = name;
@@ -25,18 +25,13 @@ export default class TodoProject {
     }
 
     add(todo) {
-         this.#todos.push(todo);
+        this.#todos.push(todo);
     }
-    
-    remove(id) {
-        let i = 0;
-        while(i < this.#todos.length && this.#todos[i].id !== id){
-            i++;
-        }
 
-        if (i < this.#todos.length ){
-            this.#todos.splice(i, 1);
-        }
+    remove(id) {
+        let length = this.#todos.length;
+        this.#todos = this.#todos.filter(todo => id !== todo.id);
+        return length !== this.#todos.length;
     }
 
     sort(sortName) {
@@ -53,32 +48,34 @@ export default class TodoProject {
         TodoProject.#sortMethods.set(name, f);
     }
 
-    removeSortMethod(sortName){
-        if (sortName !== TodoProject.#sortByDateName && sortName !== TodoProject.#sortByPriorityName){
+    removeSortMethod(sortName) {
+        if (sortName !== TodoProject.#sortByDateName && sortName !== TodoProject.#sortByPriorityName) {
             TodoProject.#sortMethods.delete(sortName);
         }
     }
 
-    
-    get name(){
+    toString() {
         return this.#name;
     }
-    set name(projectName){
+
+    getTodoById(id) {
+        return this.#todos.filter(todo => todo.id === id)[0];
+
+    }
+
+    get name() {
+        return this.#name;
+    }
+    set name(projectName) {
         this.#name = projectName;
     }
 
-    get sortName(){
+    get sortName() {
         return this.#sortName;
     }
- 
-    get todos(){
+
+    get todos() {
         return this.#todos;
     }
 
-    toString(){
-        return this.#name;
-    }
-
-    
-   
 }

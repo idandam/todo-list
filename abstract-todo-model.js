@@ -7,8 +7,8 @@ export default class AbstractTodoModel extends AbstractPublisher {
     sortProject(sortName,){throw new Error("Abstract method")};
     addTodo(todo, project){throw new Error("Abstract method")};
     removeTodo(id){throw new Error("Abstract method")};
-    updateTodo(todo, properties){throw new Error("Abstract method")};
-    checkTodo(todo){throw new Error("Abstract method")};
+    updateTodo(id, properties){throw new Error("Abstract method")};
+    checkTodo(id){throw new Error("Abstract method")};
     
 }
 

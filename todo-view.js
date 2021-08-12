@@ -75,6 +75,14 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.removeTodo(id);
     }
 
+    clickChangeCurrentProject(name){
+        this.#todoController.changeCurrentProject(name);
+    }
+
+    clickCheckTodo(id){
+        this.#todoController.checkTodo(id);
+    }
+
 
     /**
      * Substribe to all of the topics.

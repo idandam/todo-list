@@ -1,5 +1,5 @@
-import AbstractTodoModel from './abstract-todo-model.js'
-import pubsub from './pubsub.js'
+import AbstractTodoModel from './abstract-todo-model.js';
+import pubsub from './pubsub.js';
 import TodoProject from './todo-project.js';
 import { TOPICS } from './utils.js';
 
@@ -48,9 +48,9 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     sortProject(sortName) {
-        if (this.#currProject.sort(sortName)) {
-            let newSortName = this.#currProject.sortName;
-            this.publish(TOPICS.projectSorted, { newSortName, currProject: this.#currProject });
+        let updatedSortName = this.#currProject.sort(sortName);
+        if (updatedSortName) {
+            this.publish(TOPICS.projectSorted, { updatedSortName, currProject: this.#currProject });
         }
     }
 

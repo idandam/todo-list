@@ -36,8 +36,12 @@ console.log("after adding todo 4  to project 1");
 todoView.clickAddTodo(todoModel.getCurrentProject, "todo 5", "High");
 console.log("after adding todo 5 to project 1");
 
-todoView.clickSortProject("priority");
+todoView.clickSortProject("Priority");
 console.log("sort todos of project 1 by priority");
+
+todoView.clickSortProject("Date");
+console.log("sort todos of project 1 by Date");
+
 
 
 

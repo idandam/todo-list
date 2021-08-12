@@ -1,8 +1,11 @@
+import SortBehavior from "./sort-behavior.js";
+import * as sortBehaviors from "./sort-behaviors.js"
+
 export default class TodoProject {
     #name;
     #todos;
-    #sortName;
-
+    #sortBehavior;
+    /*
     static #sortByDateName = 'date';;
     static #sortByPriorityName = 'priority';
 
@@ -16,11 +19,11 @@ export default class TodoProject {
     static #sortMethods = new Map([[TodoProject.#sortByDateName, TodoProject.#sortByDate],
     [TodoProject.#sortByPriorityName, TodoProject.#sortByPriority]]);
 
-
+    */
     constructor(name) {
         this.#name = name;
         this.#todos = [];
-        this.#sortName = TodoProject.#sortByDateName;
+        this.#sortBehavior = new sortBehaviors.SortByPriority();
 
     }
 
@@ -35,24 +38,17 @@ export default class TodoProject {
     }
 
     sort(sortName) {
-        // TODO replace true with this.#sortName !== sortName
-        if ( true && TodoProject.#sortMethods.has(sortName)) {
-            this.#todos.sort(TodoProject.#sortMethods.get(sortName));
-            this.#sortName = sortName;
-            return true;
+        // TODO replace true with this.#sortBehavior.name !== sortName
+        if (true) {
+            let sn = `SortBy${sortName}`;
+            if (sortBehaviors[sn]) {
+                this.#sortBehavior = new sortBehaviors[sn]();
+                this.#todos.sort(this.#sortBehavior.sort);
+                return sortName;
+            }
         }
 
 
-    }
-    // this will replace the sorting method if name already exists
-    addSortMethod(name, f) {
-        TodoProject.#sortMethods.set(name, f);
-    }
-
-    removeSortMethod(sortName) {
-        if (sortName !== TodoProject.#sortByDateName && sortName !== TodoProject.#sortByPriorityName) {
-            TodoProject.#sortMethods.delete(sortName);
-        }
     }
 
     toString() {
@@ -69,10 +65,6 @@ export default class TodoProject {
     }
     set name(projectName) {
         this.#name = projectName;
-    }
-
-    get sortName() {
-        return this.#sortName;
     }
 
     get todos() {

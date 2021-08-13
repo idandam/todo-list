@@ -1,24 +1,5 @@
 import CompareBehavior from "./compare-behavior.js"
 
-class CompareByPriority extends CompareBehavior {
-
-
-    constructor() {
-        super("Priority");
-    }
-
-    /**
-     * 
-     * @param {Todo} todo1 
-     * @param {Todo} todo2 
-     * @returns The todo's dates difference if theirs priorities are the same,   
-     *          Else returns the todo's priorities difference in revered order.
-     */
-    compare(todo1, todo2) {
-        return (todo2 - todo1);
-    }
-    
-}
 
 class CompareByDate extends CompareBehavior {
 
@@ -31,7 +12,7 @@ class CompareByDate extends CompareBehavior {
      * 
      * @param {Todo} todo1 
      * @param {Todo} todo2 
-     * @returns The todo's dates difference
+     * @returns //TODO -complete doc
      */
     compare(todo1, todo2) {
         if (!(todo1.dueDate instanceof Date)){
@@ -44,4 +25,31 @@ class CompareByDate extends CompareBehavior {
     }
 
 }
+
+class CompareByPriority extends CompareBehavior {
+
+    #compareByDate
+
+    constructor() {
+        super("Priority");
+        this.#compareByDate = new CompareByDate();
+    }
+
+    /**
+     * 
+     * @param {Todo} todo1 
+     * @param {Todo} todo2 
+     * @returns The comapre by date result if the todo's priorities are the same,   
+     *          Else returns the todo's priorities difference in reversed order.
+     */
+    compare(todo1, todo2) {
+        if (todo1.priority === todo2.priority){
+            return this.#compareByDate.compare(todo1, todo2)
+        }
+
+        return todo2 - todo1;
+    }
+    
+}
+
 export { CompareByDate, CompareByPriority };

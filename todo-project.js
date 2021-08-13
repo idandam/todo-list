@@ -31,7 +31,7 @@ export default class TodoProject {
                 let compareBevahior = new compareBehaviors[compareBehaviorStr]();
                 if (compareBevahior instanceof CompareBehavior) {
                     this.#compareBehavior = compareBevahior;
-                    this.#todos.sort(this.#compareBehavior.compare);
+                    this.#todos.sort(this.#compareBehavior.compare.bind(this.#compareBehavior));
                     return sortName;
                 }
             }

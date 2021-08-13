@@ -6,11 +6,11 @@ export default class Todo {
     #priority
     #isChecked;
     #containingProject;
-    
+
     static #priorities = { Low: 1, Medium: 2, High: 3 };
 
     static #runNum = 0;
-    static #fetchUniqueId(){
+    static #fetchUniqueId() {
         return Todo.#runNum++;
     }
 
@@ -40,7 +40,8 @@ export default class Todo {
         return this.#dueDate;
     }
     set dueDate(dueDate) {
-        this.#dueDate = dueDate;
+        if (!dueDate instanceof Date || dueDate !== "No Date")
+            throw new Error("dueDate must be a Date object or equals to the string 'No Date'.");
     }
 
     get priority() {
@@ -66,7 +67,7 @@ export default class Todo {
         this.#containingProject = containingProject;
     }
 
-    get id(){
+    get id() {
         return this.#id;
     }
 
@@ -74,7 +75,18 @@ export default class Todo {
         return this.#priorities;
     }
 
-    valueOf(){
+    valueOf() {
         return Todo.#priorities[this.#priority];
+    }
+
+    toString() {
+        return this.#priority;
+    }
+    toDateString() {
+        if (this.#dueDate instanceof Date) {
+            return this.#dueDate.toLocaleDateString();
+        }
+
+        return this.#dueDate;
     }
 }

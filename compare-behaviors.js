@@ -15,7 +15,7 @@ class CompareByPriority extends CompareBehavior {
      *          Else returns the todo's priorities difference in revered order.
      */
     compare(todo1, todo2) {
-        return (todo1.priority === todo2.priority ? todo1.dueDate - todo2.dueDate : todo2 - todo1)
+        return (todo2 - todo1);
     }
     
 }
@@ -34,7 +34,13 @@ class CompareByDate extends CompareBehavior {
      * @returns The todo's dates difference
      */
     compare(todo1, todo2) {
-        return todo1.dueDate - todo2.dueDate;
+        if (!(todo1.dueDate instanceof Date)){
+            return 1;
+        }
+        if (!(todo2.dueDate instanceof Date)){
+            return -1;
+        }
+        return todo1.dueDate- todo2.dueDate;
     }
 
 }

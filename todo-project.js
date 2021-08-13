@@ -30,6 +30,7 @@ export default class TodoProject {
             if (compareBehaviors[compareBehaviorStr]) {
                 let compareBevahior = new compareBehaviors[compareBehaviorStr]();
                 if (compareBevahior instanceof CompareBehavior) {
+                    this.#compareBehavior = compareBevahior;
                     this.#todos.sort(this.#compareBehavior.compare);
                     return sortName;
                 }
@@ -57,6 +58,14 @@ export default class TodoProject {
 
     get todos() {
         return this.#todos;
+    }
+
+    printTodosByDate(){
+        let str = "";
+        for (let todo of this.#todos){
+            str += ", " + todo.toDateString();
+        }
+        return str;
     }
 
 }

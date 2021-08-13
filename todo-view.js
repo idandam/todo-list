@@ -59,6 +59,8 @@ export default class TodoView extends AbstractSubscriber {
         console.log(data);
     }
 
+   
+
     clickAddProject(name) {
         this.#todoController.addProject(name);
     }
@@ -87,6 +89,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.sortProject(sortName);
     }
 
+    
 
     /**
      * Substribe to all of the topics.

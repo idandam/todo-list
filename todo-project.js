@@ -1,29 +1,15 @@
-import SortBehavior from "./sort-behavior.js";
-import * as sortBehaviors from "./sort-behaviors.js"
+import CompareBehavior from "./compare-behavior.js";
+import * as compareBehaviors from "./compare-behaviors.js"
 
 export default class TodoProject {
     #name;
     #todos;
-    #sortBehavior;
-    /*
-    static #sortByDateName = 'date';;
-    static #sortByPriorityName = 'priority';
+    #compareBehavior;
 
-    static #sortByPriority(todo1, todo2) {
-        return todo2 - todo1;
-    }
-    static #sortByDate(todo1, todo2) {
-        // TODO
-    }
-
-    static #sortMethods = new Map([[TodoProject.#sortByDateName, TodoProject.#sortByDate],
-    [TodoProject.#sortByPriorityName, TodoProject.#sortByPriority]]);
-
-    */
     constructor(name) {
         this.#name = name;
         this.#todos = [];
-        this.#sortBehavior = new sortBehaviors.SortByPriority();
+        this.#compareBehavior = new compareBehaviors.CompareByPriority();
 
     }
 
@@ -38,13 +24,15 @@ export default class TodoProject {
     }
 
     sort(sortName) {
-        // TODO replace true with this.#sortBehavior.name !== sortName
+        // TODO replace true with this.#compareBehavior.name !== sortName
         if (true) {
-            let sn = `SortBy${sortName}`;
-            if (sortBehaviors[sn]) {
-                this.#sortBehavior = new sortBehaviors[sn]();
-                this.#todos.sort(this.#sortBehavior.sort);
-                return sortName;
+            let compareBehaviorStr = `CompareBy${sortName}`;
+            if (compareBehaviors[compareBehaviorStr]) {
+                let compareBevahior = new compareBehaviors[compareBehaviorStr]();
+                if (compareBevahior instanceof CompareBehavior) {
+                    this.#todos.sort(this.#compareBehavior.compare);
+                    return sortName;
+                }
             }
         }
 

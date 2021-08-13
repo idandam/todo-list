@@ -15,32 +15,41 @@ console.log("after adding project 3, projects state now: " + todoModel.projects)
 todoView.clickRemoveProject("project 2");
 console.log("after removeing project 2, projects state now: " + todoModel.projects);
 
-todoView.clickAddTodo(todoModel.projects[1], "clean house", "Medium", new Date(2021,6,23));
-console.log("after adding todo to project 1, projects state now: ",todoModel.projects);
+todoView.clickChangeCurrentProject("project 1")
 
-todoView.clickAddTodo(todoModel.projects[1], "suck cock", "High", new Date(2021,4,4));
-console.log("after adding todo to project 1, projects state now: ",todoModel.projects);
+todoView.clickAddTodo(todoModel.currentProject, "clean house", "Medium", new Date(2021,6,23));
+console.log("after adding todo to project 1: "+ todoModel.currentProject.todos  );
 
-todoView.clickAddTodo(todoModel.projects[2], "see a movie", "Low", new Date(2021,2,28));
-console.log("after adding todo to project 3, projects state now: ",todoModel.projects);
+
+todoView.clickAddTodo(todoModel.currentProject, "suck cock", "High", new Date(2021,4,4));
+console.log("after adding todo to project 1: "+ todoModel.currentProject.todos  );
+
+todoView.clickChangeCurrentProject("project 3")
+todoView.clickAddTodo(todoModel.currentProject, "see a movie", "Low", new Date(2021,2,28));
+console.log("after adding todo to project 3, projects state now: ",todoModel.currentProject.todos);
 
 todoView.clickChangeCurrentProject("project 1");
 
 
 todoView.clickAddTodo(todoModel.currentProject, "todo 3", "Medium", new Date(2021,2,27));
-console.log("after adding todo  to project 1");
+console.log("after adding todo  to project 1: " + todoModel.currentProject.todos);
+
 
 todoView.clickAddTodo(todoModel.currentProject, "todo 4", "Low", new Date(2021,6,1));
-console.log("after adding todo 4  to project 1");
+console.log("after adding todo 4  to project 1:  " + todoModel.currentProject.todos);
 
 todoView.clickAddTodo(todoModel.currentProject, "todo 5", "High", new Date(2021,10,19));
-console.log("after adding todo 5 to project 1");
+console.log("after adding todo to project 1: "+ todoModel.currentProject.todos + "\n\t\t" + todoModel.currentProject.printTodosByDate()  );
 
-todoView.clickSortProject("Priority");
-console.log("sort todos of project 1 by priority: " + todoModel.currentProject.todos + "\n\t\t" + todoModel.currentProject.printTodosByDate());
 
 todoView.clickSortProject("Date");
 console.log("sort todos of project 1 by Date: " + todoModel.currentProject.printTodosByDate());
+
+todoView.clickAddTodo(todoModel.currentProject, "todo 6", "High", new Date(2021,7,1));
+console.log("after adding todo to project 1: "+ todoModel.currentProject.todos  );
+
+todoView.clickAddTodo(todoModel.currentProject, "todo 7", "Low", new Date(2021,8,8));
+console.log("after adding todo to project 1: "+ todoModel.currentProject.todos   + "\n\t\t" + todoModel.currentProject.printTodosByDate() );
 
 
 

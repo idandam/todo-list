@@ -61,8 +61,10 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     removeTodo(id) {
-        if (this.#currProject.remove(id)) {
+        let todo = this.#currProject.remove(id)
+        if (todo) {
             this.publish(TOPICS.todoRemoved, { id });
+            return todo;
         }
 
     }
@@ -98,6 +100,15 @@ export default class TodoModel extends AbstractTodoModel {
         // delegate to the PubSub instance
         pubsub.publish(topic, data);
 
+    }
+
+    moveTodoToProject(todo, projectName){
+        let project = this.#getProjectByName(projectName);
+        if (project && this.removeTodo(todo.id)){
+            this.addTodo(todo, project);
+            // TODO - publish...
+
+        }
     }
 
     get currentProject() {

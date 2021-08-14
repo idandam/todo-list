@@ -16,13 +16,17 @@ export default class TodoProject {
     add(todo) {
         let todoPosition = this.#searchTodoPosition(todo);
         this.#todos.splice(todoPosition, 0, todo);
+        todo.containingProject = this;
+        
+
 
     }
 
     remove(id) {
-        let prevLength = this.#todos.length;
-        this.#todos = this.#todos.filter(todo => id !== todo.id);
-        return prevLength !== this.#todos.length;
+        let indexOfTodo = this.#getIndexOfTodo(id);
+        if (indexOfTodo) {
+            return this.#todos.splice(indexOfTodo, 1)[0];
+        }
     }
 
     sort(sortName) {
@@ -32,7 +36,7 @@ export default class TodoProject {
 
             if (compareBehaviors[compareBehaviorStr]) {
                 let compareBevahior = new compareBehaviors[compareBehaviorStr]();
-                
+
                 if (compareBevahior instanceof CompareBehavior) {
                     this.#compareBehavior = compareBevahior;
                     this.#todos.sort(this.#compareBehavior.compare.bind(this.#compareBehavior));
@@ -48,9 +52,16 @@ export default class TodoProject {
         return this.#name;
     }
 
-    getTodoById(id) {
-        return this.#todos.filter(todo => todo.id === id)[0];
+    #getTodoById(id) {
+        return this.#todos.find(todo => todo.id === id);
 
+    }
+    
+    #getIndexOfTodo(id){
+        let i = this.#todos.indexOf(todo => todo.id === id);
+        if (i > -1){
+            return i;
+        }
     }
 
     get name() {
@@ -73,14 +84,20 @@ export default class TodoProject {
     }
 
     /**
-     * search the position of todo in the sorted todos array according to how this project compares his todos.
+     * Search the position of todo in the sorted todos array according to how this project compares his todos.
      * Using binary search.
-     * We are using here the compare behavior of this project since this project's todos are sorted according 
-     * to the same compare behavior, so the binary search will return the correct position of todo.
+     * Notes:
+     * 1. We are using here the compare behavior of this project since this project's todos are sorted according 
+     *    the same compare behavior, so the binary search will return the correct position of todo.
+     * 2. In the while loop, if left > right and 
+     *      we finished at left, then it must be that finishedAt (( == left) == todo's length).
+     *      Else if we finished at right then it must be that we previously went left and then right,
+     *      so todo's position is between left and right, therefore we need to return finishedAt + 1 ( == right +1).
+     *      Else finishedAt = mid and mid can be the a valid position for for todo, in terms of the compare behavior.
      * @param {Todo} todo 
-     * @returns the position of todo in the sorted array if 
+     * @returns The position of todo in the sorted todo's array.
      */
-    
+
     #searchTodoPosition(todo) {
         let left = 0, finishedAt = 0, right = this.#todos.length - 1;
         let mid, compareResult;
@@ -88,9 +105,10 @@ export default class TodoProject {
         while (left <= right) {
             mid = Math.trunc((left + right) / 2);
             compareResult = this.#compareBehavior.compare(todo, this.#todos[mid]);
-        
+
             if (compareResult > 0) {
                 finishedAt = left = mid + 1;
+
             }
             else if (compareResult < 0) {
                 finishedAt = right = mid - 1;
@@ -100,13 +118,13 @@ export default class TodoProject {
                 break;
             }
         }
-        if (finishedAt === right){
+        if (finishedAt === right) {
             return finishedAt + 1;
         }
 
         return finishedAt;
 
     }
-    
+
 
 }

@@ -24,8 +24,8 @@ export default class TodoController extends AbstractController {
     sortProject(sortName) {
         this.#todoModel.sortProject(sortName);
     }
-    addTodo(todo, project) {
-        this.#todoModel.addTodo(todo, project);
+    addTodo(todo) {
+        this.#todoModel.addTodo(todo);
     }
 
     removeTodo(id){

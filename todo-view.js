@@ -69,8 +69,8 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.removeProject(name);
     }
 
-    clickAddTodo(project, title, priority, date){
-        this.#todoController.addTodo(new Todo(project, title, priority, date), project);
+    clickAddTodo(title, priority, date){
+        this.#todoController.addTodo(new Todo(title, priority, date));
 
     }
     clickRemoveTodo(id){

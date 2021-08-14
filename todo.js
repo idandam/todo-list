@@ -14,13 +14,12 @@ export default class Todo {
         return Todo.#runNum++;
     }
 
-    constructor(containingProject, title, priority = 'LOW', dueDate = 'No Date') {
+    constructor(title, priority = 'LOW', dueDate = 'No Date') {
         this.#id = Todo.#fetchUniqueId();
         this.#title = title;
         this.#dueDate = dueDate;
         this.#priority = priority;
         this.#isChecked = false;
-        this.#containingProject = containingProject;
     }
 
     get title() {

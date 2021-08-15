@@ -1,12 +1,11 @@
 import TodoProject from "./todo-project.js";
+import dateManager from "./todo-date-manager.js";
 
 export default class TodayProject extends TodoProject {
 
-    #todayDay
-
     constructor() {
         super("Today");
-        this.#todayDay = new Date();
+        
     }
     /**
      * @override
@@ -14,11 +13,11 @@ export default class TodayProject extends TodoProject {
      * @param {Todo} todo 
      */
     add(todo) {
-        todo.dueDate = new Date();
+        todo.dueDate = this.#todayDay;
         super.add(todo);
     }
-    fillTodayTodos(){
-        
+    clear() {
+        this.#todos = [];
     }
-
+    
 }

@@ -4,10 +4,10 @@ export default class TodoDateManager {
    
     #today
     #nextSevenDays
-
+    
     constructor(){
         this.#today = new Date();
-        this.#nextSevenDays = new DateRange(this.getNextDate(1), this.getNextDate(8));
+        this.#nextSevenDays = new DateRange(this.getFeatureDate({days:1}), this.getFeatureDate({days=8}));
 
         
     }
@@ -17,7 +17,7 @@ export default class TodoDateManager {
             this.#year === date.getYear();
     }
 
-    getNextDate(daysFromNow){
+    getFeatureDate(options){
         return new Date(this.#today.getFullYear(), this.#today.getMonth(), this.#today.getDay() + daysFromNow);
     }
     

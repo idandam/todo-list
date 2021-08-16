@@ -1,8 +1,10 @@
-class Range {
+export default class Range {
+
     #from
     #to
 
     constructor(from, to) {
+        this.#validateRange(from, to);
         this.#from = from;
         this.#to = to;
     }
@@ -16,17 +18,21 @@ class Range {
     get from() {
         return this.#from;
     }
-    set from(other) {
-        if (this.#to <= other) {
-            this.#form = other;
-        }
+    set from(from) {
+        this.#validateRange(from, this.#to);
+        this.#from = from;
     }
-    get to(){
+    get to() {
         return this.#to;
     }
-    set to(other){
-        if (other <= this.#from){
-            this.#to = other;
+    set to(to) {
+        this.#validateRange(this.#from, to);
+        this.#to = to;
+    }
+    #validateRange(from, to){
+        if(from > to){
+            throw new Error(`The start of the range can't be greater then the end: from=${from}, to=${to}`);
         }
+        
     }
 }

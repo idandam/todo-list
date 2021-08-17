@@ -5,7 +5,6 @@ export default class DateRange extends Range {
     constructor(from, to) {
         super(from, to);
         this.#validateRange(from, to);
-
     }
     /**
      * @override
@@ -16,6 +15,7 @@ export default class DateRange extends Range {
         if (!(date instanceof Date)) {
             throw new Error("Argument must be an instance of Date");
         }
+
         return super.includes(date);
     }
 

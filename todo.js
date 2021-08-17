@@ -14,7 +14,7 @@ export default class Todo {
         return Todo.#runNum++;
     }
 
-    constructor(title, priority = 'LOW', dueDate = 'No Date') {
+    constructor(title, priority = "LOW", dueDate = "No Date") {
         this.#id = Todo.#fetchUniqueId();
         this.#title = title;
         this.#dueDate = dueDate;
@@ -41,6 +41,9 @@ export default class Todo {
     set dueDate(dueDate) {
         if (!dueDate instanceof Date || dueDate !== "No Date")
             throw new Error("dueDate must be a Date object or equals to the string 'No Date'.");
+
+        dueDate.setHours(0,0,0,0);
+        this.#dueDate = dueDate;
     }
 
     get priority() {

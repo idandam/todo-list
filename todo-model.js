@@ -1,18 +1,19 @@
 import AbstractTodoModel from './abstract-todo-model.js';
 import pubsub from './pubsub.js';
 import TodoProject from './todo-project.js';
+import TodayProject from './today-project.js';
 import { TOPICS } from './utils.js';
+import NextSevenDaysProject from './todo-next-seven-days-project.js';
 
 
 export default class TodoModel extends AbstractTodoModel {
-    #projects;
+    #projects
     #currProject;
 
     constructor() {
         super();
-        this.#currProject = new TodoProject("Default");
-        this.#projects = [this.#currProject];
-
+        this.#defineProjectsProperties();
+        this.#currProject = this.#projects.inbox;
     }
 
     init() {
@@ -22,7 +23,7 @@ export default class TodoModel extends AbstractTodoModel {
     addProject(projectName) {
         // if we don't have a project with that name then add the project  
         if (!this.#getProjectByName(projectName)) {
-            this.#projects.push(new TodoProject(projectName));
+            this.#otherProjects.push(new TodoProject(projectName));
             this.publish(TOPICS.projectAdded, { projectName });
         }
         // announce that we didn't add the project since 
@@ -35,12 +36,12 @@ export default class TodoModel extends AbstractTodoModel {
     removeProject(projectName) {
         // TODO - what if the removed project is the current project
         let i = 0;
-        while (i < this.#projects.length && this.#projects[i].name !== projectName) {
+        while (i < this.#otherProjects.length && this.#otherProjects[i].name !== projectName) {
             i++;
         }
 
-        if (i < this.#projects.length) {
-            let [removedProject] = this.#projects.splice(i, 1);
+        if (i < this.#otherProjects.length) {
+            let [removedProject] = this.#otherProjects.splice(i, 1);
             let isCurrentProject = removedProject === this.#currProject;
             this.publish(TOPICS.projectRemoved, { index: i, isCurrentProject, projectName });
         }
@@ -102,9 +103,9 @@ export default class TodoModel extends AbstractTodoModel {
 
     }
 
-    moveTodoToProject(todo, projectName){
+    moveTodoToProject(todo, projectName) {
         let project = this.#getProjectByName(projectName);
-        if (project && this.removeTodo(todo.id)){
+        if (project && this.removeTodo(todo.id)) {
             this.addTodo(todo, project);
             // TODO - publish...
 
@@ -124,11 +125,40 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     get projects() {
-        return this.#projects;
+        return this.#otherProjects;
     }
 
     #getProjectByName(projectName) {
-        return this.#projects.filter(project => project.name === projectName)[0];
+        return this.#otherProjects.filter(project => project.name === projectName)[0];
+    }
+    #defineProjectsProperties() {
+        Object.defineProperties(this.#projects, {
+            inbox: {
+                value: new TodoProject("Inbox"),
+                writable: true,
+                configurable: false,
+                enumerable: true
+            },
+            today: {
+                value: new TodayProject(),
+                writable: true,
+                configurable: false,
+                enumerable: true
+            },
+            nextSevenDays: {
+                value: new NextSevenDaysProject(),
+                writable: true,
+                configurable: false,
+                enumerable: true
+            },
+            otherProjects: {
+                value: [],
+                writable: true,
+                configurable: true,
+                enumerable: true
+            },
+        });
+
     }
 
 }

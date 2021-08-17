@@ -1,3 +1,5 @@
 * a project with a date range has a DateRange
 
+* add a clear() method for a TodoProject
+
 * use tamplates for a list item in the View ?

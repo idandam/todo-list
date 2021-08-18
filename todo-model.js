@@ -3,7 +3,7 @@ import pubsub from './pubsub.js';
 import TodoProject from './todo-project.js';
 import TodayProject from './today-project.js';
 import { TOPICS } from './utils.js';
-import NextSevenDaysProject from './todo-next-seven-days-project.js';
+import NextSevenDaysProject from './next-seven-days-project.js';
 
 
 export default class TodoModel extends AbstractTodoModel {
@@ -32,7 +32,7 @@ export default class TodoModel extends AbstractTodoModel {
         }
 
     }
-
+    //TODO - check if need to remove from next seven days or from today
     removeProject(projectName) {
         // TODO - what if the removed project is the current project
         let i = 0;

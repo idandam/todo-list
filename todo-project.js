@@ -40,7 +40,7 @@ export default class TodoProject {
                 if (compareBevahior instanceof CompareBehavior) {
                     this.#compareBehavior = compareBevahior;
                     this.#todos.sort(this.#compareBehavior.compare.bind(this.#compareBehavior));
-                    return sortName;
+                    return true;
                 }
             }
         }
@@ -52,7 +52,7 @@ export default class TodoProject {
         return this.#name;
     }
 
-    #getTodoById(id) {
+    getTodoById(id) {
         return this.#todos.find(todo => todo.id === id);
 
     }

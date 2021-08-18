@@ -1,19 +1,19 @@
 import AbstractTodoModel from './abstract-todo-model.js';
 import pubsub from './pubsub.js';
 import TodoProject from './todo-project.js';
-import TodayProject from './today-project.js';
 import { TOPICS } from './utils.js';
-import NextSevenDaysProject from './next-seven-days-project.js';
 
 
 export default class TodoModel extends AbstractTodoModel {
-    #projects
+    #projects;
     #currProject;
 
     constructor() {
-        super();
+        super(); 
+        this.#projects = [];
         this.#defineProjectsProperties();
-        this.#currProject = this.#projects.inbox;
+        this.#currProject = projects[0];
+
     }
 
     init() {
@@ -23,25 +23,26 @@ export default class TodoModel extends AbstractTodoModel {
     addProject(projectName) {
         // if we don't have a project with that name then add the project  
         if (!this.#getProjectByName(projectName)) {
-            this.#otherProjects.push(new TodoProject(projectName));
-            this.publish(TOPICS.projectAdded, { projectName });
+            let project = new TodoProject(projectName)
+            this.#projects.push(project);
+            this.publish(TOPICS.projectAdded, { project });
         }
-        // announce that we didn't add the project since 
+        // announce that we didn't add the project since a project with this name already exists
         else {
-            this.publish(TOPICS.projectAdded, { isAdded: false, why: `A project with the name ${projectName} is already exists` });
+            this.publish(TOPICS.projectAdded, { errorMessage: `A project with the name ${projectName} is already exists` });
         }
 
     }
-    //TODO - check if need to remove from next seven days or from today
+
     removeProject(projectName) {
         // TODO - what if the removed project is the current project
-        let i = 0;
-        while (i < this.#otherProjects.length && this.#otherProjects[i].name !== projectName) {
+        let i = 3;
+        while (i < this.#projects.length && this.#projects[i].name !== projectName) {
             i++;
         }
 
-        if (i < this.#otherProjects.length) {
-            let [removedProject] = this.#otherProjects.splice(i, 1);
+        if (i < this.#projects.length) {
+            let [removedProject] = this.#projects.splice(i, 1);
             let isCurrentProject = removedProject === this.#currProject;
             this.publish(TOPICS.projectRemoved, { index: i, isCurrentProject, projectName });
         }
@@ -49,9 +50,9 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     sortProject(sortName) {
-        let updatedSortName = this.#currProject.sort(sortName);
-        if (updatedSortName) {
-            this.publish(TOPICS.projectSorted, { updatedSortName, currProject: this.#currProject });
+      
+        if (this.#currProject.sort(sortName)) {
+            this.publish(TOPICS.projectSorted, { sortName, currProject: this.#currProject });
         }
     }
 
@@ -97,15 +98,9 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-    publish(topic, data) {
-        // delegate to the PubSub instance
-        pubsub.publish(topic, data);
-
-    }
-
-    moveTodoToProject(todo, projectName) {
+    moveTodoToProject(todo, projectName){
         let project = this.#getProjectByName(projectName);
-        if (project && this.removeTodo(todo.id)) {
+        if (project && this.removeTodo(todo.id)){
             this.addTodo(todo, project);
             // TODO - publish...
 
@@ -125,36 +120,41 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     get projects() {
-        return this.#otherProjects;
+        return this.#projects;
     }
 
-    #getProjectByName(projectName) {
-        return this.#otherProjects.filter(project => project.name === projectName)[0];
+
+    publish(topic, data) {
+        // delegate to the PubSub instance
+        pubsub.publish(topic, data);
+
     }
-    #defineProjectsProperties() {
+
+
+    #getProjectByName(projectName) {
+        return this.#projects.filter(project => project.name === projectName)[0];
+    }
+    /**
+     * Define the first three properties. Make them non-configurable.
+     */
+     #defineProjectsProperties() {
         Object.defineProperties(this.#projects, {
-            inbox: {
+            0: {
                 value: new TodoProject("Inbox"),
                 writable: true,
                 configurable: false,
                 enumerable: true
             },
-            today: {
+            1: {
                 value: new TodayProject(),
                 writable: true,
                 configurable: false,
                 enumerable: true
             },
-            nextSevenDays: {
+            2: {
                 value: new NextSevenDaysProject(),
                 writable: true,
                 configurable: false,
-                enumerable: true
-            },
-            otherProjects: {
-                value: [],
-                writable: true,
-                configurable: true,
                 enumerable: true
             },
         });

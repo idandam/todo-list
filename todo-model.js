@@ -25,7 +25,7 @@ export default class TodoModel extends AbstractTodoModel {
 
     addProject(projectName) {
         // if we don't have a project with that name then add the project  
-        if (!this.#getProjectByName(projectName)) {
+        if (!this.getProjectByName(projectName)) {
             let project = new TodoProject(projectName)
             this.#projects.push(project);
             this.publish(TOPICS.projectAdded, { project });
@@ -97,7 +97,7 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     changeCurrentProject(projectName) {
-        let project = this.#getProjectByName(projectName);
+        let project = this.getProjectByName(projectName);
         if (project) {
             this.#currProject = project;
             this.publish(TOPICS.currentProjectChanged, { projectName });
@@ -105,22 +105,22 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     moveTodoToProject(todoId, projectName) {
-        let project = this.#getProjectByName(projectName);
+        let project = this.getProjectByName(projectName);
         if (project) {
             let todo = this.removeTodo(todoId);
             if (todo) {
                 this.addTodo(todo, project);
-                console.log("todo with id ",  todoId, "moved from " , this.#currProject.name, " to ", project.name);
             }
         }
     }
+
 
     get currentProject() {
         return this.#currProject;
     }
 
     set currentProject(projectName) {
-        let project = this.#getProjectByName(projectName);
+        let project = this.getProjectByName(projectName);
         if (project) {
             this.#currProject = project;
             this.publish(TOPICS.currentProjectChanged, { currentProject: this.#currProject });
@@ -131,6 +131,9 @@ export default class TodoModel extends AbstractTodoModel {
         return this.#projects;
     }
 
+    getCheckedTodos(){
+        return this.#currProject.todos.filter(todo => todo.isChecked);
+    }
 
     publish(topic, data) {
         // delegate to the PubSub instance
@@ -139,7 +142,7 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
 
-    #getProjectByName(projectName) {
+    getProjectByName(projectName) {
         return this.#projects.filter(project => project.name === projectName)[0];
     }
     /**

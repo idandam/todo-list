@@ -55,7 +55,7 @@ todoView.clickSortProject("Priority");
 console.log("sort todos of project 1 by Priority: " + todoModel.currentProject.todos   + "\n\t\t"  +todoModel.currentProject.printTodosByDate());
 
 
-todoView.clickCheckTodo(5);
+
 console.log("check todo with id 5");
 
 // check add to project a todo with today's date
@@ -78,6 +78,13 @@ todoView.clickRemoveTodo(9);
 
 // move todo
 todoView.clickMoveTodoToProject(3, "project 3");
+
+console.log("check todos 1,5,7")
+todoView.clickCheckTodo(5);
+todoView.clickCheckTodo(1);
+todoView.clickCheckTodo(7);
+
+todoView.clickRemoveCheckedTodos();
 
 
 

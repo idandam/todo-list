@@ -93,6 +93,10 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.moveTodoToProject(todoId, projectName);
     }
 
+    clickRemoveCheckedTodos(){
+        this.#todoController.removeCheckedTodos();
+    }
+
     
 
     /**

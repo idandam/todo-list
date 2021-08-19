@@ -104,12 +104,14 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-    moveTodoToProject(todo, projectName) {
+    moveTodoToProject(todoId, projectName) {
         let project = this.#getProjectByName(projectName);
-        if (project && this.removeTodo(todo.id)) {
-            this.addTodo(todo, project);
-            // TODO - publish...
-
+        if (project) {
+            let todo = this.removeTodo(todoId);
+            if (todo) {
+                this.addTodo(todo, project);
+                console.log("todo with id ",  todoId, "moved from " , this.#currProject.name, " to ", project.name);
+            }
         }
     }
 

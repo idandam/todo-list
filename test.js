@@ -76,6 +76,8 @@ todoView.clickRemoveTodo(8);
 //remove todo 9
 todoView.clickRemoveTodo(9);
 
+// move todo
+todoView.clickMoveTodoToProject(3, "project 3");
 
 
 

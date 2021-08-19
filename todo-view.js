@@ -89,6 +89,10 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.sortProject(sortName);
     }
 
+    clickMoveTodoToProject(todoId, projectName){
+        this.#todoController.moveTodoToProject(todoId, projectName);
+    }
+
     
 
     /**

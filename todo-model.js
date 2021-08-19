@@ -104,17 +104,6 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-    moveTodoToProject(todoId, projectName) {
-        let project = this.getProjectByName(projectName);
-        if (project) {
-            let todo = this.removeTodo(todoId);
-            if (todo) {
-                this.addTodo(todo, project);
-            }
-        }
-    }
-
-
     get currentProject() {
         return this.#currProject;
     }
@@ -131,7 +120,7 @@ export default class TodoModel extends AbstractTodoModel {
         return this.#projects;
     }
 
-    getCheckedTodos(){
+    getCheckedTodos() {
         return this.#currProject.todos.filter(todo => todo.isChecked);
     }
 

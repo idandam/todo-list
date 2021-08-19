@@ -79,12 +79,7 @@ todoView.clickRemoveTodo(9);
 // move todo
 todoView.clickMoveTodoToProject(3, "project 3");
 
-console.log("check todos 1,5,7")
-todoView.clickCheckTodo(5);
-todoView.clickCheckTodo(1);
-todoView.clickCheckTodo(7);
 
-todoView.clickRemoveCheckedTodos();
 
 
 

@@ -49,7 +49,13 @@ export default class TodoController extends AbstractController {
         this.#todoModel.changeCurrentProject(projectName);
     }
     moveTodoToProject(todoId, projectName){
-        this.#todoModel.moveTodoToProject(todoId, projectName);
+        let project = this.#todoModel.getProjectByName(projectName);
+        if (project) {
+            let todo = this.#todoModel.removeTodo(todoId);
+            if (todo) {
+                this.#todoModel.addTodo(todo, project);
+            }
+        }
     }
 
 }

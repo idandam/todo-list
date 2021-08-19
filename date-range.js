@@ -25,7 +25,7 @@ export default class DateRange extends Range {
      * @param {Date} from 
      * @param {Date} to 
      */
-    validateRange(from, to) {
+    #validateRange(from, to) {
         if (!(from instanceof Date && to instanceof Date)) {
             throw new Error("The date range sides must be an instance of Date");
         }

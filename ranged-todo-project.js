@@ -9,9 +9,7 @@ export default class RangedTodoProject extends TodoProject{
 
     constructor(name, from, to){
         super(name);
-        this.#dateRange = new DateRange(from, to);
-        pubsub.subscribe(TOPICS.projectAdded, onTodoAdded.bind(this));
-        
+        this.#dateRange = new DateRange(from, to);    
     }
 
     fillTodos(projects){
@@ -24,10 +22,9 @@ export default class RangedTodoProject extends TodoProject{
         }
     }
 
-    onTodoAdded(data){
-        if (this.#dateRange.includes(data.todo.dueDate)){
-            this.add(data.todo);
-        }  
+    get dateRange(){
+        return this.#dateRange;
     }
+
 
 }

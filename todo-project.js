@@ -58,7 +58,7 @@ export default class TodoProject {
     }
     
     #getIndexOfTodo(id){
-        let i = this.#todos.indexOf(todo => todo.id === id);
+        let i = this.#todos.findIndex(todo => todo.id === id);
         if (i > -1){
             return i;
         }

@@ -36,7 +36,7 @@ class DateManager {
      */
     getFutureDate(options) {
         return new Date(this.#today.getFullYear() + options.years, this.#today.getMonth() + options.months,
-            this.#today.getDay() + options.days, 0, 0, 0, 0);
+            this.#today.getDate() + options.days, 0, 0, 0, 0);
     }
 
 

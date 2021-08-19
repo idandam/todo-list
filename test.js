@@ -55,6 +55,26 @@ todoView.clickSortProject("Priority");
 console.log("sort todos of project 1 by Priority: " + todoModel.currentProject.todos   + "\n\t\t"  +todoModel.currentProject.printTodosByDate());
 
 
+todoView.clickCheckTodo(5);
+console.log("check todo with id 5");
+
+// check add to project a todo with today's date
+let date1 = new Date();
+date1.setHours(0,0,0,0);
+todoView.clickAddTodo("todo 8", "Low", date1);
+console.log("after adding todo to project 1: "+ todoModel.currentProject.todos   + "\n\t\t" + todoModel.currentProject.printTodosByDate() );
+console.log("projects:" ,todoModel.projects);
+// check add to project a todo with next 7 days date
+let date2 = new Date(2021,7,23);
+date2.setHours(0,0,0,0);
+todoView.clickAddTodo("todo 9", "Medium", date2);
+console.log("after adding todo to project 1: "+ todoModel.currentProject.todos   + "\n\t\t" + todoModel.currentProject.printTodosByDate() );
+console.log("projects:" ,todoModel.projects);
+
+//remove todo 8 
+todoView.clickRemoveTodo(8);
+
+
 
 
 

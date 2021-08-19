@@ -61,7 +61,7 @@ export default class TodoModel extends AbstractTodoModel {
 
     addTodo(todo, project = this.#currProject) {
         project.add(todo);
-        this.#updateSpecialProjects(todo, "add");
+        this.#updateSpecialProjects("add", todo.dueDate, todo);
         this.publish(TOPICS.todoAdded, { todo });
 
     }
@@ -69,7 +69,7 @@ export default class TodoModel extends AbstractTodoModel {
     removeTodo(id) {
         let todo = this.#currProject.remove(id)
         if (todo) {
-            this.#updateSpecialProjects(id, "remove");
+            this.#updateSpecialProjects("remove", todo.dueDate, id);
             this.publish(TOPICS.todoRemoved, { id });
             return todo;
         }
@@ -166,11 +166,11 @@ export default class TodoModel extends AbstractTodoModel {
         });
 
     }
-    #updateSpecialProjects(todoData, op){
-        if (this.#projects[TodoModel.#specialProjects.today].dateRange.includes(todoData.dueDate)){
+    #updateSpecialProjects(op, dueDate, todoData) {
+        if (this.#projects[TodoModel.#specialProjects.today].dateRange.includes(dueDate)) {
             this.#projects[TodoModel.#specialProjects.today][op](todoData);
         }
-        else if (this.#projects[TodoModel.#specialProjects.nextSevenDays].dateRange.includes(todoData.dueDate)){
+        else if (this.#projects[TodoModel.#specialProjects.nextSevenDays].dateRange.includes(dueDate)) {
             this.#projects[TodoModel.#specialProjects.nextSevenDays][op](todoData);
         }
     }

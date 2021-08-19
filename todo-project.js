@@ -24,7 +24,7 @@ export default class TodoProject {
 
     remove(id) {
         let indexOfTodo = this.#getIndexOfTodo(id);
-        if (indexOfTodo) {
+        if (indexOfTodo > -1) {
             return this.#todos.splice(indexOfTodo, 1)[0];
         }
     }

@@ -73,6 +73,8 @@ console.log("projects:" ,todoModel.projects);
 
 //remove todo 8 
 todoView.clickRemoveTodo(8);
+//remove todo 9
+todoView.clickRemoveTodo(9);
 
 
 

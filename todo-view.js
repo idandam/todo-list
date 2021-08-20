@@ -61,6 +61,24 @@ export default class TodoView extends AbstractSubscriber {
 
    
 
+    
+
+    /**
+     * Substribe to all of the topics.
+     */
+    #subscribeAll() {
+        // for each topic subscribe with a function who's name is the topic name with a capital first letter
+        // prepended with "on"
+        // for example if topic == "projectAdded" then onTopic == "onProjectAdded"
+        for (let topic in TOPICS) {
+            let first = topic.charAt(0).toUpperCase();
+            let onTopic = `on${first}${topic.substring(1)}`;
+            this.subscribe(TOPICS[topic], this[onTopic].bind(this));
+        }
+    }
+
+    /*
+
     clickAddProject(name) {
         this.#todoController.addProject(name);
     }
@@ -97,21 +115,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.removeCheckedTodos();
     }
 
-    
-
-    /**
-     * Substribe to all of the topics.
-     */
-    #subscribeAll() {
-        // for each topic subscribe with a function who's name is the topic name with a capital first letter
-        // prepended with "on"
-        // for example if topic == "projectAdded" then onTopic == "onProjectAdded"
-        for (let topic in TOPICS) {
-            let first = topic.charAt(0).toUpperCase();
-            let onTopic = `on${first}${topic.substring(1)}`;
-            this.subscribe(TOPICS[topic], this[onTopic].bind(this));
-        }
-    }
+    */
 
 
 }

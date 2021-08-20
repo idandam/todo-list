@@ -1,0 +1,64 @@
+
+*, ::before, ::after{
+    margin: 0px;
+    padding:0px;
+    box-sizing: border-box;
+}
+
+html, body{
+    height: 100%;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+.header{
+    display: flex;
+    background-color: black;
+    color:white;
+    padding:10px
+    
+}
+
+.title-container{
+    display: flex;
+}
+
+.main{
+    display:flex;
+    flex: 1 0 auto;
+}
+
+.nav-projects{
+    background-color: gray;
+    width:250px;
+    padding: 20px;
+}
+
+.project-content{
+    background-color: cadetblue;
+    width: 1000px;
+    padding: 30px;
+    margin:0 auto;
+    
+}
+
+.footer{
+    flex-shrink: 0;
+    background-color: crimson;
+    position: fixed;
+    display:flex;
+    left:0;
+    bottom: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.custom-projects-header{
+    display: flex;
+    
+}

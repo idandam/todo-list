@@ -1,5 +1,5 @@
 export default class AbstractController{
-
+    
     init(){throw new Error("Abstract method");}
     addProject(projectName){throw new Error("Abstract method");}
     removeProject(projectName){throw new Error("Abstract method");}

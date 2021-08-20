@@ -1,5 +1,8 @@
+/**
+ * Represents a compare behavior for comparing two elements  
+ */
 export default class CompareBehavior {
-
+    // String name that represents the compare behavior
     #name
 
     constructor(name){
@@ -7,10 +10,14 @@ export default class CompareBehavior {
     }
     /**
      * 
-     * @param {Todo} todo1 
-     * @param {Todo} todo2 
+     * @param {Object} todo1 
+     * @param {Object} todo2 
+     * @returns (In the context of a sorted data structure)
+     *  A value smaller than 0 if element1's position should be before element2.
+        Else returns a value greater than 0 if element1's position should be after element2.
+        Else returns 0 if the position of the two elements with respect to each other doesn't matter. 
      */
-    compare(todo1, todo2){throw new Error("Abstract Method");}
+    compare(element1, element2){throw new Error("Abstract Method");}
 
     get name() {
         return this.#name;

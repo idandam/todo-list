@@ -8,10 +8,18 @@ export default class Range {
         this.#from = from;
         this.#to = to;
     }
-
+    /**
+     * 
+     * @param {*} x 
+     * @returns true if x belongs to [this.#from, this.#to], false otherwise
+     */
     includes(x) {
         return this.#from <= x && x <= this.#to;
     }
+    /**
+     * @override
+     * 
+     */
     toString() {
         return `(${this.#from},...,${this.#to})`;
     }

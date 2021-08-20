@@ -1,11 +1,14 @@
 import DateRange from "./date-range.js"
-
+/**
+ * Take care of dates operations
+ */
 class DateManager {
 
     #today
 
     constructor(){
         this.#today = new Date();
+        // Not interested with time
         this.#today.setHours(0,0,0,0);
     }
     /**

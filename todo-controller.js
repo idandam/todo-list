@@ -13,7 +13,7 @@ export default class TodoController extends AbstractController {
        // this.#todoView = new TodoView(this, model);
 
     }
-
+   
     addProject(projectName) {
         this.#todoModel.addProject(projectName);
     }

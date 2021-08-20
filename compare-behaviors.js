@@ -7,21 +7,27 @@ class CompareByDate extends CompareBehavior {
         super("Date");
 
     }
-    
+
     /**
      * 
-     * @param {Todo} todo1 
-     * @param {Todo} todo2 
-     * @returns //TODO -complete doc
+     * @param {*} todo1 
+     * @param {*} todo2 
+     * @returns (In the context of a sorted data structure)
+     *  A value smaller than 0 if todo1's position should be before todo2.
+        Else returns a value greater than 0 if todo1's position should be after todo2.
+        Else returns 0 if the position of the two todos with respect to each other doesn't matter. 
      */
     compare(todo1, todo2) {
-        if (!(todo1.dueDate instanceof Date)){
+        /* If an argument is not an instance of Date then he should come after the other argument
+           in a sorted data structure */
+        if (!(todo1.dueDate instanceof Date)) {
             return 1;
         }
-        if (!(todo2.dueDate instanceof Date)){
+        if (!(todo2.dueDate instanceof Date)) {
             return -1;
         }
-        return todo1.dueDate- todo2.dueDate;
+
+        return todo1.dueDate - todo2.dueDate;
     }
 
 }
@@ -35,21 +41,15 @@ class CompareByPriority extends CompareBehavior {
         this.#compareByDate = new CompareByDate();
     }
 
-    /**
-     * 
-     * @param {Todo} todo1 
-     * @param {Todo} todo2 
-     * @returns The comapre by date result if the todo's priorities are the same,   
-     *          Else returns the todo's priorities difference in reversed order.
-     */
     compare(todo1, todo2) {
-        if (todo1.priority === todo2.priority){
+       // If the priorities are identical then compare based on the Date value of the two todos. 
+        if (todo1.priority === todo2.priority) {
             return this.#compareByDate.compare(todo1, todo2)
         }
-
+        // Higher priorities todos should come first 
         return todo2 - todo1;
     }
-    
+
 }
 
 export { CompareByDate, CompareByPriority };

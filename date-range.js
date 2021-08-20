@@ -1,5 +1,7 @@
 import Range from "./range.js"
-
+/**
+ * Represents a range of Dates without time
+ */
 export default class DateRange extends Range {
 
     constructor(from, to) {
@@ -7,8 +9,8 @@ export default class DateRange extends Range {
         this.#validateRange(from, to);
     }
     /**
+     * @inheritdoc
      * @override
-     * 
      * @param {Date} date 
      */
     includes(date) {
@@ -20,10 +22,10 @@ export default class DateRange extends Range {
     }
 
     /**
+     * @inheritdoc
      * @override
-     * 
-     * @param {Date} from 
-     * @param {Date} to 
+     * @param {Date} from
+     * @param {Date} to
      */
     #validateRange(from, to) {
         if (!(from instanceof Date && to instanceof Date)) {

@@ -1,8 +1,9 @@
 import DateRange from "./date-range.js";
 import TodoProject from "./todo-project.js";
-import pubsub from './pubsub.js';
-import { TOPICS } from "./utils.js";
 
+/**
+ * A todo project with todos that belong to a specific range of dates.
+ */
 export default class RangedTodoProject extends TodoProject{
 
     #dateRange
@@ -11,7 +12,10 @@ export default class RangedTodoProject extends TodoProject{
         super(name);
         this.#dateRange = new DateRange(from, to);    
     }
-
+    /**
+     * Add to this project todos that belong to the range of dates that is represeted by dateRange
+     * @param {Array} projects 
+     */
     fillTodos(projects){
         for (let project of projects){
             for (let todo of project.todos){

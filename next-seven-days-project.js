@@ -1,7 +1,9 @@
 import RangedTodoProject from "./ranged-todo-project.js";
 import dateManager from "./date-manager.js";
 
-
+/**
+ * A project that contains todos with a date from the next seven days.
+ */
 export default class NextSevenDaysProject extends RangedTodoProject {
 
     constructor() {

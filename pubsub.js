@@ -1,3 +1,6 @@
+/**
+ * Shychronous Publicsher-subscriber
+ */
 class PubSub {
     #topicMap;
 

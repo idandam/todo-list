@@ -9,15 +9,19 @@ export default class TodoProject {
     constructor(name) {
         this.#name = name;
         this.#todos = [];
+        // The default compare behavior between two todos is this project is by priority (from highest to lowest).
         this.#compareBehavior = new compareBehaviors.CompareByPriority();
 
     }
 
     add(todo) {
+        // Find todo's appropriate position in this project
         let todoPosition = this.#searchTodoPosition(todo);
+        // Add the todo in his appropriate position in this project
         this.#todos.splice(todoPosition, 0, todo);
+        // todo is now contained in this project
         todo.containingProject = this;
-        
+
 
 
     }
@@ -25,6 +29,7 @@ export default class TodoProject {
     remove(id) {
         let indexOfTodo = this.#getIndexOfTodo(id);
         if (indexOfTodo > -1) {
+            // Return the removed todo.
             return this.#todos.splice(indexOfTodo, 1)[0];
         }
     }
@@ -32,36 +37,38 @@ export default class TodoProject {
     sort(sortName) {
         // TODO replace true with this.#compareBehavior.name !== sortName
         if (true) {
+            // Get the appropriate compare behavior with respect to the given sortName.
             let compareBehaviorStr = `CompareBy${sortName}`;
-
+            // If there exists such compare behavior 
             if (compareBehaviors[compareBehaviorStr]) {
-                let compareBevahior = new compareBehaviors[compareBehaviorStr]();
+                // Set this project compare behavior dynamically to the new compare behavior.
+                this.#compareBehavior = new compareBehaviors[compareBehaviorStr]();
+                // Sort this project's todos according to the new compare behavior.
+                this.#todos.sort(this.#compareBehavior.compare.bind(this.#compareBehavior));
+                // Indicate that the project was sorted 
+                return true;
 
-                if (compareBevahior instanceof CompareBehavior) {
-                    this.#compareBehavior = compareBevahior;
-                    this.#todos.sort(this.#compareBehavior.compare.bind(this.#compareBehavior));
-                    return true;
-                }
             }
         }
 
 
     }
 
-    toString() {
-        return this.#name;
-    }
-
+    
     getTodoById(id) {
         return this.#todos.find(todo => todo.id === id);
 
     }
-    
-    #getIndexOfTodo(id){
+
+    #getIndexOfTodo(id) {
         let i = this.#todos.findIndex(todo => todo.id === id);
-        if (i > -1){
+        if (i > -1) {
             return i;
         }
+    }
+
+    toString() {
+        return this.#name;
     }
 
     get name() {

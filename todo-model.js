@@ -28,7 +28,7 @@ export default class TodoModel extends AbstractTodoModel {
         if (!this.getProjectByName(projectName)) {
             let project = new TodoProject(projectName)
             this.#projects.push(project);
-            this.publish(TOPICS.projectAdded, { project });
+            this.publish(TOPICS.projectAdded, project );
         }
         // announce that we didn't add the project since a project with this name already exists
         else {

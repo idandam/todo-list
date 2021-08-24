@@ -60,5 +60,40 @@ body{
 
 .custom-projects-header{
     display: flex;
+    justify-content: space-between;
     
 }
+
+/* Container for modal prompt forms */
+.modal-cover{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1024;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.3;
+  }
+
+  .form-container{
+      --vwidth: 150px;
+      --vheight: 100px;
+      display:block;
+      position: absolute;
+      background-color: green;
+      width: 150px;
+      height: 100px;
+      left :50%;    
+      top: 50%;
+      margin-left: calc(-1/2 * var(--vwidth));
+      margin-top: calc(-1/2 * var(--vheight));
+      z-index: 1025;
+      
+  }
+
+  .one-input-project-form{
+      display: none;
+      margin: 5px;
+      background-color: coral;
+  }

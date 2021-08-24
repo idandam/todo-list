@@ -6,6 +6,11 @@ const todoModel = new TodoModel();
 const todoController = new TodoController(todoModel);
 const todoView = new TodoView(todoController, todoModel);
 
+
+
+/**
+ * console log tests
+ * 
 todoView.clickAddProject("project 1");
 console.log("after adding project 1, projects state now: " + todoModel.projects);
 todoView.clickAddProject("project 2");
@@ -79,6 +84,7 @@ todoView.clickRemoveTodo(9);
 // move todo
 todoView.clickMoveTodoToProject(3, "project 3");
 
+ */
 
 
 

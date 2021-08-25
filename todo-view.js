@@ -69,24 +69,10 @@ export default class TodoView extends AbstractSubscriber {
     onClickAddProject() {
 
         let form = document.querySelector(".one-input-project-form");
-        let lastElem = form.elements[form.elements.length - 1];
-        let firstElem = form.elements[0];
-
-        lastElem.onkeydown = function (e) {
-            if (e.key == 'Tab' && !e.shiftKey) {
-                firstElem.focus();
-                return false;
-            }
-        };
-
-        firstElem.onkeydown = function (e) {
-            if (e.key == 'Tab' && e.shiftKey) {
-                lastElem.focus();
-                return false;
-            }
-        };
         let formContainer = this.#attachFormContainer(form, "Add New Project", "form-container");
         let modalCover = this.#createModalCover();
+        
+        
         // Get the project name from the form.
         // Let controller handle logic given the name of the project.
         // Quit the form and hide the modal cover.
@@ -137,6 +123,7 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #showModalForm(modalCover, form) {
+        this.#handleFocusTrap(modalCover,form);
         // Add the modal cover to the DOM 
         document.body.append(modalCover);
         // don't allow scrolling the body
@@ -147,7 +134,35 @@ export default class TodoView extends AbstractSubscriber {
         form.elements.text.value = "";
         form.elements.text.focus();
     }
+    /**
+     * Make sure that when inside the form, the natural flow of passing between elements will accur
+     * but when we're on the first form element and we try to go to the previous element using shift+tab
+     * then we will actually go to the lsat element of the form. 
+     * Also, handle the symmetric case.
+     * @param {HTMLDivEelement} modalCover 
+     * @param {HTMLFormElement} form 
+     */
+    #handleFocusTrap(modalCover, form){
+        let firstElement = form.elements[0];
+        let lastElement = form.elements[form.elements.length - 1];
+        
+        lastElement.onkeydown = function (e) {
+            if (e.key == 'Tab' && !e.shiftKey) {
+                firstElement.focus();
+                return false;
+            }
+        };
+        
+        firstElement.onkeydown = function (e) {
+            if (e.key == 'Tab' && e.shiftKey) {
+                lastElement.focus();
+                return false;
+            }
+        };
+        // When a click outside the form accurs, the form will not loose focus
+        modalCover.onclick = function(){firstElement.focus()}
 
+    }
 
     /**
      * Substribe to all of the topics.

@@ -104,6 +104,10 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
+    isTodayCurrentProject(){
+        return this.#currentProject === this.#projects[1];
+    }
+
     get currentProject() {
         return this.#currentProject;
     }

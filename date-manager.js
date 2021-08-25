@@ -42,7 +42,11 @@ class DateManager {
             this.#today.getDate() + options.days, 0, 0, 0, 0);
     }
 
-
+    toDateString(date){
+        if (date instanceof Date){
+            return date.toLocaleDateString();
+        }
+    }
 }
 
 let instance = new DateManager();

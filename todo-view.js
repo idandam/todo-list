@@ -2,6 +2,7 @@ import AbstractSubscriber from "./abstract-subscriber.js"
 import pubsub from "./pubsub.js"
 import TodoProject from "./todo-project.js"
 import Todo from "./todo.js"
+import dateManager from "./date-manager.js"
 import { TOPICS } from "./utils.js"
 
 export default class TodoView extends AbstractSubscriber {
@@ -17,6 +18,8 @@ export default class TodoView extends AbstractSubscriber {
     #projectContent;
 
     #projectsQueue;
+
+    #todos
 
 
     constructor(controller, model) {
@@ -35,21 +38,62 @@ export default class TodoView extends AbstractSubscriber {
         this.#customProjects = document.querySelector(".custom-projects");
         this.#addProjectBtn = document.querySelector(".add-project-btn")
         this.#projectContent = document.querySelector(".project-content");
+        this.#todos = document.querySelector("todos");
 
         this.#currentProject = this.#constantProjects.firstElementChild.nextElementSibling;
         this.#currentProject.classList.add("current-project");
         this.#projectContent.querySelector("h3").innerHTML = this.#todoModel.currentProject.name;
-        //TODO - update todos for this the current project 
+        this.#populateTodos(this.#todoModel.currentProject.todos);
 
         this.#addListeners();
     }
 
+    onTodosClick(event){
+        let listItem = this.#getContainingListItem(event.target);
+        if (listItem){
+            if (listItem.classList.contains("add-todo-list-item")){
+                this.#addTodo();
+            }
+            else{
+                //TODO - expand todo to show details and edit mode
+            }
+        }
+    }
+    
+    #addTodo(){
+        let form = document.querySelector(".one-input-project-form");
+        let formContainer = this.#attachFormContainer(form, "Add New Project", "form-container");
+        let modalCover = this.#createModalCover();
+
+        this.#todoController.addTodo(new Todo(title, priority, date));
+    }
+
     /* TODO - I'm here*/
+   
+      /* **** */
+    #populateTodos(todos) {
+        let todoListItem, title, date;
+        for (let todo of todos) {
+            todoListItem = document.createElement("li");
+            title = document.createElement("div");
+            title.innerHTML = todo.title;
+            todoListItem.append(title);
+            // Show the date only for todos that are not for today
+            if (!this.#todoModel.isTodayCurrentProject()) {
+                date = document.createElement("span");
+                date.innerHTML = dateManager.toDateString(todo.dueDate);
+                todoListItem.append(date);
+            }
+            todoListItem.classList.add("todo-list-item");
+            this.#todos.append(todoListItem);
+        }
+    }
+  
 
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject && this.#projectsQueue.length > 0) {
             this.#currentProject.classList.remove("current-project");
-            this.#currentProject = this.#projectsQueue.splice(0,1)[0];
+            this.#currentProject = this.#projectsQueue.splice(0, 1)[0];
             this.#currentProject.classList.add("current-project");
             this.#projectContent.querySelector("h3").innerHTML = data.name;
             //TODO update todos for the current project
@@ -67,10 +111,11 @@ export default class TodoView extends AbstractSubscriber {
     #getContainingListItem(element) {
         return element.closest("li");
     }
-    /* **** */
+
     #addListeners() {
         this.#addProjectBtn.addEventListener("click", this.onClickAddProject.bind(this));
         this.#projects.addEventListener("click", this.onClickChangeCurrentProject.bind(this));
+        this.#todos.addEventListener("click", this.onTodosClick.bind(this));
     }
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
@@ -103,7 +148,7 @@ export default class TodoView extends AbstractSubscriber {
     onCheckedTodosRemoved(data) {
         console.log(data);
     }
-    
+
 
     /* on clicks */
 
@@ -231,10 +276,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.removeProject(name);
     }
 
-    clickAddTodo(title, priority, date) {
-        this.#todoController.addTodo(new Todo(title, priority, date));
-
-    }
+    
     clickRemoveTodo(id) {
         this.#todoController.removeTodo(id);
     }

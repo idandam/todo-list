@@ -24,16 +24,31 @@
             </ul>
             <div class="custom-projects-header">
                 <h2>Projects</h2>
-                <button class="add-project-btn">add</button>
+                <button class="add-project-btn">&#10133</button>
             </div>
-            <ul class="custom-projects">
-
-            </ul>
+            <ul class="custom-projects"></ul>
         </nav>
         <div class="project-content">
             <div class="project-content-header">
                 <h3></h3>
+                <div >
+                    <button class="sort-project-btn">Sort</button>
+                </div>
             </div>
+            <ul class="todos">
+                <li class="add-todo-list-item">
+                    <button class="add-todo-btn">
+                        <span>&#10133</span>
+                        Add task
+                    </button>
+                </li>
+                <li class="edit-todo-list-item">
+                    <form class="edit-todo-form">
+                        <div class="edit-todo-area"></div>
+                        <div class="edit-todo-form-btns"></div>
+                    </form>
+                </li>
+            </ul>
         </div>
         <!-- Pop-up form for addin a new poroject. Display none on default with css-->
         <form class="one-input-project-form">
@@ -41,6 +56,8 @@
             <input type="submit" value="Done">
             <input name="cancel" type="button" value="Cancel">
         </form>
+
+        
     </main>
     
     <footer class="footer">

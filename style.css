@@ -109,3 +109,16 @@ body{
   .current-project{
       background-color: blue;
   }
+
+  .todos{
+      display:flex;
+      flex-direction: column;
+  }
+  .todo-list-item{
+      display:flex;
+      justify-content: space-between;
+  }
+  .todo-list-item,.project-content-header{
+    display:flex;
+    justify-content: space-between;
+}

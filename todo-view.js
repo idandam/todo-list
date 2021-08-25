@@ -5,37 +5,80 @@ import Todo from "./todo.js"
 import { TOPICS } from "./utils.js"
 
 export default class TodoView extends AbstractSubscriber {
-    #todoModel
-    #todoController
+    #todoModel;
+    #todoController;
 
-    #customProjects
-    #addProjectBtn
+    #projects;
+    #constantProjects;
+    #currentProject;
+    #customProjects;
+    #addProjectBtn;
+
+    #projectContent;
+
+    #projectsQueue;
 
 
     constructor(controller, model) {
         super();
         this.#todoController = controller;
         this.#todoModel = model;
+        this.#projectsQueue = [];
         this.#subscribeAll();
         this.createView();
 
     }
 
     createView() {
-
+        this.#projects = document.querySelector(".nav-projects");
+        this.#constantProjects = document.querySelector(".constant-projects");
         this.#customProjects = document.querySelector(".custom-projects");
         this.#addProjectBtn = document.querySelector(".add-project-btn")
-        this.#addProjectBtn.addEventListener("click", this.onClickAddProject.bind(this));
+        this.#projectContent = document.querySelector(".project-content");
 
+        this.#currentProject = this.#constantProjects.firstElementChild.nextElementSibling;
+        this.#currentProject.classList.add("current-project");
+        this.#projectContent.querySelector("h3").innerHTML = this.#todoModel.currentProject.name;
+        //TODO - update todos for this the current project 
+
+        this.#addListeners();
     }
 
+    /* TODO - I'm here*/
 
+    onCurrentProjectChanged(data) {
+        if (data instanceof TodoProject && this.#projectsQueue.length > 0) {
+            this.#currentProject.classList.remove("current-project");
+            this.#currentProject = this.#projectsQueue.splice(0,1)[0];
+            this.#currentProject.classList.add("current-project");
+            this.#projectContent.querySelector("h3").innerHTML = data.name;
+            //TODO update todos for the current project
+        }
+    }
 
+    onClickChangeCurrentProject(event) {
+        let project = this.#getContainingListItem(event.target);
+        if (project && this.#currentProject !== project) {
+            this.#projectsQueue.push(project);
+            this.#todoController.changeCurrentProject(project.querySelector("button").innerText);
+        }
+    }
+
+    #getContainingListItem(element) {
+        return element.closest("li");
+    }
+    /* **** */
+    #addListeners() {
+        this.#addProjectBtn.addEventListener("click", this.onClickAddProject.bind(this));
+        this.#projects.addEventListener("click", this.onClickChangeCurrentProject.bind(this));
+    }
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
+            let li = document.createElement("li");
             let button = document.createElement("button");
             button.append(data.name);
-            this.#customProjects.prepend(button);
+            li.append(button);
+            this.#customProjects.prepend(li);
         }
 
     }
@@ -60,19 +103,17 @@ export default class TodoView extends AbstractSubscriber {
     onCheckedTodosRemoved(data) {
         console.log(data);
     }
-    onCurrentProjectChanged(data) {
-        console.log(data);
-    }
+    
 
-    /* on clicks*/
+    /* on clicks */
 
     onClickAddProject() {
 
         let form = document.querySelector(".one-input-project-form");
         let formContainer = this.#attachFormContainer(form, "Add New Project", "form-container");
         let modalCover = this.#createModalCover();
-        
-        
+
+
         // Get the project name from the form.
         // Let controller handle logic given the name of the project.
         // Quit the form and hide the modal cover.
@@ -123,7 +164,7 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #showModalForm(modalCover, form) {
-        this.#handleFocusTrap(modalCover,form);
+        this.#handleFocusTrap(modalCover, form);
         // Add the modal cover to the DOM 
         document.body.append(modalCover);
         // don't allow scrolling the body
@@ -142,17 +183,17 @@ export default class TodoView extends AbstractSubscriber {
      * @param {HTMLDivEelement} modalCover 
      * @param {HTMLFormElement} form 
      */
-    #handleFocusTrap(modalCover, form){
+    #handleFocusTrap(modalCover, form) {
         let firstElement = form.elements[0];
         let lastElement = form.elements[form.elements.length - 1];
-        
+
         lastElement.onkeydown = function (e) {
             if (e.key == 'Tab' && !e.shiftKey) {
                 firstElement.focus();
                 return false;
             }
         };
-        
+
         firstElement.onkeydown = function (e) {
             if (e.key == 'Tab' && e.shiftKey) {
                 lastElement.focus();
@@ -160,7 +201,7 @@ export default class TodoView extends AbstractSubscriber {
             }
         };
         // When a click outside the form accurs, the form will not loose focus
-        modalCover.onclick = function(){firstElement.focus()}
+        modalCover.onclick = function () { firstElement.focus() }
 
     }
 
@@ -198,9 +239,6 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.removeTodo(id);
     }
 
-    clickChangeCurrentProject(name) {
-        this.#todoController.changeCurrentProject(name);
-    }
 
     clickCheckTodo(id) {
         this.#todoController.checkTodo(id);

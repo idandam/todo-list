@@ -8,14 +8,14 @@ import NextSevenDaysProject from "./next-seven-days-project.js"
 
 export default class TodoModel extends AbstractTodoModel {
     #projects;
-    #currProject;
+    #currentProject;
     static #specialProjects = { inbox: 0, today: 1, nextSevenDays: 2 };
 
     constructor() {
         super();
         this.#projects = [];
         this.#defineProjectsProperties();
-        this.#currProject = this.#projects[0];
+        this.#currentProject = this.#projects[1];
 
     }
 
@@ -46,7 +46,7 @@ export default class TodoModel extends AbstractTodoModel {
 
         if (i < this.#projects.length) {
             let [removedProject] = this.#projects.splice(i, 1);
-            let isCurrentProject = removedProject === this.#currProject;
+            let isCurrentProject = removedProject === this.#currentProject;
             this.publish(TOPICS.projectRemoved, { index: i, isCurrentProject, projectName });
         }
 
@@ -54,12 +54,12 @@ export default class TodoModel extends AbstractTodoModel {
 
     sortProject(sortName) {
 
-        if (this.#currProject.sort(sortName)) {
-            this.publish(TOPICS.projectSorted, { sortName, currProject: this.#currProject });
+        if (this.#currentProject.sort(sortName)) {
+            this.publish(TOPICS.projectSorted, { sortName, currProject: this.#currentProject });
         }
     }
 
-    addTodo(todo, project = this.#currProject) {
+    addTodo(todo, project = this.#currentProject) {
         project.add(todo);
         this.#updateSpecialProjects("add", todo.dueDate, todo);
         this.publish(TOPICS.todoAdded, { todo });
@@ -67,7 +67,7 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     removeTodo(id) {
-        let todo = this.#currProject.remove(id)
+        let todo = this.#currentProject.remove(id)
         if (todo) {
             this.#updateSpecialProjects("remove", todo.dueDate, id);
             this.publish(TOPICS.todoRemoved, { id });
@@ -78,7 +78,7 @@ export default class TodoModel extends AbstractTodoModel {
 
 
     checkTodo(id) {
-        let todo = this.#currProject.getTodoById(id);
+        let todo = this.#currentProject.getTodoById(id);
         if (todo) {
             todo.isChecked = !todo.isChecked;
             // TODO handle change in today or sevedays project. publich there a special topic for this
@@ -99,20 +99,20 @@ export default class TodoModel extends AbstractTodoModel {
     changeCurrentProject(projectName) {
         let project = this.getProjectByName(projectName);
         if (project) {
-            this.#currProject = project;
-            this.publish(TOPICS.currentProjectChanged, { projectName });
+            this.#currentProject = project;
+            this.publish(TOPICS.currentProjectChanged, this.#currentProject);
         }
     }
 
     get currentProject() {
-        return this.#currProject;
+        return this.#currentProject;
     }
 
     set currentProject(projectName) {
         let project = this.getProjectByName(projectName);
         if (project) {
-            this.#currProject = project;
-            this.publish(TOPICS.currentProjectChanged, { currentProject: this.#currProject });
+            this.#currentProject = project;
+            this.publish(TOPICS.currentProjectChanged, { currentProject: this.#currentProject });
         }
     }
 
@@ -121,7 +121,7 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     getCheckedTodos() {
-        return this.#currProject.todos.filter(todo => todo.isChecked);
+        return this.#currentProject.todos.filter(todo => todo.isChecked);
     }
 
     publish(topic, data) {

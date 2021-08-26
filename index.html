@@ -31,22 +31,41 @@
         <div class="project-content">
             <div class="project-content-header">
                 <h3></h3>
-                <div >
+                <div>
                     <button class="sort-project-btn">Sort</button>
                 </div>
             </div>
             <ul class="todos">
+                <li class="edit-todo-list-item">
+                    <form class="edit-todo-form">
+                        <div class="edit-todo-area">
+                            <div class="edit-todo-area-input">
+                                <input type="text" name="edit-todo-title" class="edit-todo-title"></input>
+                                <textarea name="edit-todo-description" class="edit-todo-description" rows="5"></textarea>
+                            </div>
+                            <div class="edit-todo-area-date-priority">
+                                <input type="date" name="edit-todo-date" class="edit-todo-date"></input>
+                                <div class="edit-todo-priorities">
+                                    <span>Priority:</span>
+                                        <ul name="ff" class="edit-todo-priorities">
+                                            <li class="priority-high"><button>High</button></li>
+                                            <li class="priority-medium"><button>Medium</button></li>
+                                            <li class="priority-low"><button>Low</button></li>
+                                        </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edit-todo-form-btns">
+                            <input type="submit" value="Done"></input>
+                            <input type="button" name="cancel" value="Cancel"></input>
+                        </div>
+                    </form>
+                </li>
                 <li class="add-todo-list-item">
                     <button class="add-todo-btn">
                         <span>&#10133</span>
                         Add task
                     </button>
-                </li>
-                <li class="edit-todo-list-item">
-                    <form class="edit-todo-form">
-                        <div class="edit-todo-area"></div>
-                        <div class="edit-todo-form-btns"></div>
-                    </form>
                 </li>
             </ul>
         </div>
@@ -57,9 +76,9 @@
             <input name="cancel" type="button" value="Cancel">
         </form>
 
-        
+
     </main>
-    
+
     <footer class="footer">
         My Footer
     </footer>

@@ -8,16 +8,18 @@ export default class Todo {
     #containingProject;
 
     static #priorities = { Low: 1, Medium: 2, High: 3 };
+    static #defaultPriority = "Low";
 
     static #runNum = 0;
     static #fetchUniqueId() {
         return Todo.#runNum++;
     }
 
-    constructor(title, priority = "LOW", dueDate = "No Date") {
+    constructor(title, description, priority = Todo.#defaultPriority, dueDate) {
         this.#id = Todo.#fetchUniqueId();
         this.#title = title;
-        this.#dueDate = dueDate;
+        this.#description = description;
+        this.#dueDate = (dueDate instanceof Date && dueDate) || "No Date";
         this.#priority = priority;
         this.#isChecked = false;
     }
@@ -90,5 +92,8 @@ export default class Todo {
         }
 
         return this.#dueDate;
+    }
+    static get defaultPriority(){
+        return Todo.#defaultPriority;
     }
 }

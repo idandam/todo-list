@@ -38,39 +38,132 @@ export default class TodoView extends AbstractSubscriber {
         this.#customProjects = document.querySelector(".custom-projects");
         this.#addProjectBtn = document.querySelector(".add-project-btn")
         this.#projectContent = document.querySelector(".project-content");
-        this.#todos = document.querySelector("todos");
+        this.#todos = document.querySelector(".todos");
 
         this.#currentProject = this.#constantProjects.firstElementChild.nextElementSibling;
         this.#currentProject.classList.add("current-project");
         this.#projectContent.querySelector("h3").innerHTML = this.#todoModel.currentProject.name;
-        this.#populateTodos(this.#todoModel.currentProject.todos);
 
+        this.#populateTodos(this.#todoModel.currentProject.todos);
         this.#addListeners();
     }
 
-    onTodosClick(event){
-        let listItem = this.#getContainingListItem(event.target);
-        if (listItem){
-            if (listItem.classList.contains("add-todo-list-item")){
-                this.#addTodo();
+    onTodoAdded(data) {
+        if (data instanceof Todo){
+            let todoListItem = document.createElement("li");
+            let titleContainer = document.createElement("div");
+            let priorityDateContainer =document.createElement("div");
+            let title = document.createElement("span");
+            let priority = document.createElement("span");
+            let date = document.createElement("span");
+
+            title.append(data.title);
+            priority.append(data.priority);
+            date.append(dateManager.toDateString(data.dueDate));
+
+            titleContainer.append(title);
+            priorityDateContainer.append(date,priority);
+
+            todoListItem.classList.add("todo-list-item");
+            todoListItem.append(titleContainer, priorityDateContainer);
+            this.#todos.prepend(todoListItem);
+
+
+        }
+    }
+
+    /**
+     * Depends on the target, perform the related operation. 
+     * @param {*} event click event in side the todos list
+     */
+    onTodosClick(event) {
+        let addTodoListItem = this.#getContainingListItem(event.target);
+        if (addTodoListItem) {
+            // If the user wants to add a new todo
+            if (addTodoListItem.classList.contains("add-todo-list-item")) {
+                this.#addTodo(addTodoListItem);
             }
-            else{
+            // Else if the user wants to expand an existing todo
+            else {
                 //TODO - expand todo to show details and edit mode
             }
         }
     }
-    
-    #addTodo(){
-        let form = document.querySelector(".one-input-project-form");
-        let formContainer = this.#attachFormContainer(form, "Add New Project", "form-container");
-        let modalCover = this.#createModalCover();
+    /**
+     * Add a new todo
+     * @param {HTMLLIElement} addTodoListItem a list item for adding a new todo
+     */
+    #addTodo(addTodoListItem) {
+        // Form container is a <li> element
+        let formContainer = document.querySelector(".edit-todo-list-item");
+        let form = formContainer.firstElementChild;
+        let currentPriority = this.#todoModel.getDefaultPriority();
+        // Using closure in second argument
+        this.#handlePriorityClick(form, (priority) => { currentPriority = priority });
 
-        this.#todoController.addTodo(new Todo(title, priority, date));
+        form.onsubmit = function () {
+            let title = form.elements.title.value?.trim();
+            if (title) {
+                this.#todoController.addTodo(new Todo(title, form.elements.description.value, currentPriority, form.elements.date.valueAsDate));
+            }
+
+            this.#assignDisplayValue(addTodoListItem, formContainer, "block", "none");
+            return false;
+        }.bind(this);
+
+        form.elements.cancel.onclick = function () {
+            this.#assignDisplayValue(addTodoListItem, formContainer, "block", "none");
+            return false;
+        }.bind(this);
+
+        // Prepare to display the form
+        form.elements.title.value = "";
+        form.elements.description.value = "";
+        this.#assignDisplayValue(addTodoListItem, formContainer, "none", "block");
+       
     }
+    /**
+     * get the priority that the user clicked on and use setPriority closure to set the priority in the caller
+     * @param {HTMLFormElement} form 
+     * @param {Function} setPriority 
+     */
+    #handlePriorityClick(form, setPriority) {
+        // Get the priorities list
+        let priorityList = form.querySelector(".edit-todo-priorities-list");
+        // Get the priorities list elements as an array
+        let priorities = Array.from(priorityList.children);
+        // When the user click on a priority it will change color for it and remove color for the other two priorities
+        priorityList.onclick = function (event) {
+            let priority = event.target.closest("li");
+            // Return if the user didn't click on a priority or this priority already marked as chosen
+            if (!priority || priority.classList.contains("chosen"))
+                return false;
+            
+            let targetIndex = priorities.indexOf(priority);
+            priority.classList.add("chosen");
+            priorities[(targetIndex + 1) % 3].classList.remove("chosen");
+            priorities[(targetIndex + 2) % 3].classList.remove("chosen");
+            setPriority(priority.firstChild.firstChild.nodeValue);
+            return false;
 
+        }
+
+    }
+    /**
+     * 
+     * @param {HTMLElement} element1 
+     * @param {HTMLElement} element2 
+     * @param {String} value1 display value for the style property of element1
+     * @param {String} value2 display value for the style property of element2
+     */
+    #assignDisplayValue(element1, element2, value1, value2) {
+        element1.style.display = value1;
+        element2.style.display = value2;
+
+    }
     /* TODO - I'm here*/
-   
-      /* **** */
+
+    /* **** */
     #populateTodos(todos) {
         let todoListItem, title, date;
         for (let todo of todos) {
@@ -88,7 +181,7 @@ export default class TodoView extends AbstractSubscriber {
             this.#todos.append(todoListItem);
         }
     }
-  
+
 
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject && this.#projectsQueue.length > 0) {
@@ -116,6 +209,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#addProjectBtn.addEventListener("click", this.onClickAddProject.bind(this));
         this.#projects.addEventListener("click", this.onClickChangeCurrentProject.bind(this));
         this.#todos.addEventListener("click", this.onTodosClick.bind(this));
+    
     }
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
@@ -133,9 +227,7 @@ export default class TodoView extends AbstractSubscriber {
     onProjectSorted(data) {
         console.log(data);
     }
-    onTodoAdded(data) {
-        console.log(data);
-    }
+    
     onTodoRemoved(data) {
         console.log(data);
     }
@@ -276,7 +368,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController.removeProject(name);
     }
 
-    
+
     clickRemoveTodo(id) {
         this.#todoController.removeTodo(id);
     }

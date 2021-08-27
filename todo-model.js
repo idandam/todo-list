@@ -4,6 +4,7 @@ import TodoProject from './todo-project.js';
 import { TOPICS } from './utils.js';
 import TodayProject from "./today-project.js"
 import NextSevenDaysProject from "./next-seven-days-project.js"
+import Todo from './todo.js';
 
 
 export default class TodoModel extends AbstractTodoModel {
@@ -28,7 +29,7 @@ export default class TodoModel extends AbstractTodoModel {
         if (!this.getProjectByName(projectName)) {
             let project = new TodoProject(projectName)
             this.#projects.push(project);
-            this.publish(TOPICS.projectAdded, project );
+            this.publish(TOPICS.projectAdded, project);
         }
         // announce that we didn't add the project since a project with this name already exists
         else {
@@ -62,7 +63,7 @@ export default class TodoModel extends AbstractTodoModel {
     addTodo(todo, project = this.#currentProject) {
         project.add(todo);
         this.#updateSpecialProjects("add", todo.dueDate, todo);
-        this.publish(TOPICS.todoAdded, { todo });
+        this.publish(TOPICS.todoAdded, todo);
 
     }
 
@@ -104,7 +105,7 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-    isTodayCurrentProject(){
+    isTodayCurrentProject() {
         return this.#currentProject === this.#projects[1];
     }
 
@@ -164,13 +165,22 @@ export default class TodoModel extends AbstractTodoModel {
         });
 
     }
+    /**
+     * @param {String} op an operation in {"add", "remove"}
+     */
     #updateSpecialProjects(op, dueDate, todoData) {
-        if (this.#projects[TodoModel.#specialProjects.today].dateRange.includes(dueDate)) {
-            this.#projects[TodoModel.#specialProjects.today][op](todoData);
+        if (dueDate instanceof Date) {
+            if (this.#projects[TodoModel.#specialProjects.today].dateRange.includes(dueDate)) {
+                this.#projects[TodoModel.#specialProjects.today][op](todoData);
+            }
+            else if (this.#projects[TodoModel.#specialProjects.nextSevenDays].dateRange.includes(dueDate)) {
+                this.#projects[TodoModel.#specialProjects.nextSevenDays][op](todoData);
+            }
         }
-        else if (this.#projects[TodoModel.#specialProjects.nextSevenDays].dateRange.includes(dueDate)) {
-            this.#projects[TodoModel.#specialProjects.nextSevenDays][op](todoData);
-        }
+    }
+
+    getDefaultPriority(){
+        return Todo.defaultPriority;
     }
 
 }

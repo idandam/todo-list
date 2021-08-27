@@ -40,17 +40,17 @@
                     <form class="edit-todo-form">
                         <div class="edit-todo-area">
                             <div class="edit-todo-area-input">
-                                <input type="text" name="edit-todo-title" class="edit-todo-title"></input>
-                                <textarea name="edit-todo-description" class="edit-todo-description" rows="5"></textarea>
+                                <input type="text" name="title" class="edit-todo-title" placeholder="title..." required></input>
+                                <textarea name="description" class="edit-todo-description" rows="5" placeholder="description..."></textarea>
                             </div>
                             <div class="edit-todo-area-date-priority">
-                                <input type="date" name="edit-todo-date" class="edit-todo-date"></input>
-                                <div class="edit-todo-priorities">
+                                <input type="date" name="date" class="edit-todo-date"></input>
+                                <div class="edit-todo-priorities-container">
                                     <span>Priority:</span>
-                                        <ul name="ff" class="edit-todo-priorities">
-                                            <li class="priority-high"><button>High</button></li>
-                                            <li class="priority-medium"><button>Medium</button></li>
-                                            <li class="priority-low"><button>Low</button></li>
+                                        <ul class="edit-todo-priorities-list">
+                                            <li class="priority-high"><span>High</span></li>
+                                            <li class="priority-medium"><span>Medium</span></li>
+                                            <li class="priority-low"><span>Low</span></li>
                                         </ul>
                                 </div>
                             </div>

@@ -27,10 +27,10 @@ export default class TodoProject {
     }
 
     remove(id) {
-        let indexOfTodo = this.#getIndexOfTodo(id);
-        if (indexOfTodo > -1) {
+        let position = this.#getIndexOfTodo(id);
+        if (position > -1) {
             // Return the removed todo.
-            return this.#todos.splice(indexOfTodo, 1)[0];
+            return { todo: this.#todos.splice(position, 1)[0], position };
         }
     }
 
@@ -54,7 +54,7 @@ export default class TodoProject {
 
     }
 
-    
+
     getTodoById(id) {
         return this.#todos.find(todo => todo.id === id);
 

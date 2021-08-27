@@ -63,16 +63,17 @@ export default class TodoModel extends AbstractTodoModel {
     addTodo(todo, project = this.#currentProject) {
         let position = project.add(todo);
         this.#updateSpecialProjects("add", todo.dueDate, todo);
-        this.publish(TOPICS.todoAdded, {todo, position});
+        this.publish(TOPICS.todoAdded, { todo, position });
 
     }
 
     removeTodo(id) {
-        let todo = this.#currentProject.remove(id)
-        if (todo) {
-            this.#updateSpecialProjects("remove", todo.dueDate, id);
-            this.publish(TOPICS.todoRemoved, { id });
-            return todo;
+        // data is of the form { todo, position }
+        let data = this.#currentProject.remove(id)
+        if (data) {
+            this.#updateSpecialProjects("remove", data.todo.dueDate, id);
+            this.publish(TOPICS.todoRemoved, data.position);
+            return data;
         }
 
     }
@@ -179,7 +180,7 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-    getDefaultPriority(){
+    getDefaultPriority() {
         return Todo.defaultPriority;
     }
 

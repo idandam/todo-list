@@ -74,24 +74,29 @@ export default class TodoView extends AbstractSubscriber {
      */
     onTodoAdded(data) {
         if (data.todo instanceof Todo) {
-            let todoListItem = this.#createTodoStructure();
-            this.#injectTodoDetails(todoListItem, data.todo);
-            this.#todos.children[data.position].before(todoListItem);
+            this.#todos.children[data.position].before(this.#createTodoListItem(data.todo));
 
         }
     }
 
+    #createTodoListItem(todo) {
+        let todoListItem = this.#createTodoStructure();
+        this.#injectTodoDetails(todoListItem, todo);
+        return todoListItem;
+    }
+
     #injectTodoDetails(todoListItem, todo) {
+        todoListItem.dataset.id = todo.id;
         todoListItem.querySelector(".todo-list-item-title").innerHTML = todo.title;
         todoListItem.querySelector(".todo-list-item-date").innerHTML = dateManager.toDateString(todo.dueDate);
         todoListItem.querySelector(".todo-list-item-priority").innerHTML = todo.priority;
-        
+
     }
 
     #createTodoStructure() {
         let todoListItemTemplate = this.#todos.querySelector("template");
-        return todoListItemTemplate.content.cloneNode(true);
-        
+        return todoListItemTemplate.content.cloneNode(true).children[0];
+
     }
     /**
      * Depends on the target, perform the related operation. 
@@ -139,14 +144,14 @@ export default class TodoView extends AbstractSubscriber {
 
         // Prepare to display the form
         this.#resetEditTodoForm();
-        
+
         this.#assignDisplayValue(addTodoListItem, formContainer, "none", "block");
 
     }
 
-    #resetEditTodoForm(){
+    #resetEditTodoForm() {
         this.#editTodoForm.reset();
-        for (let priority of this.#editTodoForm.querySelector(".edit-todo-priorities-list").children){
+        for (let priority of this.#editTodoForm.querySelector(".edit-todo-priorities-list").children) {
             priority.classList.remove("chosen");
         }
     }
@@ -189,29 +194,13 @@ export default class TodoView extends AbstractSubscriber {
         element2.style.display = value2;
 
     }
-    /* TODO - I'm here*/
-
-    /* **** */
+    /* TODO this method is good. Test it When the time is right.
     #populateTodos(todos) {
-        /*
-        let todoListItem, title, date;
-        for (let todo of todos) {
-            todoListItem = document.createElement("li");
-            title = document.createElement("div");
-            title.innerHTML = todo.title;
-            todoListItem.append(title);
-            // Show the date only for todos that are not for today
-            if (!this.#todoModel.isTodayCurrentProject()) {
-                date = document.createElement("span");
-                date.innerHTML = dateManager.toDateString(todo.dueDate);
-                todoListItem.append(date);
-            }
-            todoListItem.classList.add("todo-list-item");
-            this.#todos.append(todoListItem);
-        }
-        */
+        for (let todo of todos){
+            this.#todos.append(this.#createTodoListItem(todo));
+        }    
     }
-
+    */
 
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject && this.#projectsQueue.length > 0) {
@@ -245,12 +234,12 @@ export default class TodoView extends AbstractSubscriber {
         this.#todos.addEventListener("click", this.onTodosClick.bind(this));
 
     }
-    #onDocumentClick(event){
+    #onDocumentClick(event) {
         let todos = event.target.closest(".todos");
-        if (!todos || event.target.classList.contains("todo-list-item")){
+        if (!todos || event.target.classList.contains("todo-list-item")) {
             this.#editTodoFormContainer.style.display = "none";
             this.#editTodoForm.reset();
-            if (!this.#todoModel.isTodayCurrentProject()){
+            if (!this.#todoModel.isTodayCurrentProject()) {
                 this.#addTodoListItem.style.display = "block";
             }
         }

@@ -22,7 +22,7 @@ export default class TodoProject {
         // todo is now contained in this project
         todo.containingProject = this;
 
-
+        return todoPosition;
 
     }
 

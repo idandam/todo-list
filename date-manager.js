@@ -46,6 +46,7 @@ class DateManager {
         if (date instanceof Date){
             return date.toLocaleDateString();
         }
+        return "No date";
     }
 }
 

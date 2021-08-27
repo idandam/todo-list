@@ -61,9 +61,9 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     addTodo(todo, project = this.#currentProject) {
-        project.add(todo);
+        let position = project.add(todo);
         this.#updateSpecialProjects("add", todo.dueDate, todo);
-        this.publish(TOPICS.todoAdded, todo);
+        this.publish(TOPICS.todoAdded, {todo, position});
 
     }
 

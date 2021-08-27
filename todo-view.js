@@ -14,6 +14,9 @@ export default class TodoView extends AbstractSubscriber {
     #currentProject;
     #customProjects;
     #addProjectBtn;
+    #addTodoListItem
+    #editTodoForm
+    #editTodoFormContainer
 
     #projectContent;
 
@@ -39,39 +42,57 @@ export default class TodoView extends AbstractSubscriber {
         this.#addProjectBtn = document.querySelector(".add-project-btn")
         this.#projectContent = document.querySelector(".project-content");
         this.#todos = document.querySelector(".todos");
+        this.#editTodoForm = this.#todos.querySelector(".edit-todo-form");
+        this.#addTodoListItem = this.#todos.querySelector(".add-todo-list-item");
+        this.#editTodoFormContainer = this.#todos.querySelector(".edit-todo-list-item");
 
         this.#currentProject = this.#constantProjects.firstElementChild.nextElementSibling;
         this.#currentProject.classList.add("current-project");
+        // Don't allow adding todos to today's todo list.
+        // Remove the option to add a todo.
+        this.#toggleAddTodoDisplay("none");
         this.#projectContent.querySelector("h3").innerHTML = this.#todoModel.currentProject.name;
 
         this.#populateTodos(this.#todoModel.currentProject.todos);
+        console.log("in constructor", this.#todos.children.length)
         this.#addListeners();
     }
 
+    #toggleAddTodoDisplay(isTodayCurrentProject) {
+        let addTodoListItem = document.querySelector(".add-todo-list-item");
+
+        if (isTodayCurrentProject) {
+            addTodoListItem.style.display = "none";
+        }
+        else {
+            addTodoListItem.style.display = "block";
+        }
+    }
+    /**
+     * Add a todo list item in his position according to the way todos are sorted in the model
+     * @param {Object} data an object of the form {todo, postion}
+     */
     onTodoAdded(data) {
-        if (data instanceof Todo){
-            let todoListItem = document.createElement("li");
-            let titleContainer = document.createElement("div");
-            let priorityDateContainer =document.createElement("div");
-            let title = document.createElement("span");
-            let priority = document.createElement("span");
-            let date = document.createElement("span");
-
-            title.append(data.title);
-            priority.append(data.priority);
-            date.append(dateManager.toDateString(data.dueDate));
-
-            titleContainer.append(title);
-            priorityDateContainer.append(date,priority);
-
-            todoListItem.classList.add("todo-list-item");
-            todoListItem.append(titleContainer, priorityDateContainer);
-            this.#todos.prepend(todoListItem);
-
+        if (data.todo instanceof Todo) {
+            let todoListItem = this.#createTodoStructure();
+            this.#injectTodoDetails(todoListItem, data.todo);
+            this.#todos.children[data.position].before(todoListItem);
 
         }
     }
 
+    #injectTodoDetails(todoListItem, todo) {
+        todoListItem.querySelector(".todo-list-item-title").innerHTML = todo.title;
+        todoListItem.querySelector(".todo-list-item-date").innerHTML = dateManager.toDateString(todo.dueDate);
+        todoListItem.querySelector(".todo-list-item-priority").innerHTML = todo.priority;
+        
+    }
+
+    #createTodoStructure() {
+        let todoListItemTemplate = this.#todos.querySelector("template");
+        return todoListItemTemplate.content.cloneNode(true);
+        
+    }
     /**
      * Depends on the target, perform the related operation. 
      * @param {*} event click event in side the todos list
@@ -117,10 +138,17 @@ export default class TodoView extends AbstractSubscriber {
         }.bind(this);
 
         // Prepare to display the form
-        form.elements.title.value = "";
-        form.elements.description.value = "";
+        this.#resetEditTodoForm();
+        
         this.#assignDisplayValue(addTodoListItem, formContainer, "none", "block");
-       
+
+    }
+
+    #resetEditTodoForm(){
+        this.#editTodoForm.reset();
+        for (let priority of this.#editTodoForm.querySelector(".edit-todo-priorities-list").children){
+            priority.classList.remove("chosen");
+        }
     }
     /**
      * get the priority that the user clicked on and use setPriority closure to set the priority in the caller
@@ -138,7 +166,7 @@ export default class TodoView extends AbstractSubscriber {
             // Return if the user didn't click on a priority or this priority already marked as chosen
             if (!priority || priority.classList.contains("chosen"))
                 return false;
-            
+
             let targetIndex = priorities.indexOf(priority);
             priority.classList.add("chosen");
             priorities[(targetIndex + 1) % 3].classList.remove("chosen");
@@ -165,6 +193,7 @@ export default class TodoView extends AbstractSubscriber {
 
     /* **** */
     #populateTodos(todos) {
+        /*
         let todoListItem, title, date;
         for (let todo of todos) {
             todoListItem = document.createElement("li");
@@ -180,6 +209,7 @@ export default class TodoView extends AbstractSubscriber {
             todoListItem.classList.add("todo-list-item");
             this.#todos.append(todoListItem);
         }
+        */
     }
 
 
@@ -189,6 +219,9 @@ export default class TodoView extends AbstractSubscriber {
             this.#currentProject = this.#projectsQueue.splice(0, 1)[0];
             this.#currentProject.classList.add("current-project");
             this.#projectContent.querySelector("h3").innerHTML = data.name;
+            this.#toggleAddTodoDisplay(this.#todoModel.isTodayCurrentProject());
+
+
             //TODO update todos for the current project
         }
     }
@@ -206,11 +239,23 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #addListeners() {
+        document.addEventListener("click", this.#onDocumentClick.bind(this))
         this.#addProjectBtn.addEventListener("click", this.onClickAddProject.bind(this));
         this.#projects.addEventListener("click", this.onClickChangeCurrentProject.bind(this));
         this.#todos.addEventListener("click", this.onTodosClick.bind(this));
-    
+
     }
+    #onDocumentClick(event){
+        let todos = event.target.closest(".todos");
+        if (!todos || event.target.classList.contains("todo-list-item")){
+            this.#editTodoFormContainer.style.display = "none";
+            this.#editTodoForm.reset();
+            if (!this.#todoModel.isTodayCurrentProject()){
+                this.#addTodoListItem.style.display = "block";
+            }
+        }
+    }
+
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
             let li = document.createElement("li");
@@ -227,7 +272,7 @@ export default class TodoView extends AbstractSubscriber {
     onProjectSorted(data) {
         console.log(data);
     }
-    
+
     onTodoRemoved(data) {
         console.log(data);
     }

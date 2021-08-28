@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
+    <script src="https://kit.fontawesome.com/3542926ff6.js" crossorigin="anonymous"></script>
     <title>Todo List</title>
 </head>
 
@@ -39,6 +40,7 @@
                 <template>
                     <li class="todo-list-item" data-id="">
                         <div class="todo-list-item-title-container">
+                            <i class="far fa-circle"></i>
                             <span class="todo-list-item-title"></span>
                         </div>
                         <div class="todo-list-item-priority-date-container">
@@ -51,8 +53,8 @@
                     <form class="edit-todo-form">
                         <div class="edit-todo-area">
                             <div class="edit-todo-area-input">
-                                <input type="text" name="title" class="edit-todo-title" placeholder="title..." required></input>
-                                <textarea name="description" class="edit-todo-description" rows="5" placeholder="description..."></textarea>
+                                <input type="text" name="title" class="edit-todo-title" placeholder="title" required></input>
+                                <textarea name="description" class="edit-todo-description" rows="5" placeholder="description"></textarea>
                             </div>
                             <div class="edit-todo-area-date-priority">
                                 <input type="date" name="date" class="edit-todo-date"></input>

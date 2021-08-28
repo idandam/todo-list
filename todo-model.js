@@ -73,7 +73,7 @@ export default class TodoModel extends AbstractTodoModel {
         if (data) {
             this.#updateSpecialProjects("remove", data.todo.dueDate, id);
             this.publish(TOPICS.todoRemoved, data.position);
-            return data;
+            return data.todo;
         }
 
     }

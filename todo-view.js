@@ -58,6 +58,13 @@ export default class TodoView extends AbstractSubscriber {
         this.#addListeners();
     }
 
+   /**
+    * Assuming data is the position of the todo to be removed
+    */
+    onTodoRemoved(data) {
+        this.#todos.children[data].remove();
+    }
+
     #toggleAddTodoDisplay(isTodayCurrentProject) {
         let addTodoListItem = document.querySelector(".add-todo-list-item");
 
@@ -103,15 +110,20 @@ export default class TodoView extends AbstractSubscriber {
      * @param {*} event click event in side the todos list
      */
     onTodosClick(event) {
-        let addTodoListItem = this.#getContainingListItem(event.target);
-        if (addTodoListItem) {
-            // If the user wants to add a new todo
-            if (addTodoListItem.classList.contains("add-todo-list-item")) {
-                this.#addTodo(addTodoListItem);
-            }
-            // Else if the user wants to expand an existing todo
-            else {
-                //TODO - expand todo to show details and edit mode
+        if (event.target.tagName === "I"){
+            this.#todoController.removeTodo(event.target.closest("li").dataset.id);
+        }
+        else{
+            let addTodoListItem = this.#getContainingListItem(event.target);
+            if (addTodoListItem) {
+                // If the user wants to add a new todo
+                if (addTodoListItem.classList.contains("add-todo-list-item")) {
+                    this.#addTodo(addTodoListItem);
+                }
+                // Else if the user wants to expand an existing todo
+                else {
+                    //TODO - expand todo to show details and edit mode
+                }
             }
         }
     }
@@ -194,13 +206,13 @@ export default class TodoView extends AbstractSubscriber {
         element2.style.display = value2;
 
     }
-    /* TODO this method is good. Test it When the time is right.
+    // TODO this method is good. Test it When the time is right.
     #populateTodos(todos) {
-        for (let todo of todos){
-            this.#todos.append(this.#createTodoListItem(todo));
-        }    
+      //  for (let todo of todos){
+      //      this.#todos.append(this.#createTodoListItem(todo));
+      //  }    
     }
-    */
+    
 
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject && this.#projectsQueue.length > 0) {
@@ -262,9 +274,7 @@ export default class TodoView extends AbstractSubscriber {
         console.log(data);
     }
 
-    onTodoRemoved(data) {
-        console.log(data);
-    }
+    
     onTodoUpdated(data) {
         console.log(data);
     }
@@ -403,10 +413,7 @@ export default class TodoView extends AbstractSubscriber {
     }
 
 
-    clickRemoveTodo(id) {
-        this.#todoController.removeTodo(id);
-    }
-
+    
 
     clickCheckTodo(id) {
         this.#todoController.checkTodo(id);

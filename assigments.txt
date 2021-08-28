@@ -1,5 +1,6 @@
 
 
+* expand todo list item when user clicks on it
+
 * add a clear() method for a TodoProject
 
-* use tamplates for a list item in the View ?

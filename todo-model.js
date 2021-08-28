@@ -184,4 +184,7 @@ export default class TodoModel extends AbstractTodoModel {
         return Todo.defaultPriority;
     }
 
+    getTodoById(id){
+        return this.#currentProject.getTodoById(id);
+    }
 }

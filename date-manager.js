@@ -48,6 +48,10 @@ class DateManager {
         }
         return "No date";
     }
+
+    equals(d1 ,d2){
+        return d1.getTime() === d2.getTime();
+    }
 }
 
 let instance = new DateManager();

@@ -17,7 +17,7 @@ export default class TodoView extends AbstractSubscriber {
     #addTodoListItem
     #editTodoForm
     #editTodoFormContainer
-
+    #priorityList
     #projectContent;
 
     #projectsQueue;
@@ -45,16 +45,16 @@ export default class TodoView extends AbstractSubscriber {
         this.#editTodoForm = this.#todos.querySelector(".edit-todo-form");
         this.#addTodoListItem = this.#todos.querySelector(".add-todo-list-item");
         this.#editTodoFormContainer = this.#todos.querySelector(".edit-todo-list-item");
+        this.#priorityList = document.querySelector(".edit-todo-priorities-list");
 
         this.#currentProject = this.#constantProjects.firstElementChild.nextElementSibling;
         this.#currentProject.classList.add("current-project");
         // Don't allow adding todos to today's todo list.
         // Remove the option to add a todo.
-        this.#toggleAddTodoDisplay("none");
+        this.#toggleAddTodoDisplay(this.#todoModel.isTodayCurrentProject());
         this.#projectContent.querySelector("h3").innerHTML = this.#todoModel.currentProject.name;
 
         this.#populateTodos(this.#todoModel.currentProject.todos);
-        console.log("in constructor", this.#todos.children.length)
 
         this.#editTodoForm.querySelector(".edit-todo-area").onclick = (event) => {
             event.preventDefault();
@@ -72,13 +72,12 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #toggleAddTodoDisplay(isTodayCurrentProject) {
-        let addTodoListItem = document.querySelector(".add-todo-list-item");
 
         if (isTodayCurrentProject) {
-            addTodoListItem.style.display = "none";
+            this.#addTodoListItem.style.display = "none";
         }
         else {
-            addTodoListItem.style.display = "block";
+            this.#addTodoListItem.style.display = "block";
         }
     }
     /**
@@ -121,23 +120,45 @@ export default class TodoView extends AbstractSubscriber {
             this.#todoController.removeTodo(event.target.closest("li").dataset.id);
         }
         else {
-            let addTodoListItem = this.#getContainingListItem(event.target);
+            let listItem = this.#getContainingListItem(event.target);
             // If the user clicked on a todo 
-            if (addTodoListItem) {
+            if (listItem) {
                 // If the user wants to add a new todo
-                if (addTodoListItem.classList.contains("add-todo-list-item")) {
+                if (listItem.classList.contains("add-todo-list-item")) {
                     this.#addTodo();
                     event.preventDefault();
                     event.stopPropagation();
                 }
                 // Else if the user wants to expand an existing todo
                 else {
-                    //TODO - expand todo to show details and edit mode
-                    addTodoListItem.style.display = "none"
-                    addTodoListItem.after(this.#editTodoFormContainer);
-                    this.#addTodoListItem.style.display = "none";
-                    this.#editTodoFormContainer.style.display = "block";
+                    let todo = this.#todoModel.getTodoById(listItem.dataset.id);
+                    this.#editTodoForm.elements.title.value = todo.title;
+                    this.#editTodoForm.elements.description.value = todo.description;
+                    this.#editTodoForm.elements.date.value = dateManager.toInputDateFormat(todo.dueDate);
+                    for (let priority of this.#priorityList.children) {
+                        if (priority.firstChild.firstChild.nodeValue === todo.priority) {
+                            priority.classList.add("chosen");
+                        }
+                    }
+                    this.#handlePriorityClick();
 
+                    this.#editTodoForm.elements.submit.onclick = function (event) {
+                        let title = this.#editTodoForm.elements.title.value?.trim();
+                        if (title) {
+                            this.#todoController.removeTodo(listItem.dataset.id);
+                            this.#todoController.addTodo(new Todo(title, this.#editTodoForm.elements.description.value,
+                                this.#priorityList.dataset.priority, this.#editTodoForm.elements.date.valueAsDate));
+                        }
+
+                        this.#hideEditTodoForm();
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                    }.bind(this);
+
+                    listItem.style.display = "none"
+                    listItem.after(this.#editTodoFormContainer);
+                    this.#showEditTodoForm();
 
                 }
             }
@@ -148,26 +169,23 @@ export default class TodoView extends AbstractSubscriber {
      * 
      */
     #addTodo() {
-        let currentPriority = this.#todoModel.getDefaultPriority();
-        // Using closure in second argument
-        this.#handlePriorityClick(priority => currentPriority = priority );
 
-        this.#editTodoForm.onsubmit = function (event) {
+        this.#handlePriorityClick();
+
+        this.#editTodoForm.elements.submit.onclick = function (event) {
             let title = this.#editTodoForm.elements.title.value?.trim();
             if (title) {
-                this.#todoController.addTodo(new Todo(title, this.#editTodoForm.elements.description.value, 
-                    currentPriority, this.#editTodoForm.elements.date.valueAsDate));
+                this.#todoController.addTodo(new Todo(title, this.#editTodoForm.elements.description.value,
+                    this.#priorityList.dataset.priority, this.#editTodoForm.elements.date.valueAsDate));
             }
 
             this.#hideEditTodoForm();
             event.preventDefault();
+            event.stopPropagation();
 
         }.bind(this);
 
-        this.#editTodoForm.elements.submit.onclick = function (event) {
-            this.#hideEditTodoForm();
-            event.stopPropagation();
-        }
+
 
         this.#editTodoForm.elements.cancel.onclick = function (event) {
             this.#hideEditTodoForm();
@@ -178,14 +196,14 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-    
+
     /**
      * get the priority that the user clicked on and use setPriority closure to set the priority in the caller
      * @param {Function} setPriority 
      */
-    #handlePriorityClick(setPriority) {
+    #handlePriorityClick() {
         // Get the priorities list
-        let priorityList = this.#editTodoForm.querySelector(".edit-todo-priorities-list");
+        let priorityList = this.#priorityList;
         // Get the priorities list elements as an array
         let priorities = Array.from(priorityList.children);
         // When the user click on a priority it will change color for it and remove color for the other two priorities
@@ -199,24 +217,14 @@ export default class TodoView extends AbstractSubscriber {
             priority.classList.add("chosen");
             priorities[(targetIndex + 1) % 3].classList.remove("chosen");
             priorities[(targetIndex + 2) % 3].classList.remove("chosen");
-            setPriority(priority.firstChild.firstChild.nodeValue);
+            priorityList.dataset.priority = priority.firstChild.firstChild.nodeValue;
 
 
         }
 
     }
-    /**
-     * 
-     * @param {HTMLElement} element1 
-     * @param {HTMLElement} element2 
-     * @param {String} value1 display value for the style property of element1
-     * @param {String} value2 display value for the style property of element2
-     */
-    #assignDisplayValue(element1, element2, value1, value2) {
-        element1.style.display = value1;
-        element2.style.display = value2;
 
-    }
+
     // TODO this method is good. Test it When the time is right.
     #populateTodos(todos) {
         //  for (let todo of todos){
@@ -264,19 +272,20 @@ export default class TodoView extends AbstractSubscriber {
         }
     }
 
-    #showEditTodoForm(){
+    #showEditTodoForm() {
         this.#editTodoFormContainer.style.display = "block";
-        this.#addTodoListItem.style.display = "none"; 
+        this.#addTodoListItem.style.display = "none";
     }
 
     #hideEditTodoForm() {
         this.#editTodoFormContainer.style.display = "none";
 
         this.#editTodoForm.reset();
+        this.#editTodoForm.dataset.priority = this.#todoModel.getDefaultPriority();
         for (let priority of this.#editTodoForm.querySelector(".edit-todo-priorities-list").children) {
             priority.classList.remove("chosen");
         }
-        
+
         if (!this.#todoModel.isTodayCurrentProject()) {
             this.#addTodoListItem.style.display = "block";
         }

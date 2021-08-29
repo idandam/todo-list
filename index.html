@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-    <script src="https://kit.fontawesome.com/3542926ff6.js" crossorigin="anonymous"></script>
+   <!-- <script src="https://kit.fontawesome.com/3542926ff6.js" crossorigin="anonymous"></script> -->
     <title>Todo List</title>
 </head>
 
@@ -40,7 +40,7 @@
                 <template>
                     <li class="todo-list-item" data-id="">
                         <div class="todo-list-item-title-container">
-                            <i class="far fa-circle"></i>
+                            <i>O</i>
                             <span class="todo-list-item-title"></span>
                         </div>
                         <div class="todo-list-item-priority-date-container">
@@ -60,7 +60,7 @@
                                 <input type="date" name="date" class="edit-todo-date"></input>
                                 <div class="edit-todo-priorities-container">
                                     <span>Priority:</span>
-                                        <ul class="edit-todo-priorities-list">
+                                        <ul class="edit-todo-priorities-list" data-priority="Low">
                                             <li class="priority-high"><span>High</span></li>
                                             <li class="priority-medium"><span>Medium</span></li>
                                             <li class="priority-low"><span>Low</span></li>
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <div class="edit-todo-form-btns">
-                            <input type="submit" name="submit" value="Done"></input>
+                            <input type="button" name="submit" value="Done"></input>
                             <input type="button" name="cancel" value="Cancel"></input>
                         </div>
                     </form>

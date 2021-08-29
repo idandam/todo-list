@@ -6,10 +6,10 @@ class DateManager {
 
     #today
 
-    constructor(){
+    constructor() {
         this.#today = new Date();
         // Not interested with time
-        this.#today.setHours(0,0,0,0);
+        this.#today.setHours(0, 0, 0, 0);
     }
     /**
      * 
@@ -28,7 +28,7 @@ class DateManager {
      * @returns Today's date.
      */
     getTodayDate() {
-        
+
         return this.#today;
     }
 
@@ -42,15 +42,28 @@ class DateManager {
             this.#today.getDate() + options.days, 0, 0, 0, 0);
     }
 
-    toDateString(date){
-        if (date instanceof Date){
+    toDateString(date) {
+        if (date instanceof Date) {
             return date.toLocaleDateString();
         }
         return "No date";
     }
 
-    equals(d1 ,d2){
+    equals(d1, d2) {
         return d1.getTime() === d2.getTime();
+    }
+
+    toInputDateFormat(date) {
+        if (date instanceof Date) {
+            let dateParts = [1 + date.getMonth() + "", date.getDate() + ""];
+            for (let i = 0; i < 2; i++) {
+                if (dateParts[i].length < 2) {
+                    dateParts[i] = "0" + dateParts[i];
+                }
+            }
+            return [date.getFullYear(), ...dateParts].join("-");
+        }
+        return date;
     }
 }
 

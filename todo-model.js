@@ -88,14 +88,10 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-    // TODO 
-    updateTodo(id, properties) {
-        if (properties) {
-            for (let prop in properties) {
-                todo[prop] = properties[prop];
-            }
-            (TOPICS.todoUpdated, { todo, properties });
-        }
+  
+    updateTodo(id, updatedTodo) {
+        this.removeTodo(id);
+        this.addTodo(updatedTodo);
     }
 
     changeCurrentProject(projectName) {

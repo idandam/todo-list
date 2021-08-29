@@ -145,9 +145,11 @@ export default class TodoView extends AbstractSubscriber {
                     this.#editTodoForm.elements.submit.onclick = function (event) {
                         let title = this.#editTodoForm.elements.title.value?.trim();
                         if (title) {
-                            this.#todoController.removeTodo(listItem.dataset.id);
-                            this.#todoController.addTodo(new Todo(title, this.#editTodoForm.elements.description.value,
-                                this.#priorityList.dataset.priority, this.#editTodoForm.elements.date.valueAsDate));
+                            let updatedTodo = new Todo(title, this.#editTodoForm.elements.description.value,
+                                this.#priorityList.dataset.priority, this.#editTodoForm.elements.date.valueAsDate)
+                            
+                                this.#todoController.updateTodo(listItem.dataset.id, updatedTodo);
+                            
                         }
 
                         this.#hideEditTodoForm();

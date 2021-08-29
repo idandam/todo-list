@@ -36,8 +36,8 @@ export default class TodoController extends AbstractController {
         this.#todoModel.checkTodo(id);
     }
     
-    updateTodo(id, properties) {
-        this.#todoModel.updateTodo(id, properties);
+    updateTodo(id, updatedTodo) {
+        this.#todoModel.updateTodo(id, updatedTodo);
     }
     
     removeCheckedTodos() {

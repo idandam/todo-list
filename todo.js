@@ -1,3 +1,5 @@
+import dateManager from "./date-manager.js"
+
 export default class Todo {
     #id
     #title;
@@ -19,7 +21,7 @@ export default class Todo {
         this.#id = Todo.#fetchUniqueId();
         this.#title = title;
         this.#description = description;
-        this.#dueDate = (dueDate instanceof Date && dueDate) || "No Date";
+        this.#dueDate = dateManager.getProperTodoDate(dueDate);
         this.#priority = priority;
         this.#isChecked = false;
     }

@@ -6,6 +6,10 @@ class DateManager {
 
     #today
 
+    static get noDateValue(){
+        return "No date";
+    }
+
     constructor() {
         this.#today = new Date();
         // Not interested with time
@@ -46,7 +50,7 @@ class DateManager {
         if (date instanceof Date) {
             return date.toLocaleDateString();
         }
-        return "No date";
+        return DateManager.noDateValue;
     }
 
     equals(d1, d2) {
@@ -55,14 +59,29 @@ class DateManager {
 
     toInputDateFormat(date) {
         if (date instanceof Date) {
-            let dateParts = [1 + date.getMonth() + "", date.getDate() + ""];
-            for (let i = 0; i < 2; i++) {
-                if (dateParts[i].length < 2) {
-                    dateParts[i] = "0" + dateParts[i];
-                }
-            }
-            return [date.getFullYear(), ...dateParts].join("-");
+            return date.toISOString().split("T")[0];
         }
+        return date;
+    }
+
+    getProperTodoDate(date) {
+
+        if (!date ||
+            !(date instanceof Date) ||
+            (Math.trunc(date.getFullYear() / 1000)) !== (Math.trunc(this.#today.getFullYear() / 1000)) ||
+            date < this.#today) {
+            return DateManager.noDateValue;;
+        }
+
+        return date;
+
+    }
+
+    resetHours(date){
+        if (date instanceof Date){
+            date.setHours(0,0,0,0);
+        }
+
         return date;
     }
 }

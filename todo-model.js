@@ -66,12 +66,25 @@ export default class TodoModel extends AbstractTodoModel {
         this.publish(TOPICS.todoAdded, { todo, position });
 
     }
-
+    //TODO - you eed to publish the new length of the todos array and in the view
+    // implement the number of todos in a project in the nav 
     removeTodo(id) {
         // data is of the form { todo, position }
-        let data = this.#currentProject.remove(id)
+        let data = this.#currentProject.remove(id);
         if (data) {
-            this.#updateSpecialProjects("remove", data.todo.dueDate, id);
+            // If we removed the todo from a dpecial project like "Today" or "Next 7 days"
+            // then also ermove the todo from his containing project (that is a custom project);
+            if (this.#currentProject === this.#projects[TodoModel.#specialProjects.today] ||
+                this.#currentProject === this.#projects[TodoModel.#specialProjects.nextSevenDays]) {
+                data.todo.containingProject.remove(id);
+            }
+            // Else we removed the todo from a custom project
+            // so remove him also from a special project if he currently located in one.
+            else {
+                this.#updateSpecialProjects("remove", data.todo.dueDate, id);   
+            }
+            // In either case publish the position of the removed todo from the current project
+            // and return the removed todo
             this.publish(TOPICS.todoRemoved, data.position);
             return data.todo;
         }
@@ -88,7 +101,7 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-  
+
     updateTodo(id, updatedTodo) {
         this.removeTodo(id);
         this.addTodo(updatedTodo);
@@ -180,7 +193,7 @@ export default class TodoModel extends AbstractTodoModel {
         return Todo.defaultPriority;
     }
 
-    getTodoById(id){
+    getTodoById(id) {
         return this.#currentProject.getTodoById(id);
     }
 }

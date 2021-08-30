@@ -20,7 +20,9 @@ export default class TodoProject {
         // Add the todo in his appropriate position in this project
         this.#todos.splice(todoPosition, 0, todo);
         // todo is now contained in this project
-        todo.containingProject = this;
+        if (!todo.containingProject){
+            todo.containingProject = this;
+        }
 
         return todoPosition;
 

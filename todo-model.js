@@ -74,8 +74,7 @@ export default class TodoModel extends AbstractTodoModel {
         if (data) {
             // If we removed the todo from a dpecial project like "Today" or "Next 7 days"
             // then also ermove the todo from his containing project (that is a custom project);
-            if (this.#currentProject === this.#projects[TodoModel.#specialProjects.today] ||
-                this.#currentProject === this.#projects[TodoModel.#specialProjects.nextSevenDays]) {
+            if (this.isCurrentProjectSpecial()) {
                 data.todo.containingProject.remove(id);
             }
             // Else we removed the todo from a custom project
@@ -115,8 +114,9 @@ export default class TodoModel extends AbstractTodoModel {
         }
     }
 
-    isTodayCurrentProject() {
-        return this.#currentProject === this.#projects[1];
+    isCurrentProjectSpecial() {
+        return this.#currentProject === this.#projects[TodoModel.#specialProjects.today] ||
+        this.#currentProject === this.#projects[TodoModel.#specialProjects.nextSevenDays];
     }
 
     get currentProject() {

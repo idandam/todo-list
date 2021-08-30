@@ -21,6 +21,7 @@ export default class TodoView extends AbstractSubscriber {
     #projectContent;
 
     #projectsQueue;
+    #hiddenTodo
 
     #todos
 
@@ -51,7 +52,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#currentProject.classList.add("current-project");
         // Don't allow adding todos to today's todo list.
         // Remove the option to add a todo.
-        this.#toggleAddTodoDisplay(this.#todoModel.isTodayCurrentProject());
+        this.#toggleAddTodoDisplay(this.#todoModel.isCurrentProjectSpecial());
         this.#projectContent.querySelector("h3").innerHTML = this.#todoModel.currentProject.name;
 
         this.#populateTodos(this.#todoModel.currentProject.todos);
@@ -71,9 +72,9 @@ export default class TodoView extends AbstractSubscriber {
         this.#todos.children[data].remove();
     }
 
-    #toggleAddTodoDisplay(isTodayCurrentProject) {
+    #toggleAddTodoDisplay(isCurrentProjectSpecial) {
 
-        if (isTodayCurrentProject) {
+        if (isCurrentProjectSpecial) {
             this.#addTodoListItem.style.display = "none";
         }
         else {
@@ -115,79 +116,84 @@ export default class TodoView extends AbstractSubscriber {
      * @param {EventTarget} event click event in side the todos list
      */
     onTodosClick(event) {
-        // If the user clicked on the delete todo icon then delete the todo
-        if (event.target.tagName === "I") {
-            this.#todoController.removeTodo(event.target.closest("li").dataset.id);
-        }
-        //  Else we check if the user clicked on a list item inside the todo list
-        
-        else {
-            let listItem = this.#getContainingListItem(event.target);
-            if (listItem) {
+        // The user will have to quit the edit todos form totake actions on a todo list item
+        if (!this.#isEditTodoFormDisplayed()) {
+            // If the user clicked on the delete todo icon then delete the todo
+            if (event.target.tagName === "I") {
+                this.#todoController.removeTodo(event.target.closest("li").dataset.id);
+            }
+            //  Else we check if the user clicked on a list item inside the todo list
 
-                /* We split to cases depends on each type of list item: */
-                
-                // If the user wants to add a new todo
-                if (listItem.classList.contains("add-todo-list-item")) {
-                    this.#addTodo();
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                // Else if the user wants to expand an existing todo
-                else {
-                    // Get the details of the clicked todo to expand
-                    let todo = this.#todoModel.getTodoById(listItem.dataset.id);
-                    this.#editTodoForm.elements.title.value = todo.title;
-                    this.#editTodoForm.elements.description.value = todo.description;
-                    this.#editTodoForm.elements.date.value = dateManager.toInputDateFormat(todo.dueDate);
-                    // Highlight the todo's priority in the UI
-                    for (let priority of this.#priorityList.children) {
-                        if (priority.firstChild.firstChild.nodeValue === todo.priority) {
-                            priority.classList.add("chosen");
-                            // Save the priority in the dataset of the priority list since
-                            // if the user will not choose a priority the the priority will have
-                            // the value "LOW" next time the user expand this todo, 
-                            // because after the user submits the form, we set the priority 
-                            // in the dataset to the default value for priorities, which is the value "Low".
-                            // 
-                            this.#priorityList.dataset.priority = todo.priority;
-                        }
+            else {
+                let listItem = this.#getContainingListItem(event.target);
+                if (listItem) {
+
+                    /* We split to cases depends on each type of list item: */
+
+                    // If the user wants to add a new todo
+                    if (listItem.classList.contains("add-todo-list-item")) {
+                        this.#addTodo();
+
                     }
-                    
-                    this.#editTodoForm.elements.submit.onclick = function (event) {
-                        let title = this.#editTodoForm.elements.title.value?.trim();
-                        if (title) {
-                            // TODO - the view shouldn't know about Todo. Change this.
-                            let updatedTodo = new Todo(title, this.#editTodoForm.elements.description.value,
-                                this.#priorityList.dataset.priority, dateManager.resetHours(this.#editTodoForm.elements.date.valueAsDate))
-                            
-                                this.#todoController.updateTodo(listItem.dataset.id, updatedTodo);
-                            
+                    // Else if the user wants to expand an existing todo
+                    else {
+                        // Get the details of the clicked todo to expand
+                        let todo = this.#todoModel.getTodoById(listItem.dataset.id);
+                        this.#editTodoForm.elements.title.value = todo.title;
+                        this.#editTodoForm.elements.description.value = todo.description;
+                        this.#editTodoForm.elements.date.value = dateManager.toInputDateFormat(todo.dueDate);
+                        // Highlight the todo's priority in the UI
+                        for (let priority of this.#priorityList.children) {
+                            if (priority.firstChild.firstChild.nodeValue === todo.priority) {
+                                priority.classList.add("chosen");
+                                // Save the priority in the dataset of the priority list since
+                                // if the user will not choose a priority the the priority will have
+                                // the value "LOW" next time the user expand this todo, 
+                                // because after the user submits the form, we set the priority 
+                                // in the dataset to the default value for priorities, which is the value "Low".
+                                // 
+                                this.#priorityList.dataset.priority = todo.priority;
+                            }
                         }
 
-                        this.#hideEditTodoForm();
-                        // TODO - no need to prevent default
-                        event.preventDefault();
-                        event.stopPropagation();
+                        this.#editTodoForm.elements.submit.onclick = function (event) {
+                            let title = this.#editTodoForm.elements.title.value?.trim();
+                            if (title) {
+                                // TODO - the view shouldn't know about Todo. Change this.
+                                let updatedTodo = new Todo(title, this.#editTodoForm.elements.description.value,
+                                    this.#priorityList.dataset.priority, dateManager.resetHours(this.#editTodoForm.elements.date.valueAsDate))
 
-                    }.bind(this);
+                                this.#todoController.updateTodo(listItem.dataset.id, updatedTodo);
 
-                    this.#editTodoForm.elements.cancel.onclick = function(event){
-                        this.#addTodoListItem.before(this.#editTodoFormContainer);
-                        this.#hideEditTodoForm();
-                        // TODO this will get back to the less specific classList class that has a flex display
-                        // but this line don't looks good.
-                        listItem.style.display = ""
-                        event.stopPropagation();
-                    }.bind(this);
+                            }
 
-                    listItem.after(this.#editTodoFormContainer);
-                    listItem.style.display = "none"
-                    this.#showEditTodoForm();
+                            this.#hideEditTodoForm();
+                            // TODO - no need to prevent default
+                            event.preventDefault();
+                            event.stopPropagation();
 
+                        }.bind(this);
+
+                        this.#editTodoForm.elements.cancel.onclick = function (event) {
+                            this.#addTodoListItem.before(this.#editTodoFormContainer);
+                            this.#hideEditTodoForm();
+                            // TODO this will get back to the less specific classList class that has a flex display
+                            // but this line don't looks good.
+                            listItem.style.display = ""
+                            event.stopPropagation();
+                        }.bind(this);
+
+                        listItem.after(this.#editTodoFormContainer);
+                        listItem.style.display = "none"
+                        this.#hiddenTodo = listItem;
+                        this.#showEditTodoForm();
+
+                    }
                 }
             }
         }
+        event.preventDefault();
+        event.stopPropagation();
     }
     /**
      * Add a new todo
@@ -220,7 +226,9 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-
+    #isEditTodoFormDisplayed() {
+        return this.#editTodoFormContainer.style.display != "none";
+    }
     /**
      * get the priority that the user clicked on and use setPriority closure to set the priority in the caller
      * @param {Function} setPriority 
@@ -248,18 +256,18 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-    #clearCurrentProjectTodos(){
+    #clearCurrentProjectTodos() {
         let element = this.#todos.querySelector("template");
-        while (element.previousElementSibling){
-            element.previousElementSibling.remove();   
+        while (element.previousElementSibling) {
+            element.previousElementSibling.remove();
         }
     }
 
     // TODO this method is good. Test it When the time is right.
     #populateTodos(todos) {
-          for (let i = todos.length - 1;  i >= 0; i--){
-              this.#todos.prepend(this.#createTodoListItem(todos[i]));
-          }    
+        for (let i = todos.length - 1; i >= 0; i--) {
+            this.#todos.prepend(this.#createTodoListItem(todos[i]));
+        }
     }
 
 
@@ -270,7 +278,7 @@ export default class TodoView extends AbstractSubscriber {
             this.#clearCurrentProjectTodos();
             this.#currentProject.classList.add("current-project");
             this.#projectContent.querySelector("h3").innerHTML = data.name;
-            this.#toggleAddTodoDisplay(this.#todoModel.isTodayCurrentProject());
+            this.#toggleAddTodoDisplay(this.#todoModel.isCurrentProjectSpecial());
             this.#populateTodos(this.#todoModel.currentProject.todos);
         }
     }
@@ -298,7 +306,15 @@ export default class TodoView extends AbstractSubscriber {
         let nav = event.target.closest(".nav-projects");
         if (nav) {
             this.#hideEditTodoForm();
+            // If this condition is true then the user expanded a todo and then clicked on the nav 
+            // the todo displayed in this phase is "none". But now the form will be closed so we need to display
+            // the hidden todo list item
+            if (this.#hiddenTodo) {
+                this.#hiddenTodo.style.display = "";
+                this.#hiddenTodo = null;
+            }
         }
+
     }
 
     #showEditTodoForm() {
@@ -315,12 +331,14 @@ export default class TodoView extends AbstractSubscriber {
             priority.classList.remove("chosen");
         }
 
-        if (!this.#todoModel.isTodayCurrentProject()) {
+        if (!this.#todoModel.isCurrentProjectSpecial()) {
             this.#addTodoListItem.style.display = "block";
         }
     }
 
-
+    #displayTodo(todo) {
+        todo.style.display = "";
+    }
 
     onProjectAdded(data) {
         if (data instanceof TodoProject) {

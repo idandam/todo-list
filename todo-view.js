@@ -155,25 +155,12 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #expandTodo(todoListItem) {
-        
-        // Get the details of the clicked todo to expand
-        let todo = this.#todoModel.getTodoById(todoListItem.dataset.id);
-        this.#editTodoForm.elements.title.value = todo.title;
-        this.#editTodoForm.elements.description.value = todo.description;
-        this.#editTodoForm.elements.date.value = dateManager.toInputDateFormat(todo.dueDate);
-        // Highlight the todo's priority in the UI
-        for (let priority of this.#priorityList.children) {
-            if (priority.firstChild.firstChild.nodeValue === todo.priority) {
-                priority.classList.add("chosen");
-                // Save the priority in the dataset of the priority list since
-                // if the user will not choose a priority the the priority will have
-                // the value "LOW" next time the user expand this todo, 
-                // because after the user submits the form, we set the priority 
-                // in the dataset to the default value for priorities, which is the value "Low".
-                // 
-                this.#priorityList.dataset.priority = todo.priority;
-            }
-        }
+        let todoProperties = this.#todoController.getTodoProperties(todoListItem.dataset.id);
+
+        if (!todoProperties)
+            return;
+
+       this.#populateEditTodoForm(todoProperties);
 
         this.#editTodoForm.elements.submit.onclick = function (event) {
             let title = this.#editTodoForm.elements.title.value?.trim();
@@ -206,6 +193,25 @@ export default class TodoView extends AbstractSubscriber {
         todoListItem.style.display = "none"
         this.#hiddenTodo = todoListItem;
         this.#showEditTodoForm();
+    }
+
+    #populateEditTodoForm(todoProperties){
+        this.#editTodoForm.elements.title.value = todoProperties.title;
+        this.#editTodoForm.elements.description.value = todoProperties.description;
+        this.#editTodoForm.elements.date.value = dateManager.toInputDateFormat(todoProperties.date);
+        // Highlight the todo's priority in the UI
+        for (let priority of this.#priorityList.children) {
+            if (priority.firstChild.firstChild.nodeValue === todoProperties.priority) {
+                priority.classList.add("chosen");
+                // Save the priority in the dataset of the priority list since
+                // if the user will not choose a priority the the priority will have
+                // the value "LOW" next time the user expand this todo, 
+                // because after the user submits the form, we set the priority 
+                // in the dataset to the default value for priorities, which is the value "Low".
+                // 
+                this.#priorityList.dataset.priority = todoProperties.priority;
+            }
+        }
     }
 
     /**

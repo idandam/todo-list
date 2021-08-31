@@ -58,4 +58,11 @@ export default class TodoController extends AbstractController {
         }
     }
 
+    getTodoProperties(id){
+        let todo = this.#todoModel.getTodoById(id);
+        if (todo){
+            return {title:todo.title, description:todo.description, date:todo.dueDate, priority: todo.priority};
+        }
+    }
+
 }

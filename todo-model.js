@@ -63,9 +63,14 @@ export default class TodoModel extends AbstractTodoModel {
 
     addTodo(todo, project = this.#currentProject) {
         let position = project.add(todo);
-        this.#updateSpecialProjects("add", todo.dueDate, todo);
-        // If we are adding a todo the the current project then publish only the todo and the todo's position
-        if (project === this.#currentProject) {
+        let specialProject = this.#updateSpecialProjects("add", todo.dueDate, todo);
+        // If added a todo the the current project then publish only the todo and the todo's position
+        // If either condition is true then we added the todo to the current project. The first case 
+        // The first condition is true when the project is a custom project.
+        // The second condition is true when we updated a todo from a special project and the date still holds
+        // for that project so first the todo will be added to the containing project and then to the 
+        // current special project. 
+        if (project === this.#currentProject || specialProject === this.#currentProject ) {
             this.publish(TOPICS.todoAdded, { todo, position });
         }// Else we are adding the todo to another project (not to the currently displayed project in the view),
         // so add this information to the publish data.
@@ -202,9 +207,11 @@ export default class TodoModel extends AbstractTodoModel {
         if (dueDate instanceof Date) {
             if (this.#projects[TodoModel.#specialProjects.today].dateRange.includes(dueDate)) {
                 this.#projects[TodoModel.#specialProjects.today][op](todoData);
+                return this.#projects[TodoModel.#specialProjects.today];
             }
             else if (this.#projects[TodoModel.#specialProjects.nextSevenDays].dateRange.includes(dueDate)) {
                 this.#projects[TodoModel.#specialProjects.nextSevenDays][op](todoData);
+                return this.#projects[TodoModel.#specialProjects.nextSevenDays];
             }
         }
     }

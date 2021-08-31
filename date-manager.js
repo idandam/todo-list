@@ -6,7 +6,7 @@ class DateManager {
 
     #today
 
-    static get noDateValue(){
+    static get noDateValue() {
         return "No date";
     }
 
@@ -59,7 +59,15 @@ class DateManager {
 
     toInputDateFormat(date) {
         if (date instanceof Date) {
-            return date.toISOString().split("T")[0];
+            let dateParts = [1 + date.getMonth() + "", date.getDate() + ""];
+
+            dateParts.forEach((datePart, index, dateParts) => {
+                if (dateParts[index].length < 2) {
+                    dateParts[index] = "0" + datePart;
+                }
+            });
+
+            return [date.getFullYear(), ...dateParts].join("-");
         }
         return date;
     }
@@ -77,9 +85,9 @@ class DateManager {
 
     }
 
-    resetHours(date){
-        if (date instanceof Date){
-            date.setHours(0,0,0,0);
+    resetHours(date) {
+        if (date instanceof Date) {
+            date.setHours(0, 0, 0, 0);
         }
 
         return date;

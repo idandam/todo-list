@@ -46,7 +46,7 @@ export default class Todo {
         if (!dueDate instanceof Date || dueDate !== "No Date")
             throw new Error("dueDate must be a Date object or equals to the string 'No Date'.");
 
-        dueDate.setHours(0,0,0,0);
+        dueDate.setHours(0, 0, 0, 0);
         this.#dueDate = dueDate;
     }
 
@@ -95,7 +95,7 @@ export default class Todo {
 
         return this.#dueDate;
     }
-    static get defaultPriority(){
+    static get defaultPriority() {
         return Todo.#defaultPriority;
     }
 }

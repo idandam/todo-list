@@ -1,6 +1,7 @@
 
 import TodoProject from "./todo-project.js";
 import TodoView from "./todo-view.js";
+import Todo from "./todo.js";
 import AbstractController from "./abstract-controller.js";
 
 export default class TodoController extends AbstractController {
@@ -24,8 +25,9 @@ export default class TodoController extends AbstractController {
     sortProject(sortName) {
         this.#todoModel.sortProject(sortName);
     }
-    addTodo(todo) {
-        this.#todoModel.addTodo(todo);
+    addTodo(todoProperties) {
+        this.#todoModel.addTodo(new Todo(todoProperties.title, todoProperties.description,
+             todoProperties.priority, todoProperties.date));
     }
 
     removeTodo(id){
@@ -48,10 +50,10 @@ export default class TodoController extends AbstractController {
     changeCurrentProject(projectName){
         this.#todoModel.changeCurrentProject(projectName);
     }
-    moveTodoToProject(todoId, projectName){
+    moveTodoToProject(id, projectName){
         let project = this.#todoModel.getProjectByName(projectName);
         if (project) {
-            let todo = this.#todoModel.removeTodo(todoId);
+            let todo = this.#todoModel.removeTodo(id);
             if (todo) {
                 this.#todoModel.addTodo(todo, project);
             }

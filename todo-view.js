@@ -160,7 +160,7 @@ export default class TodoView extends AbstractSubscriber {
         if (!todoProperties)
             return;
 
-       this.#populateEditTodoForm(todoProperties);
+        this.#populateEditTodoForm(todoProperties);
 
         this.#editTodoForm.elements.submit.onclick = function (event) {
             let title = this.#editTodoForm.elements.title.value?.trim();
@@ -195,7 +195,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#showEditTodoForm();
     }
 
-    #populateEditTodoForm(todoProperties){
+    #populateEditTodoForm(todoProperties) {
         this.#editTodoForm.elements.title.value = todoProperties.title;
         this.#editTodoForm.elements.description.value = todoProperties.description;
         this.#editTodoForm.elements.date.value = dateManager.toInputDateFormat(todoProperties.date);
@@ -214,6 +214,20 @@ export default class TodoView extends AbstractSubscriber {
         }
     }
 
+    #createTodoProperties() {
+        let title = this.#editTodoForm.elements.title.value?.trim();
+        if (title) {
+
+            return {
+                title,
+                description: this.#editTodoForm.elements.description.value,
+                priority: this.#priorityList.dataset.priority,
+                date: dateManager.resetHours(this.#editTodoForm.elements.date.valueAsDate)
+            };
+
+        }
+    }
+
     /**
      * Add a new todo
      * 
@@ -221,11 +235,9 @@ export default class TodoView extends AbstractSubscriber {
     #addTodo() {
 
         this.#editTodoForm.elements.submit.onclick = function (event) {
-            let title = this.#editTodoForm.elements.title.value?.trim();
-            if (title) {
-                //TODO - the view shouldn't know about Todo. 
-                this.#todoController.addTodo(new Todo(title, this.#editTodoForm.elements.description.value,
-                    this.#priorityList.dataset.priority, dateManager.resetHours(this.#editTodoForm.elements.date.valueAsDate)));
+            let todoProperties =  this.#createTodoProperties();
+            if (todoProperties){
+                this.#todoController.addTodo(todoProperties);
             }
 
             this.#hideEditTodoForm();

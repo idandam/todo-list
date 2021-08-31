@@ -1,6 +1,6 @@
 
 
-* expand todo list item when user clicks on it
+* move todo to a different project  (can't move from/into special project) 
 
 * add a clear() method for a TodoProject
 

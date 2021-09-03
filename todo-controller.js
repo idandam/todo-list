@@ -3,6 +3,7 @@ import TodoProject from "./todo-project.js";
 import TodoView from "./todo-view.js";
 import Todo from "./todo.js";
 import AbstractController from "./abstract-controller.js";
+import pubsub from "./pubsub.js";
 
 export default class TodoController extends AbstractController {
     #todoView
@@ -51,13 +52,7 @@ export default class TodoController extends AbstractController {
         this.#todoModel.changeCurrentProject(projectName);
     }
     moveTodoToProject(id, projectName){
-        let project = this.#todoModel.getProjectByName(projectName);
-        if (project) {
-            let todo = this.#todoModel.removeTodo(id);
-            if (todo) {
-                this.#todoModel.addTodo(todo, project);
-            }
-        }
+       this.#todoModel.moveTodoToProject(id, projectName);
     }
 
     getTodoProperties(id){

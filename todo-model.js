@@ -70,7 +70,7 @@ export default class TodoModel extends AbstractTodoModel {
         // The second condition is true when we updated a todo from a special project and the date still holds
         // for that project so first the todo will be added to the containing project and then to the 
         // current special project. 
-        if (project === this.#currentProject || specialProject === this.#currentProject ) {
+        if (project === this.#currentProject || specialProject === this.#currentProject) {
             this.publish(TOPICS.todoAdded, { todo, position });
         }// Else we are adding the todo to another project (not to the currently displayed project in the view),
         // so add this information to the publish data.
@@ -129,6 +129,17 @@ export default class TodoModel extends AbstractTodoModel {
             this.addTodo(updatedTodo);
         }
 
+    }
+
+    moveTodoToProject(id, projectName) {
+        let project = this.getProjectByName(projectName);
+        if (project) {
+            let todo = this.removeTodo(id);
+            if (todo) {
+                this.addTodo(todo, project);
+            }
+        }
+        pubsub.publish(TOPICS.todoMoved);
     }
 
     changeCurrentProject(projectName) {
@@ -222,5 +233,9 @@ export default class TodoModel extends AbstractTodoModel {
 
     getTodoById(id) {
         return this.#currentProject.getTodoById(id);
+    }
+    isSpecialProject(projectName){
+        return projectName === this.#projects[TodoModel.#specialProjects.today].name ||
+        projectName === this.#projects[TodoModel.#specialProjects.nextSevenDays].name;
     }
 }

@@ -21,7 +21,9 @@ export default class TodoView extends AbstractSubscriber {
     #projectContent;
 
     #projectsQueue;
-    #hiddenTodo
+    #hiddenTodo;
+
+    #selectProject;
 
     #todos
 
@@ -47,6 +49,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#addTodoListItem = this.#todos.querySelector(".add-todo-list-item");
         this.#editTodoFormContainer = this.#todos.querySelector(".edit-todo-list-item");
         this.#priorityList = document.querySelector(".edit-todo-priorities-list");
+        this.#selectProject = document.querySelector(".select-projects");
 
         this.#currentProject = this.#constantProjects.firstElementChild.nextElementSibling;
         this.#currentProject.classList.add("current-project");
@@ -62,7 +65,20 @@ export default class TodoView extends AbstractSubscriber {
             event.stopPropagation();
         };
 
+
+        this.#selectProject.add(this.#createOption("Inbox"));
+
         this.#addListeners();
+    }
+
+    onClickRemoveProject(event) {
+        if (confirm("Are you sure you want to remove this project?")) {
+            this.#todoController.removeProject(/*TODO*/);
+        }
+    }
+
+    onProjectRemoved(data) {
+        console.log(data);
     }
 
     /**
@@ -142,19 +158,36 @@ export default class TodoView extends AbstractSubscriber {
                         this.#addTodo();
 
                     }
-                    // Else if the user wants to expand an existing todo
+                    // Else if the user wants to expand an existing todo or move a todo to a different project
                     else {
-                        this.#expandTodo(todoListItem);
+                        this.#onTodoClick(todoListItem, event);
 
                     }
                 }
             }
         }
+
+
         event.preventDefault();
         event.stopPropagation();
     }
 
-    #expandTodo(todoListItem) {
+    #onTodoClick(todoListItem, event) {
+        let select = event.target.closest("select");
+        if (select) {
+            this.#showMoveTodoOptions(todoListItem);
+        }
+        else {
+            this.#updateTodo(todoListItem);
+        }
+    }
+
+    #showMoveTodoOptions(todoListItem) {
+
+
+    }
+
+    #updateTodo(todoListItem) {
         let todoProperties = this.#todoController.getTodoProperties(todoListItem.dataset.id);
 
         if (!todoProperties)
@@ -235,8 +268,8 @@ export default class TodoView extends AbstractSubscriber {
     #addTodo() {
 
         this.#editTodoForm.elements.submit.onclick = function (event) {
-            let todoProperties =  this.#createTodoProperties();
-            if (todoProperties){
+            let todoProperties = this.#createTodoProperties();
+            if (todoProperties) {
                 this.#todoController.addTodo(todoProperties);
             }
 
@@ -300,19 +333,52 @@ export default class TodoView extends AbstractSubscriber {
             this.#todos.prepend(this.#createTodoListItem(todos[i]));
         }
     }
+    /**
+     * Handle the project selection menu when we switch to a different project in the nav.
+     * @param {String} movedFrom the name of the project the user is leaving
+     * @param {String} movedTo  the name of the project the user navigates to
+     */
+    #handleProjectSelectionMenu(movedFrom, movedTo) {
 
+        if (!this.#todoModel.isSpecialProject(movedFrom)) {
+            // Add the project that the user is leaving to the menu, since the user will have 
+            // the option to move todos to that project
+            this.#selectProject.add(this.#createOption(movedFrom));
+        }
+        if (!this.#todoModel.isSpecialProject(movedTo)) {
+            // Remove the project that the user navigates to from the menu, since there is no point in 
+            // moving todos from a project to itself 
+            let optionToRemove;
+            for (let option of this.#selectProject.options) {
+                if (option.value === movedTo) {
+                    optionToRemove = option;
+                    break;
+                }
+            }
+            if (optionToRemove) {
+                optionToRemove.remove();
+            }
+        }
+
+    }
 
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject && this.#projectsQueue.length > 0) {
+
+            this.#handleProjectSelectionMenu(document.querySelector("li.current-project > button").textContent, data.name);
+
             this.#currentProject.classList.remove("current-project");
             this.#currentProject = this.#projectsQueue.splice(0, 1)[0];
+
             this.#clearCurrentProjectTodos();
             this.#currentProject.classList.add("current-project");
             this.#projectContent.querySelector("h3").innerHTML = data.name;
             this.#toggleAddTodoDisplay(this.#todoModel.isCurrentProjectSpecial());
             this.#populateTodos(this.#todoModel.currentProject.todos);
+
         }
     }
+
 
     onClickChangeCurrentProject(event) {
         let project = this.#getContainingListItem(event.target);
@@ -327,13 +393,32 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #addListeners() {
-        document.addEventListener("click", this.#onDocumentClick.bind(this))
+        document.addEventListener("click", this.onDocumentClick.bind(this))
         this.#addProjectBtn.addEventListener("click", this.onClickAddProject.bind(this));
         this.#projects.addEventListener("click", this.onClickChangeCurrentProject.bind(this));
         this.#todos.addEventListener("click", this.onTodosClick.bind(this));
         this.#priorityList.addEventListener("click", this.onPriorityClick());
+        this.#selectProject.addEventListener("change", this.onChangeProjectSelection.bind(this));
     }
-    #onDocumentClick(event) {
+
+    onChangeProjectSelection(event) {
+        if (this.#hiddenTodo) {
+            this.#selectProject.form.elements.submit.onclick = this.#selectProject.form.elements.cancel.onclick = null;
+            this.#todoController.moveTodoToProject(this.#hiddenTodo.dataset.id, event.target.value);
+        }
+    }
+
+    onTodoMoved() {
+
+        this.#hiddenTodo.style.display = "";
+        this.#hiddenTodo = null;
+
+        this.#hideEditTodoForm();
+
+
+    }
+
+    onDocumentClick(event) {
         let nav = event.target.closest(".nav-projects");
         if (nav) {
             this.#hideEditTodoForm();
@@ -344,6 +429,8 @@ export default class TodoView extends AbstractSubscriber {
                 this.#hiddenTodo.style.display = "";
                 this.#hiddenTodo = null;
             }
+
+
         }
         // This condition will be true if the user expanded a todo and then went to a different project.
         // in this case we need to put the form container in his original position.
@@ -376,19 +463,30 @@ export default class TodoView extends AbstractSubscriber {
         todo.style.display = "";
     }
 
+    #createOption(projectName) {
+        let option = document.createElement("option");
+        option.value = option.text = projectName;
+        return option;
+
+    }
+
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
             let li = document.createElement("li");
-            let button = document.createElement("button");
-            button.append(data.name);
-            li.append(button);
+            let projectBtn = document.createElement("button");
+            projectBtn.append(data.name);
+            li.append(projectBtn);
+
             this.#customProjects.prepend(li);
+
+            // add the an option with the project name to the select element
+            let option = this.#createOption(data.name);
+            this.#selectProject.add(option);
+
         }
 
     }
-    onProjectRemoved(data) {
-        console.log(data);
-    }
+
     onProjectSorted(data) {
         console.log(data);
     }
@@ -527,9 +625,6 @@ export default class TodoView extends AbstractSubscriber {
         pubsub.unsubscribe(topic, callback);
     }
 
-    clickRemoveProject(name) {
-        this.#todoController.removeProject(name);
-    }
 
 
 

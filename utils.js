@@ -8,6 +8,7 @@ const TOPICS = {
     todoChecked: "TODO CHECKED",
     checkedTodosRemoved: "CHECKED TODOS REMOVED",
     currentProjectChanged: "CURRENT PROJECT CHANGED",
+    todoMoved: "TODO MOVED",
 }
 
 export {TOPICS};

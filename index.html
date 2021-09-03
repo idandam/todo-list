@@ -27,7 +27,14 @@
                 <h2>Projects</h2>
                 <button class="add-project-btn">&#10133</button>
             </div>
-            <ul class="custom-projects"></ul>
+            <ul class="custom-projects">
+                <template>
+                    <div class="project-settings">
+                        <button class="edit-project">E</button>
+                        <button class="remove-project">X</button>
+                    </div>
+                </template>
+            </ul>
         </nav>
         <div class="project-content">
             <div class="project-content-header">
@@ -50,7 +57,7 @@
                     </li>
                 </template>
                 <li class="edit-todo-list-item">
-                    <form class="edit-todo-form">
+                    <form id="edit-todo-form" class="edit-todo-form">
                         <div class="edit-todo-area">
                             <div class="edit-todo-area-input">
                                 <input type="text" name="title" class="edit-todo-title" placeholder="title" required></input>
@@ -58,6 +65,9 @@
                             </div>
                             <div class="edit-todo-area-date-priority">
                                 <input type="date" name="date" class="edit-todo-date"></input>
+                                <select name="select-projects" id="select-projects" class="select-projects" form="edit-todo-form">
+                                    <option selected disabled>Move to</option>
+                                </select>
                                 <div class="edit-todo-priorities-container">
                                     <span>Priority:</span>
                                         <ul class="edit-todo-priorities-list" data-priority="Low">

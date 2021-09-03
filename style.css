@@ -203,3 +203,8 @@ li{
 .project-settings-btn{
     color: blueviolet;
 }
+
+.project-list-item{
+    display:flex;
+    justify-content: space-between;
+}

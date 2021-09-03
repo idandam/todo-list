@@ -401,6 +401,8 @@ export default class TodoView extends AbstractSubscriber {
         this.#selectProject.addEventListener("change", this.onChangeProjectSelection.bind(this));
     }
 
+   
+
     onChangeProjectSelection(event) {
         if (this.#hiddenTodo) {
             this.#selectProject.form.elements.submit.onclick = this.#selectProject.form.elements.cancel.onclick = null;
@@ -429,7 +431,6 @@ export default class TodoView extends AbstractSubscriber {
                 this.#hiddenTodo.style.display = "";
                 this.#hiddenTodo = null;
             }
-
 
         }
         // This condition will be true if the user expanded a todo and then went to a different project.
@@ -472,12 +473,26 @@ export default class TodoView extends AbstractSubscriber {
 
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
-            let li = document.createElement("li");
+            let projectListItem = document.createElement("li");
             let projectBtn = document.createElement("button");
             projectBtn.append(data.name);
-            li.append(projectBtn);
+            projectListItem.append(projectBtn);
 
-            this.#customProjects.prepend(li);
+            // Add the settings components for the project
+            let projectSettings = document.querySelector(".custom-projects > template").content.cloneNode(true).children[0];
+            projectSettings.style.display = "none";
+
+            projectListItem.addEventListener("mouseover", () => {
+                projectSettings.style.display = "block";
+            });
+            projectListItem.addEventListener("mouseleave", () => {
+                projectSettings.style.display = "none";
+            });
+
+            projectListItem.append(projectSettings, projectSettings);
+
+            projectListItem.classList.add("project-list-item");
+            this.#customProjects.prepend(projectListItem);
 
             // add the an option with the project name to the select element
             let option = this.#createOption(data.name);

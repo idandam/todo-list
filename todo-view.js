@@ -19,6 +19,7 @@ export default class TodoView extends AbstractSubscriber {
     #editTodoFormContainer
     #priorityList
     #projectContent;
+    #projectContentHeader
 
  
     #hiddenTodo;
@@ -50,6 +51,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#editTodoFormContainer = this.#todos.querySelector(".edit-todo-list-item");
         this.#priorityList = document.querySelector(".edit-todo-priorities-list");
         this.#projectSelectionMenu = document.querySelector(".select-projects");
+        this.#projectContentHeader = document.querySelector(".project-content-header");
 
         this.#currentProject = this.#constantProjects.firstElementChild.nextElementSibling;
         this.#currentProject.classList.add("current-project");
@@ -68,20 +70,23 @@ export default class TodoView extends AbstractSubscriber {
 
         this.#projectSelectionMenu.add(this.#createOption("Inbox"));
 
+        this.#setSortSelection();
+
         this.#addListeners();
     }
+
+    onProjectSorted(data) {
+        
+        this.#setSortSelection(data.sortName);
+        this.#clearCurrentProjectTodos();
+        this.#populateTodos(data.todos);
+
+    }
+
 
     onProjectRemoved(data) {
         this.#customProjects.children[data].remove();
     }
-
-    onClickRemoveProject(event) {
-        if (confirm("Are you sure you want to remove this project?")) {
-            this.#todoController.removeProject(/*TODO*/);
-        }
-    }
-
-    
 
     /**
      * Assuming data is the position of the todo to be removed
@@ -375,20 +380,35 @@ export default class TodoView extends AbstractSubscriber {
 
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject) {
-
             this.#handleProjectSelectionMenu(document.querySelector("li.current-project > button").textContent, data.name);
 
             this.#currentProject.classList.remove("current-project");
             this.#currentProject = this.#getProjectByName(data.name);
+
             this.#clearCurrentProjectTodos();
+
             this.#currentProject.classList.add("current-project");
+
             this.#projectContent.querySelector("h3").textContent = data.name;
+
             this.#toggleAddTodoDisplay(this.#todoModel.isCurrentProjectSpecial());
+
             this.#populateTodos(this.#todoModel.currentProject.todos);
+
+            this.#setSortSelection();
 
         }
     }
 
+    #setSortSelection(sortName = this.#todoModel.getCurrentProjectSortName()){
+        let options = this.#projectContentHeader.querySelector(".sort-project-menu").options;
+
+        for (let option of options){
+            if (option.value === sortName){
+                option.selected = true;
+            }
+        }
+    }
 
     onClickChangeCurrentProject(event) {
         let project = this.#getContainingListItem(event.target);
@@ -409,8 +429,16 @@ export default class TodoView extends AbstractSubscriber {
         this.#priorityList.addEventListener("click", this.onPriorityClick());
         this.#projectSelectionMenu.addEventListener("change", this.onChangeProjectSelection.bind(this));
         this.#customProjects.addEventListener("click", this.onCustomProjectsClick.bind(this));
+        this.#projectContentHeader.addEventListener("change", this.onProjectContentHeaderChange.bind(this));
     }
 
+
+    onProjectContentHeaderChange(event){
+        let select = event.target.closest("select");
+        if (select && select.classList.contains("sort-project-menu")){
+            this.#todoController.sortProject(event.target.value);
+        }
+    }
 
     onCustomProjectsClick(event) {
         let projectSettings = event.target.closest(".project-settings");
@@ -569,10 +597,7 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-    onProjectSorted(data) {
-        console.log(data);
-    }
-
+    
 
     onTodoUpdated(data) {
         console.log(data);

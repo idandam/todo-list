@@ -59,7 +59,7 @@ export default class TodoModel extends AbstractTodoModel {
     sortProject(sortName) {
 
         if (this.#currentProject.sort(sortName)) {
-            this.publish(TOPICS.projectSorted, { sortName, currProject: this.#currentProject });
+            this.publish(TOPICS.projectSorted, { sortName, todos: this.#currentProject.todos });
         }
     }
 
@@ -246,5 +246,9 @@ export default class TodoModel extends AbstractTodoModel {
             this.getProjectByName(projectName).name = updatedProjectName;
             pubsub.publish(TOPICS.projectNameChanged, {projectName, updatedProjectName});
         }
+    }
+
+    getCurrentProjectSortName(){
+        return this.#currentProject.getCompareBehaviorName();
     }
 }

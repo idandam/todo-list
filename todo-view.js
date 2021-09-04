@@ -539,6 +539,7 @@ export default class TodoView extends AbstractSubscriber {
     #showEditTodoForm() {
         this.#editTodoFormContainer.style.display = "block";
         this.#addTodoListItem.style.display = "none";
+        this.#projectContentHeader.querySelector(".sort-project-menu").disabled = true;
     }
 
     #hideEditTodoForm() {
@@ -553,6 +554,8 @@ export default class TodoView extends AbstractSubscriber {
         if (!this.#todoModel.isCurrentProjectSpecial()) {
             this.#addTodoListItem.style.display = "block";
         }
+
+        this.#projectContentHeader.querySelector(".sort-project-menu").disabled = false;
     }
 
     #displayTodo(todo) {

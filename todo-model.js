@@ -240,4 +240,11 @@ export default class TodoModel extends AbstractTodoModel {
         return projectName === this.#projects[TodoModel.#specialProjects.today].name ||
         projectName === this.#projects[TodoModel.#specialProjects.nextSevenDays].name;
     }
+
+    changeProjectName(projectName, updatedProjectName){
+        if (!this.getProjectByName(updatedProjectName)){
+            this.getProjectByName(projectName).name = updatedProjectName;
+            pubsub.publish(TOPICS.projectNameChanged, {projectName, updatedProjectName});
+        }
+    }
 }

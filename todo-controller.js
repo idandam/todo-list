@@ -61,5 +61,10 @@ export default class TodoController extends AbstractController {
             return {title:todo.title, description:todo.description, date:todo.dueDate, priority: todo.priority};
         }
     }
+    
+    changeProjectName(projectName, updatedProjectName){
+        this.#todoModel.changeProjectName(projectName, updatedProjectName);
+
+    }
 
 }

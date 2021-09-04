@@ -20,7 +20,7 @@ export default class TodoView extends AbstractSubscriber {
     #priorityList
     #projectContent;
 
-    #projectsQueue;
+ 
     #hiddenTodo;
 
     #projectSelectionMenu;
@@ -32,7 +32,7 @@ export default class TodoView extends AbstractSubscriber {
         super();
         this.#todoController = controller;
         this.#todoModel = model;
-        this.#projectsQueue = [];
+     
         this.#subscribeAll();
         this.createView();
 
@@ -56,7 +56,7 @@ export default class TodoView extends AbstractSubscriber {
         // Don't allow adding todos to today's todo list.
         // Remove the option to add a todo.
         this.#toggleAddTodoDisplay(this.#todoModel.isCurrentProjectSpecial());
-        this.#projectContent.querySelector("h3").innerHTML = this.#todoModel.currentProject.name;
+        this.#projectContent.querySelector("h3").textContent = this.#todoModel.currentProject.name;
 
         this.#populateTodos(this.#todoModel.currentProject.todos);
 
@@ -364,21 +364,25 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
+    #getProjectByName(projectName){
+        let projects = this.#projects.querySelectorAll("li");
+        for (let project of projects){
+            if (project.firstElementChild.textContent === projectName){
+                return project;
+            }
+        }
+    }
+
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject) {
 
             this.#handleProjectSelectionMenu(document.querySelector("li.current-project > button").textContent, data.name);
 
             this.#currentProject.classList.remove("current-project");
-            this.#currentProject = this.#projectsQueue.splice(0, 1)[0];
-            // This can happen if we removed the current project.
-            // In this case the behavior I chosed is that we'll switch to today's project
-            if (!this.#currentProject){
-                this.#currentProject = document.querySelector(".constant-projects").firstElementChild.nextElementSibling;
-            }
+            this.#currentProject = this.#getProjectByName(data.name);
             this.#clearCurrentProjectTodos();
             this.#currentProject.classList.add("current-project");
-            this.#projectContent.querySelector("h3").innerHTML = data.name;
+            this.#projectContent.querySelector("h3").textContent = data.name;
             this.#toggleAddTodoDisplay(this.#todoModel.isCurrentProjectSpecial());
             this.#populateTodos(this.#todoModel.currentProject.todos);
 
@@ -389,8 +393,7 @@ export default class TodoView extends AbstractSubscriber {
     onClickChangeCurrentProject(event) {
         let project = this.#getContainingListItem(event.target);
         if (project && this.#currentProject !== project) {
-            this.#projectsQueue.push(project);
-            this.#todoController.changeCurrentProject(project.querySelector("button").innerText);
+            this.#todoController.changeCurrentProject(project.querySelector("button").textContent);
         }
     }
 
@@ -412,21 +415,53 @@ export default class TodoView extends AbstractSubscriber {
     onCustomProjectsClick(event) {
         let projectSettings = event.target.closest(".project-settings");
         if (projectSettings) {
+            let projectListItem = event.target.closest("li");
             let button = event.target.closest("button");
             if (projectSettings.contains(button)) {
-                if (button.classList.contains(".edit-project-name")) {
-                    this.#editProjectName(button);
+                if (button.classList.contains("edit-project-name")) {
+                    this.#editProjectName(projectListItem);
                 }
                 else {
-                    let projectListItem = event.target.closest("li");
                     this.#removeProject(projectListItem);
                 }
             }
         }
     }
 
-    #editProjectName(projectListItem) {
+    onProjectNameChanged(data){
+        let customProjects = this.#customProjects.querySelectorAll("li");
+        for (let customProject of customProjects){
+            if (customProject.firstElementChild.textContent === data.projectName){
+                customProject.firstElementChild.textContent = data.updatedProjectName;
+                if (customProject === this.#currentProject){
+                    this.#projectContent.querySelector("h3").textContent = data.updatedProjectName;
+                }
+            }
+        }
+    }
 
+    #editProjectName(projectListItem) {
+        let form = document.querySelector(".one-input-project-form");
+        let formContainer = this.#attachFormContainer(form, "Change project name", "form-container");
+        let modalCover = this.#createModalCover();
+
+         form.onsubmit = function (event) {
+            let value = form.elements.text.value;
+            if (value) {
+                this.#todoController.changeProjectName(projectListItem.firstElementChild.textContent, value);
+            }
+            this.#hideModalForm(modalCover, form, formContainer);
+            event.preventDefault();
+            event.stopPropagation();
+        }.bind(this);
+
+        form.cancel.onclick = function (event) {
+            this.#hideModalForm(modalCover, form, formContainer);
+            event.preventDefault();
+            event.stopPropagation();
+        }.bind(this);
+
+        this.#showModalForm(modalCover, form);
     }
 
     #removeProject(projectListItem) {
@@ -562,18 +597,20 @@ export default class TodoView extends AbstractSubscriber {
         // Get the project name from the form.
         // Let controller handle logic given the name of the project.
         // Quit the form and hide the modal cover.
-        form.onsubmit = function () {
+        form.onsubmit = function (event) {
             let value = form.elements.text.value;
             if (value) {
                 this.#todoController.addProject(value);
             }
             this.#hideModalForm(modalCover, form, formContainer);
-            return false;
+            event.preventDefault();
+            event.stopPropagation();
         }.bind(this);
 
-        form.cancel.onclick = function () {
+        form.cancel.onclick = function (event) {
             this.#hideModalForm(modalCover, form, formContainer);
-            return false;
+            event.preventDefault();
+            event.stopPropagation();
         }.bind(this);
 
         this.#showModalForm(modalCover, form);

@@ -48,8 +48,10 @@ export default class TodoModel extends AbstractTodoModel {
 
         if (i < this.#projects.length) {
             let [removedProject] = this.#projects.splice(i, 1);
-            let isCurrentProject = removedProject === this.#currentProject;
-            this.publish(TOPICS.projectRemoved, { index: i, isCurrentProject, projectName });
+            if (removedProject === this.#currentProject){
+                this.changeCurrentProject("Today");
+            }
+            this.publish(TOPICS.projectRemoved, i - Object.keys(TodoModel.#specialProjects).length);
         }
 
     }

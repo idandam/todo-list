@@ -1,4 +1,11 @@
 
+:root{
+    --nav-background-color: #f5f5f5;
+    --body-header-background-color: #254552;
+    --project-content-background-color: white;
+  
+}
+
 *, ::before, ::after{
     margin: 0px;
     padding:0px;
@@ -16,7 +23,7 @@ body{
 
 .header{
     display: flex;
-    background-color: black;
+    background-color: var(--body-header-background-color);
     color:white;
     padding:10px
     
@@ -32,43 +39,58 @@ body{
 }
 
 .nav-projects{
-    background-color: gray;
-    width:250px;
-    padding: 20px;
+    background-color: var(--nav-background-color);
+    width:350px;
+    padding: 20px 5px 20px 20px ;
 }
 
 .project-content{
     display: flex;
     flex-direction: column;
-    background-color: cadetblue;
+    background-color: var(--project-content-background-color);
     width: 1000px;
     padding: 30px;
     margin:0 auto;
     
 }
 .project-content-header{
-    background-color: brown;
+    background-color: white;
     width: 100%;
     height:50px;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .footer{
     position: fixed;
     display:flex;
     flex-shrink: 0;
-    background-color: crimson;
+    background-color: var(--body-header-background-color);
     left:0;
     bottom: 0;
     width: 100%;
     align-items: center;
     justify-content: center;
     padding: 10px;
+    color:white
 }
+.footer  i{
+    cursor:pointer;
+    margin-left: 10px;
+    
+}
+
 
 .custom-projects-header{
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    margin-bottom: 5px;
     
+}
+.custom-projects-header > button{
+    padding: 5px;
+    margin-right: 5px;
 }
 
 /* Container for modal prompt forms */
@@ -84,15 +106,21 @@ body{
   }
 
   .form-container{
-      --vwidth: 150px;
+      --vwidth: 350px;
       --vheight: 100px;
-      display:block;
+      display:flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
       position: absolute;
-      background-color: green;
-      width: 150px;
-      height: 100px;
+      background-color: white;
+      width: var(--vwidth);
+      height: var(--vheight);
       left :50%;    
       top: 50%;
+      padding: 10px;
+      border: 1px solid black;
+      border-radius: 5px;
       margin-left: calc(-1/2 * var(--vwidth));
       margin-top: calc(-1/2 * var(--vheight));
       z-index: 1025;
@@ -101,25 +129,40 @@ body{
 
   .one-input-project-form{
       display: none;
-      margin: 5px;
-      background-color: coral;
+      margin: 5px
+       
   }
 
+
   .current-project{
-      background-color: blue;
+      background-color: lightgray;
   }
 
   .todos{
       display:flex;
       flex-direction: column;
   }
+  .todos  li{
+      border-radius: 5px;
+      padding: 10px;
+      cursor:pointer
+      
+  }
+  
+
 
   .todo-list-item,.project-content-header{
     display:flex;
     justify-content: space-between;
-}
+    align-items: center;
+    margin-bottom: 10px;
+    }
 
-.todo-list-item  span{
+select{
+    border: none;
+    
+}
+.todo-list-item  span, i{
     padding-right: 10px;
 }
 
@@ -146,23 +189,25 @@ body{
     margin: 8px 0px;
     width: 100%;
     overflow:scroll;
-    resize: none;
-    
-    
-    
-    
+    resize: none;   
 }
 
 .add-todo-list-item{
     display: block;
     padding-top: 4px;
     padding-bottom: 4px;
+    width: 100%;
 }
 
 .edit-todo-priorities-container{
     display: flex;
     align-items: center;
 }
+
+.edit-todo-priorities-list{
+    display:flex
+}
+
 
 
 .edit-todo-priorities-list > li{
@@ -180,9 +225,9 @@ body{
 
 }
 
-li{
-    list-style-type: none;
-    display: block;
+.xyz{
+    display: flex;
+    
 }
 
 .edit-todo-area-date-priority{
@@ -196,14 +241,76 @@ li{
 }
 
 .chosen{
-    background-color: blueviolet;
+    background-color: lightgray;
 }
 
 .project-settings-btn{
-    color: blueviolet;
+    color: lightgray;
 }
 
 .project-list-item{
     display:flex;
     justify-content: space-between;
+}
+
+li{
+    list-style-type: none;
+    display: block;
+    width: 100%;
+}
+
+li:hover, button:hover{
+    background-color: lightgray;
+}
+button{
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+   
+}
+
+.nav-projects  li{
+    border-radius: 5px;
+    padding: 10px 5px 10px 10px;
+    cursor: pointer;
+    overflow: hidden;
+} 
+
+.fa-github{
+    color: white;
+    font-size: 25px;
+}
+
+.fa-trash-alt{
+    color: black;
+}
+
+.fa-trash-alt:hover, .fa-pen:hover{
+ color: var(--body-header-background-color);
+    
+}
+
+ .nav-projects li > span{
+    display: block;
+    overflow: hidden;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 60px) ;
+    word-break: break-all;
+    
+}
+
+.project-content-header-text{
+    word-break: break-all;
+    overflow: hidden;
+    
+}
+
+.add-todo-btn > span, .add-project-btn, .project-settings i {
+    font-size: 17px;
+}
+
+.select-projects{
+    margin-right: 10px;
 }

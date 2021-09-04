@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-   <!-- <script src="https://kit.fontawesome.com/3542926ff6.js" crossorigin="anonymous"></script> -->
+   <script src="https://kit.fontawesome.com/3542926ff6.js" crossorigin="anonymous"></script> 
     <title>Todo List</title>
 </head>
 
@@ -19,9 +19,9 @@
     <main class="main">
         <nav class="nav-projects">
             <ul class="constant-projects">
-                <li><button>Inbox</button></li>
-                <li><button>Today</button></li>
-                <li><button>Next 7 days</button></li>
+                <li><span>Inbox</span></li>
+                <li><span>Today</span></li>
+                <li><span>Next 7 days</span></li>
             </ul>
             <div class="custom-projects-header">
                 <h2>Projects</h2>
@@ -30,15 +30,15 @@
             <ul class="custom-projects">
                 <template>
                     <div class="project-settings">
-                        <button class="edit-project-name">E</button>
-                        <button class="remove-project">X</button>
+                        <span class="edit-project-name"><i class="fa fa-pen"></i></span>
+                        <span class="remove-project"><i class="fa fa-trash-alt"></i></span>
                     </div>
                 </template>
             </ul>
         </nav>
         <div class="project-content">
             <div class="project-content-header">
-                <h3></h3>
+                <h3 class="project-content-header-text"></h3>
                 <div>
                     <select name="sort-project-menu" class="sort-project-menu">
                         <option selected disabled>Sort by</option>
@@ -51,7 +51,7 @@
                 <template>
                     <li class="todo-list-item" data-id="">
                         <div class="todo-list-item-title-container">
-                            <i>O</i>
+                            <i class="far fa-circle"></i>
                             <span class="todo-list-item-title"></span>
                         </div>
                         <div class="todo-list-item-priority-date-container">
@@ -69,16 +69,18 @@
                             </div>
                             <div class="edit-todo-area-date-priority">
                                 <input type="date" name="date" class="edit-todo-date"></input>
-                                <select name="select-projects" id="select-projects" class="select-projects" form="edit-todo-form">
-                                    <option selected disabled>Move to</option>
-                                </select>
-                                <div class="edit-todo-priorities-container">
-                                    <span>Priority:</span>
-                                        <ul class="edit-todo-priorities-list" data-priority="Low">
-                                            <li class="priority-high"><span>High</span></li>
-                                            <li class="priority-medium"><span>Medium</span></li>
-                                            <li class="priority-low"><span>Low</span></li>
-                                        </ul>
+                                <div class="xyz">
+                                    <select name="select-projects" id="select-projects" class="select-projects" form="edit-todo-form">
+                                        <option selected disabled>Move to</option>
+                                    </select>
+                                    <div class="edit-todo-priorities-container">
+                                        <span>Priority:</span>
+                                            <ul class="edit-todo-priorities-list" data-priority="Low">
+                                                <li class="priority-high"><span>High</span></li>
+                                                <li class="priority-medium"><span>Medium</span></li>
+                                                <li class="priority-low"><span>Low</span></li>
+                                            </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -89,10 +91,10 @@
                     </form>
                 </li>
                 <li class="add-todo-list-item">
-                    <button class="add-todo-btn">
+                    <div class="add-todo-btn">
                         <span>&#10133</span>
                         Add task
-                    </button>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -107,7 +109,10 @@
     </main>
 
     <footer class="footer">
-        My Footer
+        <p>Copyright &copy; idan-grimberg-damri</p>
+        <a href="https://github.com/idan-grimberg-damri" target="=_blank">
+        <i class="fab fa-github" aria-hidden="true"></i>
+    </a>
     </footer>
     <script src="./test.js" type="module"></script>
 </body>

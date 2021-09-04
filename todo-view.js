@@ -380,7 +380,7 @@ export default class TodoView extends AbstractSubscriber {
 
     onCurrentProjectChanged(data) {
         if (data instanceof TodoProject) {
-            this.#handleProjectSelectionMenu(document.querySelector("li.current-project > button").textContent, data.name);
+            this.#handleProjectSelectionMenu(document.querySelector("li.current-project > span").textContent, data.name);
 
             this.#currentProject.classList.remove("current-project");
             this.#currentProject = this.#getProjectByName(data.name);
@@ -413,7 +413,7 @@ export default class TodoView extends AbstractSubscriber {
     onClickChangeCurrentProject(event) {
         let project = this.#getContainingListItem(event.target);
         if (project && this.#currentProject !== project) {
-            this.#todoController.changeCurrentProject(project.querySelector("button").textContent);
+            this.#todoController.changeCurrentProject(project.querySelector("span").textContent);
         }
     }
 
@@ -444,9 +444,9 @@ export default class TodoView extends AbstractSubscriber {
         let projectSettings = event.target.closest(".project-settings");
         if (projectSettings) {
             let projectListItem = event.target.closest("li");
-            let button = event.target.closest("button");
-            if (projectSettings.contains(button)) {
-                if (button.classList.contains("edit-project-name")) {
+            let span = event.target.closest("span");
+            if (projectSettings.contains(span)) {
+                if (span.classList.contains("edit-project-name")) {
                     this.#editProjectName(projectListItem);
                 }
                 else {
@@ -493,8 +493,9 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #removeProject(projectListItem) {
-        if (prompt("Are you sure you want to remove the project?")){
-            this.#todoController.removeProject(projectListItem.firstElementChild.textContent);
+        let projectName = projectListItem.firstElementChild.textContent;
+        if (window.confirm(`Are you sure you want to remove project "${projectName}"?`)){
+            this.#todoController.removeProject(projectName);
         }
     }
 
@@ -572,9 +573,9 @@ export default class TodoView extends AbstractSubscriber {
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
             let projectListItem = document.createElement("li");
-            let projectBtn = document.createElement("button");
-            projectBtn.append(data.name);
-            projectListItem.append(projectBtn);
+            let projectSpan = document.createElement("span");
+            projectSpan.append(data.name);
+            projectListItem.append(projectSpan);
 
             // Add the settings components for the project
             let projectSettings = document.querySelector(".custom-projects > template").content.cloneNode(true).children[0];

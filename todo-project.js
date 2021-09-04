@@ -14,6 +14,8 @@ export default class TodoProject {
 
     }
 
+    
+
     add(todo) {
         // Find todo's appropriate position in this project
         let todoPosition = this.#searchTodoPosition(todo);
@@ -84,6 +86,7 @@ export default class TodoProject {
         return this.#todos;
     }
 
+
     printTodosByDate() {
         let str = "";
         for (let todo of this.#todos) {
@@ -133,6 +136,10 @@ export default class TodoProject {
 
         return finishedAt;
 
+    }
+
+    getCompareBehaviorName(){
+        return this.#compareBehavior.name;
     }
 
 

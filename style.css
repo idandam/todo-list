@@ -5,9 +5,7 @@
     --project-content-background-color: white;
     --form-btn-background-color: #254552;
     --form-btn-hover-background-color: #1d3641;
-    --form-btn-color: white;
-    --form-btn-hover--background-color
-  
+    --form-btn-color: white;  
 }
 
 *, ::before, ::after{
@@ -23,6 +21,7 @@ html, body{
 body{
     display: flex;
     flex-direction: column;
+    font-family: "Raleway", sans-serif;
 }
 
 .header{
@@ -35,6 +34,8 @@ body{
 
 .title-container{
     display: flex;
+    padding-left: 10px;
+
 }
 
 .todo-list-item-title-container{
@@ -168,7 +169,7 @@ body{
       
   }
   
-
+  
 
   .todo-list-item,.project-content-header{
     display:flex;
@@ -282,7 +283,7 @@ li{
     width: 100%;
 }
 
-li:hover, button:hover{
+li:hover:not(.edit-todo-priorities-list li), button:hover{
     background-color: lightgray;
 }
 button{
@@ -336,6 +337,7 @@ button{
 .project-content-header-text{
     word-break: break-all;
     overflow: hidden;
+    font-size: 24px;
     
 }
 
@@ -385,6 +387,33 @@ background-color: var(--form-btn-hover-background-color);
     background-color: #ffaa78;
 }
 
+
 .priority-low{
-    background-color: #feff78;
+    background-color: #e6e6ac;
 }
+
+.priority-high:hover, .priority-medium:hover, .priority-low:hover  {
+    background-color: lightgray;
+}
+
+.vertical-seperator{
+    border-right: 1px solid rgb(230, 228, 228);;
+}
+select{
+    font-size: 20px;
+}
+select:hover{
+    background-color: lightgray;
+    cursor:pointer;
+    border-radius: 1px;
+}
+
+.todo-list-item-priority-date-container{
+    display: flex;
+    align-items: center;
+}
+
+.todo-list-item-date{
+    margin-right: 7px;
+}
+

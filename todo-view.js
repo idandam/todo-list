@@ -129,10 +129,18 @@ export default class TodoView extends AbstractSubscriber {
 
     #injectTodoDetails(todoListItem, todo) {
         todoListItem.dataset.id = todo.id;
-        todoListItem.querySelector(".todo-list-item-title").innerHTML = todo.title;
-        todoListItem.querySelector(".todo-list-item-date").innerHTML = dateManager.toDateString(todo.dueDate);
-        todoListItem.querySelector(".todo-list-item-priority").innerHTML = todo.priority;
+        todoListItem.querySelector(".todo-list-item-title").textContent = todo.title;
+        todoListItem.querySelector(".todo-list-item-date").textContent = dateManager.toDateString(todo.dueDate);
+        todoListItem.querySelector(".todo-list-item-priority").classList.add(this.#getPriorityClass(todo.priority));
 
+    }
+
+    #getPriorityClass(priority){
+        switch(priority){
+            case "High": return "priority-high"; 
+            case "Medium": return "priority-medium"; 
+            case "Low": return "priority-low"; 
+        }
     }
 
     #createTodoStructure() {
@@ -180,6 +188,8 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     #onTodoClick(todoListItem, event) {
+        this.#projectSelectionMenu.style.visibility = "";
+
         let select = event.target.closest("select");
         if (select) {
             this.#showMoveTodoOptions(todoListItem);
@@ -241,7 +251,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#editTodoForm.elements.date.value = dateManager.toInputDateFormat(todoProperties.date);
         // Highlight the todo's priority in the UI
         for (let priority of this.#priorityList.children) {
-            if (priority.firstChild.firstChild.nodeValue === todoProperties.priority) {
+            if (priority.dataset.priority === todoProperties.priority) {
                 priority.classList.add("chosen");
                 // Save the priority in the dataset of the priority list since
                 // if the user will not choose a priority the the priority will have
@@ -294,6 +304,7 @@ export default class TodoView extends AbstractSubscriber {
         }.bind(this);
 
         this.#showEditTodoForm();
+        this.#projectSelectionMenu.style.visibility = "hidden";
 
     }
 
@@ -320,7 +331,7 @@ export default class TodoView extends AbstractSubscriber {
             priority.classList.add("chosen");
             priorities[(targetIndex + 1) % 3].classList.remove("chosen");
             priorities[(targetIndex + 2) % 3].classList.remove("chosen");
-            priorityList.dataset.priority = priority.firstChild.firstChild.nodeValue;
+            priorityList.dataset.priority = priority.dataset.priority;
 
 
         }
@@ -448,6 +459,9 @@ export default class TodoView extends AbstractSubscriber {
             if (projectSettings.contains(span)) {
                 if (span.classList.contains("edit-project-name")) {
                     this.#editProjectName(projectListItem);
+                    // This will prevent from displaying the project's content
+                    // if we are currently displaying other project
+                    event.stopPropagation();
                 }
                 else {
                     this.#removeProject(projectListItem);

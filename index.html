@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-   <script src="https://kit.fontawesome.com/3542926ff6.js" crossorigin="anonymous"></script> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <script src="https://kit.fontawesome.com/3542926ff6.js" crossorigin="anonymous"></script>
     <title>Todo List</title>
 </head>
 
@@ -56,7 +57,7 @@
                         </div>
                         <div class="todo-list-item-priority-date-container">
                             <span class="todo-list-item-date"></span>
-                            <span class="todo-list-item-priority"></span>
+                            <span class="todo-list-item-priority circle"></span>
                         </div>
                     </li>
                 </template>
@@ -64,22 +65,26 @@
                     <form id="edit-todo-form" class="edit-todo-form">
                         <div class="edit-todo-area">
                             <div class="edit-todo-area-input">
-                                <input type="text" name="title" class="edit-todo-title" placeholder="title" required></input>
-                                <textarea name="description" class="edit-todo-description" rows="5" placeholder="description"></textarea>
+                                <input type="text" name="title" class="edit-todo-title" placeholder="title"
+                                    required></input>
+                                <textarea name="description" class="edit-todo-description" rows="5"
+                                    placeholder="description"></textarea>
                             </div>
                             <div class="edit-todo-area-date-priority">
                                 <input type="date" name="date" class="edit-todo-date"></input>
                                 <div class="xyz">
-                                    <select name="select-projects" id="select-projects" class="select-projects" form="edit-todo-form">
+                                    <select name="select-projects" id="select-projects" class="select-projects"
+                                        form="edit-todo-form">
                                         <option selected disabled>Move to</option>
                                     </select>
+                                    <div class="vertical-seperator"></div>
                                     <div class="edit-todo-priorities-container">
-                                        <span>Priority:</span>
-                                            <ul class="edit-todo-priorities-list" data-priority="Low">
-                                                <li class="priority-high"><span>High</span></li>
-                                                <li class="priority-medium"><span>Medium</span></li>
-                                                <li class="priority-low"><span>Low</span></li>
-                                            </ul>
+                                        <ul class="edit-todo-priorities-list" data-priority="Low">
+                                            <li data-priority="High"><span class="circle priority-high"></span></li>
+                                            <li data-priority="Medium"><span class="circle priority-medium"></span></li>
+                                            <li data-priority="Low"><span class="circle priority-low"></span></li>
+                                           
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +104,7 @@
             </ul>
         </div>
         <!-- Pop-up form for addin a new poroject. Display none on default with css-->
-        
+
         <form class="one-input-project-form">
             <label for="text"></label>
             <input name="text" type="text" placeholder="project name" required>
@@ -113,8 +118,8 @@
     <footer class="footer">
         <p>Copyright &copy; idan-grimberg-damri</p>
         <a href="https://github.com/idan-grimberg-damri" target="=_blank">
-        <i class="fab fa-github" aria-hidden="true"></i>
-    </a>
+            <i class="fab fa-github" aria-hidden="true"></i>
+        </a>
     </footer>
     <script src="./test.js" type="module"></script>
 </body>

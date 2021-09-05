@@ -3,6 +3,10 @@
     --nav-background-color: #f5f5f5;
     --body-header-background-color: #254552;
     --project-content-background-color: white;
+    --form-btn-background-color: #254552;
+    --form-btn-hover-background-color: #1d3641;
+    --form-btn-color: white;
+    --form-btn-hover--background-color
   
 }
 
@@ -31,6 +35,11 @@ body{
 
 .title-container{
     display: flex;
+}
+
+.todo-list-item-title-container{
+    display: flex;
+    align-items: center;
 }
 
 .main{
@@ -107,7 +116,7 @@ body{
 
   .form-container{
       --vwidth: 350px;
-      --vheight: 100px;
+      --vheight: 150px;
       display:flex;
       flex-direction: column;
       justify-content: space-evenly;
@@ -119,7 +128,7 @@ body{
       left :50%;    
       top: 50%;
       padding: 10px;
-      border: 1px solid black;
+      border: none;
       border-radius: 5px;
       margin-left: calc(-1/2 * var(--vwidth));
       margin-top: calc(-1/2 * var(--vheight));
@@ -133,6 +142,16 @@ body{
        
   }
 
+  .one-input-project-form input[type="text"]{
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 5px;
+      border:  1px solid black;
+      border-radius: 5px;
+      font-size: 17px;
+      
+  }
+
 
   .current-project{
       background-color: lightgray;
@@ -142,7 +161,7 @@ body{
       display:flex;
       flex-direction: column;
   }
-  .todos  li{
+  .todos  li:not(.edit-todo-list-item){
       border-radius: 5px;
       padding: 10px;
       cursor:pointer
@@ -172,8 +191,12 @@ select{
     margin-bottom: 10px;
     background: none !important;
 }
-.edit-todo-title, .edit-todo-description{
-    padding:2px;
+.edit-todo-title, .edit-todo-description, input[type="date"]{
+    padding:10px;
+    border: 1px solid rgb(230, 228, 228);
+    border-radius: 5px;
+    font-size:20px;
+
 }
 
 .edit-todo-description{
@@ -188,7 +211,7 @@ select{
     column-count: initial !important;
     margin: 8px 0px;
     width: 100%;
-    overflow:scroll;
+    overflow:auto;
     resize: none;   
 }
 
@@ -290,6 +313,15 @@ button{
     
 }
 
+.fa-circle{
+    font-size: 27px;
+}
+
+.fa-circle:hover{
+    
+    font-weight: bold;
+}
+
  .nav-projects li > span{
     display: block;
     overflow: hidden;
@@ -311,6 +343,48 @@ button{
     font-size: 17px;
 }
 
+
+
 .select-projects{
     margin-right: 10px;
+}
+
+label{
+    display: inline-block;
+    padding: 5px 12px 5px 0;
+    font-size: 20px;
+}
+
+input[type="button"], input[type="submit"]{
+    background-color: var(--form-btn-background-color);
+    color: var(--form-btn-color);
+    padding: 10px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor:pointer;
+    font-size: 17px;
+    
+}
+
+form input[type="button"]:hover, input[type="submit"]:hover{
+background-color: var(--form-btn-hover-background-color);
+}
+
+.circle{
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.priority-high{
+    background-color: #ef8888;
+}
+
+.priority-medium{
+    background-color: #ffaa78;
+}
+
+.priority-low{
+    background-color: #feff78;
 }

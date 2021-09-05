@@ -470,8 +470,9 @@ export default class TodoView extends AbstractSubscriber {
 
     #editProjectName(projectListItem) {
         let form = document.querySelector(".one-input-project-form");
-        let formContainer = this.#attachFormContainer(form, "Change project name", "form-container");
+        let formContainer = this.#attachFormContainer(form, "", "form-container");
         let modalCover = this.#createModalCover();
+        form.firstElementChild.textContent = "Edit project name";
 
          form.onsubmit = function (event) {
             let value = form.elements.text.value;
@@ -619,8 +620,9 @@ export default class TodoView extends AbstractSubscriber {
     onClickAddProject() {
 
         let form = document.querySelector(".one-input-project-form");
-        let formContainer = this.#attachFormContainer(form, "Add New Project", "form-container");
+        let formContainer = this.#attachFormContainer(form, "", "form-container");
         let modalCover = this.#createModalCover();
+        form.firstElementChild.textContent = "Add new project";
 
 
         // Get the project name from the form.

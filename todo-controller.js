@@ -1,9 +1,6 @@
-
-import TodoProject from "./todo-project.js";
 import TodoView from "./todo-view.js";
 import Todo from "./todo.js";
 import AbstractController from "./abstract-controller.js";
-import pubsub from "./pubsub.js";
 
 export default class TodoController extends AbstractController {
     #todoView
@@ -12,7 +9,9 @@ export default class TodoController extends AbstractController {
     constructor(model) {
         super();
         this.#todoModel = model;
-       // this.#todoView = new TodoView(this, model);
+        this.#todoView = new TodoView(this, model);
+        this.#todoView.subscribeAll();
+        this.#todoView.createView();
 
     }
    

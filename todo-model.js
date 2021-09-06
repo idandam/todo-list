@@ -17,12 +17,8 @@ export default class TodoModel extends AbstractTodoModel {
         super();
         this.#projects = [];
         this.#defineProjectsProperties();
-        this.#currentProject = this.#projects[1];
+        this.#currentProject = this.#projects[TodoModel.#specialProjects.today];
 
-    }
-
-    init() {
-        //  
     }
 
     addProject(projectName) {

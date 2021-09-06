@@ -3,6 +3,7 @@ import pubsub from "./pubsub.js"
 import TodoProject from "./todo-project.js"
 import Todo from "./todo.js"
 import dateManager from "./date-manager.js"
+//import tippy from "tippy.js"
 import { TOPICS } from "./utils.js"
 
 export default class TodoView extends AbstractSubscriber {
@@ -34,10 +35,15 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController = controller;
         this.#todoModel = model;
 
-        this.#subscribeAll();
-        this.createView();
+        
+        
+       // this.createTipTools();
 
     }
+
+   /* createTipTools(){
+        tippy(".priority-high", {content: "High priority"});
+    }*/
 
     createView() {
         this.#projects = document.querySelector(".nav-projects");
@@ -740,7 +746,7 @@ export default class TodoView extends AbstractSubscriber {
     /**
      * Substribe to all of the topics.
      */
-    #subscribeAll() {
+    subscribeAll() {
         // for each topic subscribe with a function who's name is the topic name with a capital first letter
         // prepended with "on"
         // for example if topic == "projectAdded" then onTopic == "onProjectAdded"

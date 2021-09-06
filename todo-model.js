@@ -48,10 +48,13 @@ export default class TodoModel extends AbstractTodoModel {
 
         if (i < this.#projects.length) {
             let [removedProject] = this.#projects.splice(i, 1);
-            if (removedProject === this.#currentProject){
+            if (removedProject === this.#currentProject) {
                 this.changeCurrentProject("Today");
             }
-            this.publish(TOPICS.projectRemoved, i - Object.keys(TodoModel.#specialProjects).length);
+            this.publish(TOPICS.projectRemoved, {
+                position: i - Object.keys(TodoModel.#specialProjects).length,
+                projectName
+            });
         }
 
     }
@@ -236,19 +239,19 @@ export default class TodoModel extends AbstractTodoModel {
     getTodoById(id) {
         return this.#currentProject.getTodoById(id);
     }
-    isSpecialProject(projectName){
+    isSpecialProject(projectName) {
         return projectName === this.#projects[TodoModel.#specialProjects.today].name ||
-        projectName === this.#projects[TodoModel.#specialProjects.nextSevenDays].name;
+            projectName === this.#projects[TodoModel.#specialProjects.nextSevenDays].name;
     }
 
-    changeProjectName(projectName, updatedProjectName){
-        if (!this.getProjectByName(updatedProjectName)){
+    changeProjectName(projectName, updatedProjectName) {
+        if (!this.getProjectByName(updatedProjectName)) {
             this.getProjectByName(projectName).name = updatedProjectName;
-            pubsub.publish(TOPICS.projectNameChanged, {projectName, updatedProjectName});
+            pubsub.publish(TOPICS.projectNameChanged, { projectName, updatedProjectName });
         }
     }
 
-    getCurrentProjectSortName(){
+    getCurrentProjectSortName() {
         return this.#currentProject.getCompareBehaviorName();
     }
 }

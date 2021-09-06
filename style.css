@@ -392,7 +392,8 @@ background-color: var(--form-btn-hover-background-color);
     background-color: #e6e6ac;
 }
 
-.priority-high:hover, .priority-medium:hover, .priority-low:hover  {
+.priority-high:hover:not(.todo-list-item .priority-high),
+ .priority-medium:hover:not(.todo-list-item .priority-medium), .priority-low:hover:not(.todo-list-item .priority-low)  {
     background-color: lightgray;
 }
 

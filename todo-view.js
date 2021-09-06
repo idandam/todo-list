@@ -85,7 +85,8 @@ export default class TodoView extends AbstractSubscriber {
 
 
     onProjectRemoved(data) {
-        this.#customProjects.children[data].remove();
+        this.#customProjects.children[data.position].remove();
+        this.#removeProjectOption(data.projectName);
     }
 
     /**
@@ -365,9 +366,15 @@ export default class TodoView extends AbstractSubscriber {
         if (!this.#todoModel.isSpecialProject(movedTo)) {
             // Remove the project that the user navigates to from the menu, since there is no point in 
             // moving todos from a project to itself 
-            let optionToRemove;
+            this.#removeProjectOption(movedTo);
+        }
+
+    }
+
+    #removeProjectOption(projectName){
+        let optionToRemove;
             for (let option of this.#projectSelectionMenu.options) {
-                if (option.value === movedTo) {
+                if (option.value === projectName) {
                     optionToRemove = option;
                     break;
                 }
@@ -375,8 +382,6 @@ export default class TodoView extends AbstractSubscriber {
             if (optionToRemove) {
                 optionToRemove.remove();
             }
-        }
-
     }
 
     #getProjectByName(projectName) {
@@ -593,7 +598,7 @@ export default class TodoView extends AbstractSubscriber {
             projectListItem.append(projectSpan);
 
             // Add the settings components for the project
-            let projectSettings = document.querySelector(".custom-projects > template").content.cloneNode(true).children[0];
+            let projectSettings = document.querySelector("#project-settings-template").content.cloneNode(true).children[0];
             projectSettings.style.display = "none";
 
             projectListItem.addEventListener("mouseover", () => {
@@ -606,7 +611,7 @@ export default class TodoView extends AbstractSubscriber {
             projectListItem.append(projectSettings, projectSettings);
 
             projectListItem.classList.add("project-list-item");
-            this.#customProjects.prepend(projectListItem);
+            this.#customProjects.append(projectListItem);
 
             // add the an option with the project name to the select element
             let option = this.#createOption(data.name);

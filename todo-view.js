@@ -21,7 +21,7 @@ export default class TodoView extends AbstractSubscriber {
     #projectContent;
     #projectContentHeader
 
- 
+
     #hiddenTodo;
 
     #projectSelectionMenu;
@@ -33,7 +33,7 @@ export default class TodoView extends AbstractSubscriber {
         super();
         this.#todoController = controller;
         this.#todoModel = model;
-     
+
         this.#subscribeAll();
         this.createView();
 
@@ -76,7 +76,7 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     onProjectSorted(data) {
-        
+
         this.#setSortSelection(data.sortName);
         this.#clearCurrentProjectTodos();
         this.#populateTodos(data.todos);
@@ -135,11 +135,11 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-    #getPriorityClass(priority){
-        switch(priority){
-            case "High": return "priority-high"; 
-            case "Medium": return "priority-medium"; 
-            case "Low": return "priority-low"; 
+    #getPriorityClass(priority) {
+        switch (priority) {
+            case "High": return "priority-high";
+            case "Medium": return "priority-medium";
+            case "Low": return "priority-low";
         }
     }
 
@@ -181,7 +181,6 @@ export default class TodoView extends AbstractSubscriber {
                 }
             }
         }
-
 
         event.preventDefault();
         event.stopPropagation();
@@ -380,10 +379,10 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-    #getProjectByName(projectName){
+    #getProjectByName(projectName) {
         let projects = this.#projects.querySelectorAll("li");
-        for (let project of projects){
-            if (project.firstElementChild.textContent === projectName){
+        for (let project of projects) {
+            if (project.firstElementChild.textContent === projectName) {
                 return project;
             }
         }
@@ -411,11 +410,11 @@ export default class TodoView extends AbstractSubscriber {
         }
     }
 
-    #setSortSelection(sortName = this.#todoModel.getCurrentProjectSortName()){
+    #setSortSelection(sortName = this.#todoModel.getCurrentProjectSortName()) {
         let options = this.#projectContentHeader.querySelector(".sort-project-menu").options;
 
-        for (let option of options){
-            if (option.value === sortName){
+        for (let option of options) {
+            if (option.value === sortName) {
                 option.selected = true;
             }
         }
@@ -444,9 +443,9 @@ export default class TodoView extends AbstractSubscriber {
     }
 
 
-    onProjectContentHeaderChange(event){
+    onProjectContentHeaderChange(event) {
         let select = event.target.closest("select");
-        if (select && select.classList.contains("sort-project-menu")){
+        if (select && select.classList.contains("sort-project-menu")) {
             this.#todoController.sortProject(event.target.value);
         }
     }
@@ -470,12 +469,12 @@ export default class TodoView extends AbstractSubscriber {
         }
     }
 
-    onProjectNameChanged(data){
+    onProjectNameChanged(data) {
         let customProjects = this.#customProjects.querySelectorAll("li");
-        for (let customProject of customProjects){
-            if (customProject.firstElementChild.textContent === data.projectName){
+        for (let customProject of customProjects) {
+            if (customProject.firstElementChild.textContent === data.projectName) {
                 customProject.firstElementChild.textContent = data.updatedProjectName;
-                if (customProject === this.#currentProject){
+                if (customProject === this.#currentProject) {
                     this.#projectContent.querySelector("h3").textContent = data.updatedProjectName;
                 }
             }
@@ -488,7 +487,7 @@ export default class TodoView extends AbstractSubscriber {
         let modalCover = this.#createModalCover();
         form.firstElementChild.textContent = "Edit project name";
 
-         form.onsubmit = function (event) {
+        form.onsubmit = function (event) {
             let value = form.elements.text.value;
             if (value) {
                 this.#todoController.changeProjectName(projectListItem.firstElementChild.textContent, value);
@@ -509,7 +508,7 @@ export default class TodoView extends AbstractSubscriber {
 
     #removeProject(projectListItem) {
         let projectName = projectListItem.firstElementChild.textContent;
-        if (window.confirm(`Are you sure you want to remove project "${projectName}"?`)){
+        if (window.confirm(`Are you sure you want to remove project "${projectName}"?`)) {
             this.#todoController.removeProject(projectName);
         }
     }
@@ -543,11 +542,12 @@ export default class TodoView extends AbstractSubscriber {
                 this.#hiddenTodo = null;
             }
 
-        }
-        // This condition will be true if the user expanded a todo and then went to a different project.
-        // in this case we need to put the form container in his original position.
-        if (this.#addTodoListItem.previousElementSibling !== this.#editTodoFormContainer) {
-            this.#addTodoListItem.before(this.#editTodoFormContainer);
+            // This condition will be true if the user expanded a todo and then went to a different project.
+            // in this case we need to put the form container in his original position.
+            if (this.#addTodoListItem.previousElementSibling !== this.#editTodoFormContainer) {
+                this.#addTodoListItem.before(this.#editTodoFormContainer);
+            }
+
         }
 
     }
@@ -616,7 +616,7 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-    
+
 
     onTodoUpdated(data) {
         console.log(data);

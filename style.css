@@ -341,7 +341,7 @@ button{
     
 }
 
-.add-todo-btn > span, .add-project-btn, .project-settings i {
+.add-todo-btn > span, .add-project-btn, .project-settings i, footer > p {
     font-size: 17px;
 }
 
@@ -415,5 +415,11 @@ select:hover{
 
 .todo-list-item-date{
     margin-right: 7px;
+}
+
+
+
+.nav-projects li span, .todo-list-item{
+    font-size: 18px;
 }
 

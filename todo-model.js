@@ -5,8 +5,7 @@ import { TOPICS } from './utils.js';
 import TodayProject from "./today-project.js"
 import NextSevenDaysProject from "./next-seven-days-project.js"
 import Todo from './todo.js';
-import dateManager from "./date-manager.js"
-
+import todoStorage from './todo-storage.js';
 
 export default class TodoModel extends AbstractTodoModel {
     #projects;
@@ -36,7 +35,7 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     removeProject(projectName) {
-        // TODO - what if the removed project is the current project
+        
         let i = TodoModel.#specialProjects.nextSevenDays + 1;
         while (i < this.#projects.length && this.#projects[i].name !== projectName) {
             i++;

@@ -1,6 +1,7 @@
 import TodoView from "./todo-view.js";
 import Todo from "./todo.js";
 import AbstractController from "./abstract-controller.js";
+import TodoStorage from './todo-storage.js'
 
 export default class TodoController extends AbstractController {
     #todoView
@@ -17,17 +18,21 @@ export default class TodoController extends AbstractController {
    
     addProject(projectName) {
         this.#todoModel.addProject(projectName);
+        TodoStorage.setProjects(this.#todoModel.projects);
     }
     removeProject(projectName) {
         this.#todoModel.removeProject(projectName);
+        TodoStorage.setProjects(this.#todoModel.projects);
     }
 
     sortProject(sortName) {
         this.#todoModel.sortProject(sortName);
+        TodoStorage.setProjects(this.#todoModel.projects);
     }
     addTodo(todoProperties) {
         this.#todoModel.addTodo(new Todo(todoProperties.title, todoProperties.description,
              todoProperties.priority, todoProperties.date));
+       
     }
 
     removeTodo(id){

@@ -11,7 +11,7 @@ export default class Todo {
 
     static #priorities = { Low: 1, Medium: 2, High: 3 };
     static #defaultPriority = "Low";
-
+    // TODO - encapsulate this
     static #runNum = 0;
     static #fetchUniqueId() {
         return Todo.#runNum++;
@@ -24,6 +24,27 @@ export default class Todo {
         this.#dueDate = dateManager.getProperTodoDate(dueDate);
         this.#priority = priority;
         this.#isChecked = false;
+    }
+
+    assign(obj) {
+        this.#id = parsed.id;
+        this.#title = parsed.title;
+        this.#description = obj.description;
+        this.#dueDate = dateManager.getProperTodoDate(obj.dueDate);
+        this.#priority = obj.priority;
+        this.#isChecked = obj.isChecked;
+    }
+
+    toJSON() {
+        return {
+            id: this.#id,
+            title: this.#title,
+            description :this.#description,
+            dueDate: this.#dueDate,
+            priority: this.#priority,
+            isChecked: this.#isChecked,
+
+        }
     }
 
     get title() {

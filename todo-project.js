@@ -1,5 +1,6 @@
-import CompareBehavior from "./compare-behavior.js";
+
 import * as compareBehaviors from "./compare-behaviors.js"
+import Todo from "./todo.js";
 
 export default class TodoProject {
     #name;
@@ -14,7 +15,21 @@ export default class TodoProject {
 
     }
 
-    
+    assign(obj) {
+        this.#name = obj.name;
+        obj.todos.forEach(todo => {
+            this.#todos.push(new Todo().assign(todo));
+        });
+        this.#compareBehavior = new compareBehaviors[`CompareBy${obj.compareBehavior}`]();
+    }
+
+    toJSON(){
+        return {
+            name: this.#name,
+            todos: this.#todos,
+            compareBehavior: this.#compareBehavior.name
+        }
+    }
 
     add(todo) {
         // Find todo's appropriate position in this project
@@ -22,7 +37,7 @@ export default class TodoProject {
         // Add the todo in his appropriate position in this project
         this.#todos.splice(todoPosition, 0, todo);
         // todo is now contained in this project
-        if (!todo.containingProject){
+        if (!todo.containingProject) {
             todo.containingProject = this;
         }
 
@@ -138,7 +153,7 @@ export default class TodoProject {
 
     }
 
-    getCompareBehaviorName(){
+    getCompareBehaviorName() {
         return this.#compareBehavior.name;
     }
 

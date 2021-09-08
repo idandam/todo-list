@@ -1,11 +1,11 @@
 
 export default class TodoSorage {
 
-    static setProjects(projects){
-        localStorage.setItem("projects", JSON.stringify(projects));
+    static setModelState(model){
+        localStorage.setItem("model", JSON.stringify(model));
     }
-    static getProjects(){
-        return JSON.parse(localStorage.getItem(projects) || []);
+    static getModelState(){
+        return JSON.parse(localStorage.getItem("model"));
     }
 
 }

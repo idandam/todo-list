@@ -73,12 +73,16 @@ class DateManager {
     }
 
     getProperTodoDate(date) {
-
-        if (!date ||
-            !(date instanceof Date) ||
+        if (!(date instanceof Date)){
+            date = new Date(date);
+            if (isNaN(date.getTime())){
+                return DateManager.noDateValue;
+            }
+        }
+        if (isNaN(date.getTime()) ||
             (Math.trunc(date.getFullYear() / 1000)) !== (Math.trunc(this.#today.getFullYear() / 1000)) ||
             date < this.#today) {
-            return DateManager.noDateValue;;
+            return DateManager.noDateValue;
         }
 
         return date;

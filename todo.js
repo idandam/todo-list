@@ -27,19 +27,23 @@ export default class Todo {
     }
 
     assign(obj) {
-        this.#id = parsed.id;
-        this.#title = parsed.title;
-        this.#description = obj.description;
-        this.#dueDate = dateManager.getProperTodoDate(obj.dueDate);
-        this.#priority = obj.priority;
-        this.#isChecked = obj.isChecked;
+        if (obj) {
+            this.#id = obj.id;
+            this.#title = obj.title;
+            this.#description = obj.description;
+            this.#dueDate = dateManager.getProperTodoDate(obj.dueDate);
+            this.#priority = obj.priority;
+            this.#isChecked = obj.isChecked;
+        }
+        return this;
+
     }
 
     toJSON() {
         return {
             id: this.#id,
             title: this.#title,
-            description :this.#description,
+            description: this.#description,
             dueDate: this.#dueDate,
             priority: this.#priority,
             isChecked: this.#isChecked,

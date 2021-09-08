@@ -16,14 +16,17 @@ export default class TodoProject {
     }
 
     assign(obj) {
-        this.#name = obj.name;
-        obj.todos.forEach(todo => {
-            this.#todos.push(new Todo().assign(todo));
-        });
-        this.#compareBehavior = new compareBehaviors[`CompareBy${obj.compareBehavior}`]();
+        if (obj) {
+            this.#name = obj.name;
+            obj.todos.forEach((todo) => {
+                this.#todos.push(new Todo().assign(todo));
+            });
+            this.#compareBehavior = new compareBehaviors[`CompareBy${obj.compareBehavior}`]();
+        }
+        return this;
     }
 
-    toJSON(){
+    toJSON() {
         return {
             name: this.#name,
             todos: this.#todos,
@@ -157,5 +160,5 @@ export default class TodoProject {
         return this.#compareBehavior.name;
     }
 
-
+    
 }

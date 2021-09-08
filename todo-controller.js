@@ -2,6 +2,7 @@ import TodoView from "./todo-view.js";
 import Todo from "./todo.js";
 import AbstractController from "./abstract-controller.js";
 import TodoStorage from './todo-storage.js'
+import TodoModel from "./todo-model.js";
 
 export default class TodoController extends AbstractController {
     #todoView
@@ -13,50 +14,61 @@ export default class TodoController extends AbstractController {
         this.#todoView = new TodoView(this, model);
         this.#todoView.subscribeAll();
         this.#todoView.createView();
+        this.#todoView.populateProjects(this.getProjectsName());
 
     }
    
     addProject(projectName) {
         this.#todoModel.addProject(projectName);
-        TodoStorage.setProjects(this.#todoModel.projects);
+        TodoStorage.setModelState(this.#todoModel);
     }
     removeProject(projectName) {
         this.#todoModel.removeProject(projectName);
-        TodoStorage.setProjects(this.#todoModel.projects);
+        TodoStorage.setModelState(this.#todoModel);
     }
 
     sortProject(sortName) {
         this.#todoModel.sortProject(sortName);
-        TodoStorage.setProjects(this.#todoModel.projects);
+        TodoStorage.setModelState(this.#todoModel);
     }
     addTodo(todoProperties) {
         this.#todoModel.addTodo(new Todo(todoProperties.title, todoProperties.description,
              todoProperties.priority, todoProperties.date));
+             
+        TodoStorage.setModelState(this.#todoModel);
        
     }
 
     removeTodo(id){
         this.#todoModel.removeTodo(id);
+        TodoStorage.setModelState(this.#todoModel);
     }
     
     checkTodo(id){
         this.#todoModel.checkTodo(id);
+        TodoStorage.setModelState(this.#todoModel);
     }
     
     updateTodo(id, updatedTodo) {
         this.#todoModel.updateTodo(id, updatedTodo);
+        TodoStorage.setModelState(this.#todoModel);
     }
     
     removeCheckedTodos() {
         this.#todoModel.getCheckedTodos()
         .forEach(todo =>  this.#todoModel.removeTodo(todo.id));
+
+        TodoStorage.setModelState(this.#todoModel);
     }
     
     changeCurrentProject(projectName){
         this.#todoModel.changeCurrentProject(projectName);
+
+        TodoStorage.setModelState(this.#todoModel);
     }
     moveTodoToProject(id, projectName){
        this.#todoModel.moveTodoToProject(id, projectName);
+       TodoStorage.setModelState(this.#todoModel);
     }
 
     getTodoProperties(id){
@@ -68,7 +80,14 @@ export default class TodoController extends AbstractController {
     
     changeProjectName(projectName, updatedProjectName){
         this.#todoModel.changeProjectName(projectName, updatedProjectName);
+        TodoStorage.setModelState(this.#todoModel);
 
+    }
+
+    getProjectsName(){
+    
+        return this.#todoModel.projects.map(project => project.name)
+        .slice(TodoModel.getSpecialProjectsLength());
     }
 
 }

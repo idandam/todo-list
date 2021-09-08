@@ -20,6 +20,26 @@ export default class TodoModel extends AbstractTodoModel {
 
     }
 
+    init(){
+        
+    }
+    assign(obj) {
+        if (obj) {
+            let i = TodoModel.getSpecialProjectsLength();
+            obj.projects.forEach((project) => {this.#projects[i++] = new TodoProject().assign(project)} )
+
+        }
+        return this;
+    }
+
+
+    toJSON() {
+        return {
+            projects: this.#projects.slice(TodoModel.getSpecialProjectsLength()),
+            currentProject: this.#projects[TodoModel.#specialProjects.today]
+        }
+    }
+
     addProject(projectName) {
         // if we don't have a project with that name then add the project  
         if (!this.getProjectByName(projectName)) {
@@ -35,7 +55,7 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     removeProject(projectName) {
-        
+
         let i = TodoModel.#specialProjects.nextSevenDays + 1;
         while (i < this.#projects.length && this.#projects[i].name !== projectName) {
             i++;
@@ -47,7 +67,7 @@ export default class TodoModel extends AbstractTodoModel {
                 this.changeCurrentProject("Today");
             }
             this.publish(TOPICS.projectRemoved, {
-                position: i - Object.keys(TodoModel.#specialProjects).length,
+                position: i - TodoModel.getSpecialProjectsLength(),
                 projectName
             });
         }
@@ -248,5 +268,8 @@ export default class TodoModel extends AbstractTodoModel {
 
     getCurrentProjectSortName() {
         return this.#currentProject.getCompareBehaviorName();
+    }
+    static getSpecialProjectsLength(){
+        return Object.keys(TodoModel.#specialProjects).length;
     }
 }

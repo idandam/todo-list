@@ -35,15 +35,15 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoController = controller;
         this.#todoModel = model;
 
-        
-        
-       // this.createTipTools();
+
+
+        // this.createTipTools();
 
     }
 
-   /* createTipTools(){
-        tippy(".priority-high", {content: "High priority"});
-    }*/
+    /* createTipTools(){
+         tippy(".priority-high", {content: "High priority"});
+     }*/
 
     createView() {
         this.#projects = document.querySelector(".nav-projects");
@@ -79,6 +79,10 @@ export default class TodoView extends AbstractSubscriber {
         this.#setSortSelection();
 
         this.#addListeners();
+    }
+
+    populateProjects(projectsNames) {
+        projectsNames.forEach((projectName) => {this.#customProjects.append(this.#createProjectListItem(projectName));})
     }
 
     onProjectSorted(data) {
@@ -377,17 +381,17 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
-    #removeProjectOption(projectName){
+    #removeProjectOption(projectName) {
         let optionToRemove;
-            for (let option of this.#projectSelectionMenu.options) {
-                if (option.value === projectName) {
-                    optionToRemove = option;
-                    break;
-                }
+        for (let option of this.#projectSelectionMenu.options) {
+            if (option.value === projectName) {
+                optionToRemove = option;
+                break;
             }
-            if (optionToRemove) {
-                optionToRemove.remove();
-            }
+        }
+        if (optionToRemove) {
+            optionToRemove.remove();
+        }
     }
 
     #getProjectByName(projectName) {
@@ -598,32 +602,37 @@ export default class TodoView extends AbstractSubscriber {
 
     onProjectAdded(data) {
         if (data instanceof TodoProject) {
-            let projectListItem = document.createElement("li");
-            let projectSpan = document.createElement("span");
-            projectSpan.append(data.name);
-            projectListItem.append(projectSpan);
-
-            // Add the settings components for the project
-            let projectSettings = document.querySelector("#project-settings-template").content.cloneNode(true).children[0];
-            projectSettings.style.display = "none";
-
-            projectListItem.addEventListener("mouseover", () => {
-                projectSettings.style.display = "block";
-            });
-            projectListItem.addEventListener("mouseleave", () => {
-                projectSettings.style.display = "none";
-            });
-
-            projectListItem.append(projectSettings, projectSettings);
-
-            projectListItem.classList.add("project-list-item");
-            this.#customProjects.append(projectListItem);
-
-            // add the an option with the project name to the select element
-            let option = this.#createOption(data.name);
-            this.#projectSelectionMenu.add(option);
-
+            this.#customProjects.append(this.#createProjectListItem(data.name));
         }
+
+    }
+
+    #createProjectListItem(projectName) {
+        let projectListItem = document.createElement("li");
+        let projectSpan = document.createElement("span");
+        projectSpan.append(projectName);
+        projectListItem.append(projectSpan);
+
+        // Add the settings components for the project
+        let projectSettings = document.querySelector("#project-settings-template").content.cloneNode(true).children[0];
+        projectSettings.style.display = "none";
+
+        projectListItem.addEventListener("mouseover", () => {
+            projectSettings.style.display = "block";
+        });
+        projectListItem.addEventListener("mouseleave", () => {
+            projectSettings.style.display = "none";
+        });
+
+        projectListItem.append(projectSettings);
+
+        projectListItem.classList.add("project-list-item");
+
+        // add the an option with the project name to the select element
+        let option = this.#createOption(projectName);
+        this.#projectSelectionMenu.add(option);
+
+        return projectListItem;
 
     }
 

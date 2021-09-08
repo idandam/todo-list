@@ -15,7 +15,7 @@ export default class TodoController extends AbstractController {
         this.#todoView = new TodoView(this, model);
         this.#todoView.subscribeAll();
         this.#todoView.createView();
-        this.#todoView.populateProjects(this.getProjectsName());
+        this.#todoView.populateProjects(this.#getProjectsNames());
 
     }
    
@@ -93,7 +93,7 @@ export default class TodoController extends AbstractController {
 
     }
 
-    getProjectsName(){
+    #getProjectsNames(){
     
         return this.#todoModel.projects.map(project => project.name)
         .slice(TodoModel.getSpecialProjectsLength());

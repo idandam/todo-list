@@ -1,3 +1,6 @@
+* fix - inbox not fetched from storage 
+
+* fix - button form and add todo list item touch footer
 
 * tooltips 
 

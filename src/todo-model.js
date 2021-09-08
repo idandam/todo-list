@@ -5,7 +5,7 @@ import { TOPICS } from './utils.js';
 import TodayProject from "./today-project.js"
 import NextSevenDaysProject from "./next-seven-days-project.js"
 import Todo from './todo.js';
-import todoStorage from './todo-storage.js';
+
 
 export default class TodoModel extends AbstractTodoModel {
     #projects;
@@ -20,21 +20,20 @@ export default class TodoModel extends AbstractTodoModel {
 
     }
 
-    init(){
-
-    }
     assign(obj) {
         if (obj) {
+            this.#projects[TodoModel.#specialProjects.inbox] = obj.inbox;
             let i = TodoModel.getSpecialProjectsLength();
-            obj.projects.forEach((project) => {this.#projects[i++] = new TodoProject().assign(project)} )
-
+            obj.projects.forEach((project) => {this.#projects[i++] = new TodoProject().assign(project)});
         }
+        
         return this;
     }
 
 
     toJSON() {
         return {
+            inbox: this.#projects[TodoModel.#specialProjects.inbox],
             projects: this.#projects.slice(TodoModel.getSpecialProjectsLength()),
             currentProject: this.#projects[TodoModel.#specialProjects.today]
         }

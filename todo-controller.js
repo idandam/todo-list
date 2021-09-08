@@ -10,7 +10,8 @@ export default class TodoController extends AbstractController {
 
     constructor(model) {
         super();
-        this.#todoModel = model;
+        this.#todoModel = model.assign(TodoStorage.getModelState());
+        this.#handleStorageSpecialProjects();
         this.#todoView = new TodoView(this, model);
         this.#todoView.subscribeAll();
         this.#todoView.createView();
@@ -18,6 +19,14 @@ export default class TodoController extends AbstractController {
 
     }
    
+    #handleStorageSpecialProjects(){
+        for(  let project of this.#todoModel.projects){
+            for (let todo of project.todos){
+                this.#todoModel.updateSpecialProjects("add", todo.dueDate, todo);
+            }
+        }
+    }
+
     addProject(projectName) {
         this.#todoModel.addProject(projectName);
         TodoStorage.setModelState(this.#todoModel);

@@ -21,7 +21,7 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     init(){
-        
+
     }
     assign(obj) {
         if (obj) {
@@ -83,7 +83,7 @@ export default class TodoModel extends AbstractTodoModel {
 
     addTodo(todo, project = this.#currentProject) {
         let position = project.add(todo);
-        let specialProject = this.#updateSpecialProjects("add", todo.dueDate, todo);
+        let specialProject = this.updateSpecialProjects("add", todo.dueDate, todo);
         // If added a todo the the current project then publish only the todo and the todo's position
         // If either condition is true then we added the todo to the current project. The first case 
         // The first condition is true when the project is a custom project.
@@ -116,7 +116,7 @@ export default class TodoModel extends AbstractTodoModel {
             // Else we removed the todo from a custom project
             // so remove him also from a special project if he currently located in one.
             else {
-                this.#updateSpecialProjects("remove", data.todo.dueDate, id);
+                this.updateSpecialProjects("remove", data.todo.dueDate, id);
             }
             // In either case publish the position of the removed todo from the current project
             // and return the removed todo
@@ -234,7 +234,7 @@ export default class TodoModel extends AbstractTodoModel {
     /**
      * @param {String} op an operation in {"add", "remove"}
      */
-    #updateSpecialProjects(op, dueDate, todoData) {
+    updateSpecialProjects(op, dueDate, todoData) {
         if (dueDate instanceof Date) {
             if (this.#projects[TodoModel.#specialProjects.today].dateRange.includes(dueDate)) {
                 this.#projects[TodoModel.#specialProjects.today][op](todoData);

@@ -1,6 +1,7 @@
 
+* tooltips 
 
-* publish validation data when adding project with same name 
+* aria
 
 * add a clear() method for a TodoProject
 

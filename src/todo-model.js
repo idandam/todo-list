@@ -22,11 +22,11 @@ export default class TodoModel extends AbstractTodoModel {
 
     assign(obj) {
         if (obj) {
-            this.#projects[TodoModel.#specialProjects.inbox] = obj.inbox;
+            this.#projects[TodoModel.#specialProjects.inbox] = new TodoProject().assign(obj.inbox);
             let i = TodoModel.getSpecialProjectsLength();
             obj.projects.forEach((project) => {this.#projects[i++] = new TodoProject().assign(project)});
         }
-        
+
         return this;
     }
 

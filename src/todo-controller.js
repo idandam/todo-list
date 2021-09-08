@@ -31,6 +31,7 @@ export default class TodoController extends AbstractController {
         this.#todoModel.addProject(projectName);
         TodoStorage.setModelState(this.#todoModel);
     }
+    
     removeProject(projectName) {
         this.#todoModel.removeProject(projectName);
         TodoStorage.setModelState(this.#todoModel);

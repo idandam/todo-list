@@ -82,7 +82,7 @@ export default class TodoView extends AbstractSubscriber {
     }
 
     populateProjects(projectsNames) {
-        projectsNames.forEach((projectName) => {this.#customProjects.append(this.#createProjectListItem(projectName));})
+        projectsNames.forEach((projectName) => { this.#customProjects.append(this.#createProjectListItem(projectName)); })
     }
 
     onProjectSorted(data) {
@@ -214,6 +214,20 @@ export default class TodoView extends AbstractSubscriber {
 
     }
 
+    #createTitleErrorMsg() {
+        let title = this.#editTodoForm.elements.title;
+        if (title.nextElementSibling === this.#editTodoForm.elements.description) {
+            let div = document.createElement("div");
+            let span = document.createElement("span");
+            span.textContent = "ERROR: Title can't be empty";
+            span.style.color = "red";
+            span.style.marginLeft = "15px";
+            div.append(span);
+            title.after(div);
+            title.addEventListener("keydown", () => { div.remove(); }, { once: true });
+        }
+    }
+
     #updateTodo(todoListItem) {
         let todoProperties = this.#todoController.getTodoProperties(todoListItem.dataset.id);
 
@@ -230,10 +244,11 @@ export default class TodoView extends AbstractSubscriber {
                     this.#priorityList.dataset.priority, dateManager.resetHours(this.#editTodoForm.elements.date.valueAsDate))
 
                 this.#todoController.updateTodo(todoListItem.dataset.id, updatedTodo);
-
+                this.#hideEditTodoForm();
             }
-
-            this.#hideEditTodoForm();
+            else {
+                this.#createTitleErrorMsg();
+            }
             // TODO - no need to prevent default
             event.preventDefault();
             event.stopPropagation();
@@ -298,9 +313,12 @@ export default class TodoView extends AbstractSubscriber {
             let todoProperties = this.#createTodoProperties();
             if (todoProperties) {
                 this.#todoController.addTodo(todoProperties);
+                this.#hideEditTodoForm();
             }
-
-            this.#hideEditTodoForm();
+            else {
+                this.#createTitleErrorMsg();
+            }
+            
             event.preventDefault();
             event.stopPropagation();
 
@@ -315,7 +333,7 @@ export default class TodoView extends AbstractSubscriber {
 
         this.#showEditTodoForm();
         this.#projectSelectionMenu.style.visibility = "hidden";
-        window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight);
 
     }
 

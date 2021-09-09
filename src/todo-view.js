@@ -315,6 +315,7 @@ export default class TodoView extends AbstractSubscriber {
 
         this.#showEditTodoForm();
         this.#projectSelectionMenu.style.visibility = "hidden";
+        window.scrollTo(0,document.body.scrollHeight);
 
     }
 

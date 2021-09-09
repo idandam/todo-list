@@ -90,7 +90,7 @@ class DateManager {
     }
 
     resetHours(date) {
-        if (date instanceof Date) {
+        if (date instanceof Date && !(isNaN(date.getTime()))) {
             date.setHours(0, 0, 0, 0);
         }
 

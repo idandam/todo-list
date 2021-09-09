@@ -24,6 +24,8 @@ body{
     font-family: "Raleway", sans-serif;
 }
 
+
+
 .header{
     display: flex;
     background-color: var(--body-header-background-color);
@@ -81,7 +83,7 @@ body{
     align-items: center;
     justify-content: center;
     padding: 10px;
-    color:white
+    color:white;
 }
 .footer  i{
     cursor:pointer;
@@ -89,6 +91,9 @@ body{
     
 }
 
+.nav-projects:last-child, .todos:last-child{
+    margin-bottom:17px;
+}
 
 .custom-projects-header{
     display: flex;

@@ -1,3 +1,3 @@
-## In progress 
+[Live Demo](https://idan-grimberg-damri.github.io/todo-list/)
+
 Todo-list using common design patterns: Publish-subscribe, MVC, Strategy.
-The view now is in test mode using console logging.

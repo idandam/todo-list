@@ -4,4 +4,5 @@ Todo-list using common design patterns: Publish-subscribe, MVC, Strategy.
 
 Class diagram:
 
-![todolist class diagram](https://user-images.githubusercontent.com/81328595/132876073-11b2fa5f-41f0-41e5-b02a-23afa2646530.jpg)
+![todolist class diagram](https://user-images.githubusercontent.com/81328595/132876976-8554cde8-4a23-4e33-949c-f9d2c9b37ed9.jpg)
+

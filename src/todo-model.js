@@ -62,9 +62,17 @@ export default class TodoModel extends AbstractTodoModel {
 
         if (i < this.#projects.length) {
             let [removedProject] = this.#projects.splice(i, 1);
+
+            // Remove todos of the removed projects from special projects
+            for (let todo of removedProject.todos){
+                this.updateSpecialProjects("remove", todo.dueDate, todo.id);
+            }
+            
             if (removedProject === this.#currentProject) {
                 this.changeCurrentProject("Today");
             }
+            
+
             this.publish(TOPICS.projectRemoved, {
                 position: i - TodoModel.getSpecialProjectsLength(),
                 projectName

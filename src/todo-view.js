@@ -3,7 +3,7 @@ import pubsub from "./pubsub.js"
 import TodoProject from "./todo-project.js"
 import Todo from "./todo.js"
 import dateManager from "./date-manager.js"
-//import tippy from "tippy.js"
+import tippy from "tippy.js"
 import { TOPICS } from "./utils.js"
 
 export default class TodoView extends AbstractSubscriber {
@@ -34,16 +34,16 @@ export default class TodoView extends AbstractSubscriber {
         super();
         this.#todoController = controller;
         this.#todoModel = model;
-
-
-
-        // this.createTipTools();
-
     }
 
-    /* createTipTools(){
+     #createTipTools(){
          tippy(".priority-high", {content: "High priority"});
-     }*/
+         tippy(".priority-medium", {content: "Medium priority"});
+         tippy(".priority-low", {content: "Low priority"});
+         tippy(".select-projects", {content: "Move to project"});
+         tippy(".add-project-btn", {content: "Add project"});
+         tippy(".sort-project-menu", {content: "Sort project"});
+     }
 
     createView() {
         this.#projects = document.querySelector(".nav-projects");
@@ -79,6 +79,8 @@ export default class TodoView extends AbstractSubscriber {
         this.#setSortSelection();
 
         this.#addListeners();
+
+        this.#createTipTools();
     }
 
     populateProjects(projectsNames) {

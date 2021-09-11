@@ -1,7 +1,7 @@
 
 * FIX - scroll down to form when user edit a todo item even if it's not the last item
 
-* FIX - when you ermove a project you need to check if there're todo's in special projects and remove them too
+* scrool nav and project content separately
 
 * tooltips 
 

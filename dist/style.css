@@ -52,7 +52,7 @@ body{
 
 .nav-projects{
     background-color: var(--nav-background-color);
-    width:350px;
+    width:300px;
     padding: 20px 5px 20px 20px ;
 }
 
@@ -60,7 +60,7 @@ body{
     display: flex;
     flex-direction: column;
     background-color: var(--project-content-background-color);
-    width: 1000px;
+    width: 900px;
     padding: 30px;
     margin:0 auto;
     

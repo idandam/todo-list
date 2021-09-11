@@ -154,7 +154,7 @@ body{
       margin-bottom: 5px;
       border:  1px solid black;
       border-radius: 5px;
-      font-size: 17px;
+      font-size: 14px;
       
   }
 
@@ -201,7 +201,7 @@ select{
     padding:10px;
     border: 1px solid rgb(230, 228, 228);
     border-radius: 5px;
-    font-size:20px;
+    font-size:14px;
 
 }
 
@@ -320,7 +320,7 @@ button{
 }
 
 .fa-circle{
-    font-size: 27px;
+    font-size: 24px;
 }
 
 .fa-circle:hover{
@@ -342,12 +342,12 @@ button{
 .project-content-header-text{
     word-break: break-all;
     overflow: hidden;
-    font-size: 24px;
+    font-size: 21px;
     
 }
 
 .add-todo-btn > span, .add-project-btn, .project-settings i, footer > p {
-    font-size: 17px;
+    font-size: 14px;
 }
 
 
@@ -369,7 +369,7 @@ input[type="button"], input[type="submit"]{
     border: none;
     border-radius: 5px;
     cursor:pointer;
-    font-size: 17px;
+    font-size: 14px;
     
 }
 
@@ -406,7 +406,7 @@ background-color: var(--form-btn-hover-background-color);
     border-right: 1px solid rgb(230, 228, 228);;
 }
 select{
-    font-size: 20px;
+    font-size: 17px;
 }
 select:hover{
     background-color: lightgray;
@@ -426,6 +426,6 @@ select:hover{
 
 
 .nav-projects li span, .todo-list-item{
-    font-size: 18px;
+    font-size: 14px;
 }
 

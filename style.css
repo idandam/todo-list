@@ -52,7 +52,7 @@ body{
 
 .nav-projects{
     background-color: var(--nav-background-color);
-    width:300px;
+    width:250px;
     padding: 20px 5px 20px 20px ;
 }
 
@@ -60,7 +60,7 @@ body{
     display: flex;
     flex-direction: column;
     background-color: var(--project-content-background-color);
-    width: 900px;
+    width: 800px;
     padding: 30px;
     margin:0 auto;
     
@@ -342,7 +342,7 @@ button{
 .project-content-header-text{
     word-break: break-all;
     overflow: hidden;
-    font-size: 21px;
+    font-size: 17px;
     
 }
 
@@ -406,7 +406,7 @@ background-color: var(--form-btn-hover-background-color);
     border-right: 1px solid rgb(230, 228, 228);;
 }
 select{
-    font-size: 17px;
+    font-size: 14px;
 }
 select:hover{
     background-color: lightgray;

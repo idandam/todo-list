@@ -258,7 +258,7 @@ export default class TodoView extends AbstractSubscriber {
         }.bind(this);
 
         this.#editTodoForm.elements.cancel.onclick = function (event) {
-            this.#addTodoListItem.before(this.#editTodoFormContainer);
+            
             this.#hideEditTodoForm();
             // TODO this will get back to the less specific classList class that has a flex display
             // but this line don't looks good.
@@ -577,13 +577,6 @@ export default class TodoView extends AbstractSubscriber {
                 this.#hiddenTodo.style.display = "";
                 this.#hiddenTodo = null;
             }
-
-            // This condition will be true if the user expanded a todo and then went to a different project.
-            // in this case we need to put the form container in his original position.
-            if (this.#addTodoListItem.previousElementSibling !== this.#editTodoFormContainer) {
-                this.#addTodoListItem.before(this.#editTodoFormContainer);
-            }
-
         }
 
     }
@@ -608,6 +601,10 @@ export default class TodoView extends AbstractSubscriber {
         }
 
         this.#projectContentHeader.querySelector(".sort-project-menu").disabled = false;
+
+        // Put form back to it's default position, which is before the add todo list item
+        this.#addTodoListItem.before( this.#editTodoFormContainer);
+
     }
 
     #displayTodo(todo) {

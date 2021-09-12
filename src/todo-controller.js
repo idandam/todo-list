@@ -10,7 +10,7 @@ export default class TodoController extends AbstractController {
 
     constructor(model) {
         super();
-        
+        localStorage.clear();
         this.#todoModel = model.assign(TodoStorage.getModelState());
         this.#handleStorageSpecialProjects();
         this.#todoView = new TodoView(this, model);

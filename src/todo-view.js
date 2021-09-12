@@ -195,7 +195,7 @@ export default class TodoView extends AbstractSubscriber {
             }
         }
 
-        event.preventDefault();
+        
         event.stopPropagation();
     }
 
@@ -241,18 +241,19 @@ export default class TodoView extends AbstractSubscriber {
         this.#editTodoForm.elements.submit.onclick = function (event) {
             let title = this.#editTodoForm.elements.title.value?.trim();
             if (title) {
+                
                 // TODO - the view shouldn't know about Todo. Change this.
                 let updatedTodo = new Todo(title, this.#editTodoForm.elements.description.value,
                     this.#priorityList.dataset.priority, dateManager.resetHours(this.#editTodoForm.elements.date.valueAsDate))
 
-                this.#todoController.updateTodo(todoListItem.dataset.id, updatedTodo);
                 this.#hideEditTodoForm();
+                this.#todoController.updateTodo(todoListItem.dataset.id, updatedTodo);
+                
             }
             else {
                 this.#createTitleErrorMsg();
             }
-            // TODO - no need to prevent default
-            event.preventDefault();
+           
             event.stopPropagation();
 
         }.bind(this);
@@ -314,14 +315,13 @@ export default class TodoView extends AbstractSubscriber {
         this.#editTodoForm.elements.submit.onclick = function (event) {
             let todoProperties = this.#createTodoProperties();
             if (todoProperties) {
-                this.#todoController.addTodo(todoProperties);
                 this.#hideEditTodoForm();
+                this.#todoController.addTodo(todoProperties);
             }
             else {
                 this.#createTitleErrorMsg();
             }
             
-            event.preventDefault();
             event.stopPropagation();
 
         }.bind(this);

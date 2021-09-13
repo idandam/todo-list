@@ -36,14 +36,14 @@ export default class TodoView extends AbstractSubscriber {
         this.#todoModel = model;
     }
 
-     #createTipTools(){
-         tippy(".priority-high", {content: "High priority"});
-         tippy(".priority-medium", {content: "Medium priority"});
-         tippy(".priority-low", {content: "Low priority"});
-         tippy(".select-projects", {content: "Move to project"});
-         tippy(".add-project-btn", {content: "Add project"});
-         tippy(".sort-project-menu", {content: "Sort project"});
-     }
+    #createTipTools() {
+        tippy(".priority-high", { content: "High priority" });
+        tippy(".priority-medium", { content: "Medium priority" });
+        tippy(".priority-low", { content: "Low priority" });
+        tippy(".select-projects", { content: "Move to project" });
+        tippy(".add-project-btn", { content: "Add project" });
+        tippy(".sort-project-menu", { content: "Sort project" });
+    }
 
     createView() {
         this.#projects = document.querySelector(".nav-projects");
@@ -195,7 +195,7 @@ export default class TodoView extends AbstractSubscriber {
             }
         }
 
-        
+
         event.stopPropagation();
     }
 
@@ -230,6 +230,17 @@ export default class TodoView extends AbstractSubscriber {
         }
     }
 
+    /**
+     * @param {Object} properties todo's properties in the current form's state
+     * @returns true if there was a change in the form fields, false otherwise
+     */
+    #isChanged(properties, updatedProperties) {
+       return !dateManager.equals(properties.date, updatedProperties.date) ||
+       properties.title !== updatedProperties.title ||
+       properties.description !== updatedProperties.description ||
+       properties.priority !== updatedProperties.priority;
+    }
+
     #updateTodo(todoListItem) {
         let todoProperties = this.#todoController.getTodoProperties(todoListItem.dataset.id);
 
@@ -241,25 +252,37 @@ export default class TodoView extends AbstractSubscriber {
         this.#editTodoForm.elements.submit.onclick = function (event) {
             let title = this.#editTodoForm.elements.title.value?.trim();
             if (title) {
+                let updatedProperties = {
+                    title,
+                    description: this.#editTodoForm.elements.description.value,
+                    date : dateManager.resetHours(dateManager.getProperTodoDate(this.#editTodoForm.elements.date.valueAsDate)),
+                    priority: this.#priorityList.dataset.priority
+                }
                 
-                // TODO - the view shouldn't know about Todo. Change this.
-                let updatedTodo = new Todo(title, this.#editTodoForm.elements.description.value,
-                    this.#priorityList.dataset.priority, dateManager.resetHours(this.#editTodoForm.elements.date.valueAsDate))
-
                 this.#hideEditTodoForm();
-                this.#todoController.updateTodo(todoListItem.dataset.id, updatedTodo);
-                
+
+                if (this.#isChanged(todoProperties, updatedProperties)) {
+                    // TODO - the view shouldn't know about Todo. Change this.
+                    let updatedTodo = new Todo(updatedProperties.title, updatedProperties.description,
+                        updatedProperties.priority, updatedProperties.date);
+
+                    this.#todoController.updateTodo(todoListItem.dataset.id, updatedTodo);
+                }
+                else{
+                    this.#hiddenTodo.style.display = "";
+                    this.#hiddenTodo = null;
+                }
             }
             else {
                 this.#createTitleErrorMsg();
             }
-           
+
             event.stopPropagation();
 
         }.bind(this);
 
         this.#editTodoForm.elements.cancel.onclick = function (event) {
-            
+
             this.#hideEditTodoForm();
             // TODO this will get back to the less specific classList class that has a flex display
             // but this line don't looks good.
@@ -290,6 +313,7 @@ export default class TodoView extends AbstractSubscriber {
                 this.#priorityList.dataset.priority = todoProperties.priority;
             }
         }
+      
     }
 
     #createTodoProperties() {
@@ -321,7 +345,7 @@ export default class TodoView extends AbstractSubscriber {
             else {
                 this.#createTitleErrorMsg();
             }
-            
+
             event.stopPropagation();
 
         }.bind(this);
@@ -603,7 +627,7 @@ export default class TodoView extends AbstractSubscriber {
         this.#projectContentHeader.querySelector(".sort-project-menu").disabled = false;
 
         // Put form back to it's default position, which is before the add todo list item
-        this.#addTodoListItem.before( this.#editTodoFormContainer);
+        this.#addTodoListItem.before(this.#editTodoFormContainer);
 
     }
 

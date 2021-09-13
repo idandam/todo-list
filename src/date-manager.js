@@ -54,7 +54,8 @@ class DateManager {
     }
 
     equals(d1, d2) {
-        return d1.getTime() === d2.getTime();
+        return d1 === d2  || (d1 instanceof Date && d2 instanceof Date && d1.getTime() === d2.getTime());
+        
     }
 
     toInputDateFormat(date) {

@@ -10,8 +10,8 @@ export default class CompareBehavior {
     }
     /**
      * 
-     * @param {Object} todo1 
-     * @param {Object} todo2 
+     * @param {Object} element1
+     * @param {Object} element2 
      * @returns (In the context of a sorted data structure)
      *  A value smaller than 0 if element1's position should be before element2.
         Else returns a value greater than 0 if element1's position should be after element2.

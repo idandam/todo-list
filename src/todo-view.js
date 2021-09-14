@@ -43,6 +43,7 @@ export default class TodoView extends AbstractSubscriber {
         tippy(".select-projects", { content: "Move to project" });
         tippy(".add-project-btn", { content: "Add project" });
         tippy(".sort-project-menu", { content: "Sort project" });
+        
     }
 
     createView() {

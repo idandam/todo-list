@@ -1,6 +1,6 @@
 import DateRange from "./date-range.js"
 /**
- * Take care of dates operations
+ * Take care of dates operations and queries 
  */
 class DateManager {
 

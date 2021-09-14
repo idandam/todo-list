@@ -26,7 +26,7 @@ class CompareByDate extends CompareBehavior {
         if (!(todo2.dueDate instanceof Date)) {
             return -1;
         }
-
+        // Natural date order
         return todo1.dueDate - todo2.dueDate;
     }
 

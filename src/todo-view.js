@@ -260,7 +260,7 @@ export default class TodoView extends AbstractSubscriber {
                 }
                 
                 this.#hideEditTodoForm();
-
+                // Update todo only if there was a change in the form
                 if (this.#isChanged(todoProperties, updatedProperties)) {
                     // TODO - the view shouldn't know about Todo. Change this.
                     let updatedTodo = new Todo(updatedProperties.title, updatedProperties.description,
@@ -268,6 +268,7 @@ export default class TodoView extends AbstractSubscriber {
 
                     this.#todoController.updateTodo(todoListItem.dataset.id, updatedTodo);
                 }
+                // There wasn't any change to the form so display the todo that the user expanded 
                 else{
                     this.#hiddenTodo.style.display = "";
                     this.#hiddenTodo = null;
@@ -282,7 +283,11 @@ export default class TodoView extends AbstractSubscriber {
         }.bind(this);
 
         this.#editTodoForm.elements.cancel.onclick = function (event) {
-
+            // This will be true if the error message fo rthe title is visible, so remove the error message before
+            // closing the form.
+            if (this.#editTodoForm.elements.title.nextElementSibling !== this.#editTodoForm.elements.description){
+                this.#editTodoForm.elements.title.nextElementSibling.remove();
+            }
             this.#hideEditTodoForm();
             // TODO this will get back to the less specific classList class that has a flex display
             // but this line don't looks good.
@@ -294,6 +299,7 @@ export default class TodoView extends AbstractSubscriber {
         todoListItem.style.display = "none"
         this.#hiddenTodo = todoListItem;
         this.#showEditTodoForm();
+        window.scrollTo(0, this.#editTodoFormContainer.scrollHeight);
     }
 
     #populateEditTodoForm(todoProperties) {

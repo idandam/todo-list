@@ -1,11 +1,9 @@
 
-* FIX - scroll down to form when user edit a todo item even if it's not the last item
-
 * scrool nav and project content separately
 
 * tooltips 
 
 * aria
 
-* add a clear() method for a TodoProject
+
 

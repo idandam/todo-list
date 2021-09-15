@@ -1,5 +1,6 @@
 import dateManager from "./date-manager.js"
 
+
 export default class Todo {
     #id
     #title;
@@ -11,14 +12,9 @@ export default class Todo {
 
     static #priorities = { Low: 1, Medium: 2, High: 3 };
     static #defaultPriority = "Low";
-    // TODO - encapsulate this
-    static #runNum = 0;
-    static #fetchUniqueId() {
-        return Todo.#runNum++;
-    }
-
+    
+    
     constructor(title, description, priority = Todo.#defaultPriority, dueDate) {
-        this.#id = Todo.#fetchUniqueId();
         this.#title = title;
         this.#description = description;
         this.#dueDate = dateManager.getProperTodoDate(dueDate);
@@ -100,6 +96,10 @@ export default class Todo {
 
     get id() {
         return this.#id;
+    }
+
+    set id(id){
+        this.#id = id;
     }
 
     static get priorities() {

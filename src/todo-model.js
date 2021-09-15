@@ -5,11 +5,14 @@ import { TOPICS } from './utils.js';
 import TodayProject from "./today-project.js"
 import NextSevenDaysProject from "./next-seven-days-project.js"
 import Todo from './todo.js';
+import IdGenerator from './id-generator.js';
+
 
 
 export default class TodoModel extends AbstractTodoModel {
     #projects;
     #currentProject;
+    #idGenerator;
     static #specialProjects = { inbox: 0, today: 1, nextSevenDays: 2 };
 
     constructor() {
@@ -17,6 +20,7 @@ export default class TodoModel extends AbstractTodoModel {
         this.#projects = [];
         this.#defineProjectsProperties();
         this.#currentProject = this.#projects[TodoModel.#specialProjects.today];
+        this.#idGenerator = new IdGenerator();
 
     }
 
@@ -25,6 +29,7 @@ export default class TodoModel extends AbstractTodoModel {
             this.#projects[TodoModel.#specialProjects.inbox] = new TodoProject("Inbox").assign(obj.inbox);
             let i = TodoModel.getSpecialProjectsLength();
             obj.projects.forEach((project) => {this.#projects[i++] = new TodoProject().assign(project)});
+            this.#idGenerator = new IdGenerator().assign(obj.idGenerator);
         }
 
         return this;
@@ -35,7 +40,8 @@ export default class TodoModel extends AbstractTodoModel {
         return {
             inbox: this.#projects[TodoModel.#specialProjects.inbox],
             projects: this.#projects.slice(TodoModel.getSpecialProjectsLength()),
-            currentProject: this.#projects[TodoModel.#specialProjects.today]
+            currentProject: this.#projects[TodoModel.#specialProjects.today],
+            idGenerator: this.#idGenerator
         }
     }
 
@@ -89,6 +95,8 @@ export default class TodoModel extends AbstractTodoModel {
     }
 
     addTodo(todo, project = this.#currentProject) {
+        todo.id = this.#idGenerator.generateId();
+        console.log(todo.id);
         let position = project.add(todo);
         let specialProject = this.updateSpecialProjects("add", todo.dueDate, todo);
         // If added a todo the the current project then publish only the todo and the todo's position
@@ -115,6 +123,7 @@ export default class TodoModel extends AbstractTodoModel {
         // data is of the form { todo, position }
         let data = this.#currentProject.remove(id);
         if (data) {
+            this.#idGenerator.reuseId(id);
             // If we removed the todo from a dpecial project like "Today" or "Next 7 days"
             // then also ermove the todo from his containing project (that is a custom project);
             if (this.isCurrentProjectSpecial()) {
@@ -128,6 +137,7 @@ export default class TodoModel extends AbstractTodoModel {
             // In either case publish the position of the removed todo from the current project
             // and return the removed todo
             this.publish(TOPICS.todoRemoved, data.position);
+            console.log(data.todo.id);
             return data.todo;
         }
 

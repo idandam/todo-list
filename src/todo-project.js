@@ -2,6 +2,7 @@
 import * as compareBehaviors from "./compare-behaviors.js"
 import Todo from "./todo.js";
 
+
 export default class TodoProject {
     #name;
     #todos;
@@ -51,7 +52,6 @@ export default class TodoProject {
     remove(id) {
         let position = this.#getIndexOfTodo(id);
         if (position > -1) {
-            // Return the removed todo.
             return { todo: this.#todos.splice(position, 1)[0], position };
         }
     }

@@ -96,7 +96,6 @@ export default class TodoModel extends AbstractTodoModel {
 
     addTodo(todo, project = this.#currentProject) {
         todo.id = this.#idGenerator.generateId();
-        console.log(todo.id);
         let position = project.add(todo);
         let specialProject = this.updateSpecialProjects("add", todo.dueDate, todo);
         // If added a todo the the current project then publish only the todo and the todo's position
@@ -137,7 +136,7 @@ export default class TodoModel extends AbstractTodoModel {
             // In either case publish the position of the removed todo from the current project
             // and return the removed todo
             this.publish(TOPICS.todoRemoved, data.position);
-            console.log(data.todo.id);
+
             return data.todo;
         }
 

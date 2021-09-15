@@ -284,11 +284,8 @@ export default class TodoView extends AbstractSubscriber {
         }.bind(this);
 
         this.#editTodoForm.elements.cancel.onclick = function (event) {
-            // This will be true if the error message fo rthe title is visible, so remove the error message before
-            // closing the form.
-            if (this.#editTodoForm.elements.title.nextElementSibling !== this.#editTodoForm.elements.description){
-                this.#editTodoForm.elements.title.nextElementSibling.remove();
-            }
+            this.#handleErrorMsg();
+            
             this.#hideEditTodoForm();
             // TODO this will get back to the less specific classList class that has a flex display
             // but this line don't looks good.
@@ -301,6 +298,14 @@ export default class TodoView extends AbstractSubscriber {
         this.#hiddenTodo = todoListItem;
         this.#showEditTodoForm();
         window.scrollTo(0, this.#editTodoFormContainer.scrollHeight);
+    }
+
+    #handleErrorMsg(){
+        // This will be true if the error message fo rthe title is visible, so remove the error message before
+            // closing the form.
+            if (this.#editTodoForm.elements.title.nextElementSibling !== this.#editTodoForm.elements.description){
+                this.#editTodoForm.elements.title.nextElementSibling.remove();
+            }
     }
 
     #populateEditTodoForm(todoProperties) {
@@ -360,6 +365,7 @@ export default class TodoView extends AbstractSubscriber {
 
 
         this.#editTodoForm.elements.cancel.onclick = function (event) {
+            this.#handleErrorMsg();
             this.#hideEditTodoForm();
             event.stopPropagation();
         }.bind(this);

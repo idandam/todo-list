@@ -1,5 +1,7 @@
 [Live Demo](https://idandam.github.io/todo-list/)
 
+This web app is not yet responsive. 
+
 Todo-list using common design patterns: Publish-subscribe, MVC, Strategy.
   * Publish-subscribe - The model is a publisher and the view is a subscriber.
   * Strategy - I used the Strategy design pattern to change compare behaviors of projects in run time. The todos in a project will be ordered according to the compare behavior of the containing project.

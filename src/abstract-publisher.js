@@ -1,3 +1,5 @@
-export default class AbstractPublisher{
-    publish(topic, data){throw new Error("Abstract method")};
+export default class AbstractPublisher {
+  publish(topic, data) {
+    throw new Error("Abstract method");
+  }
 }

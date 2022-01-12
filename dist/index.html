@@ -12,12 +12,12 @@
 </head>
 
 <body>
-    <header class="header">
-        <div class="title-container">
-            <h1>Todo List</h1>
-        </div>
-    </header>
-    <main class="main">
+    <div class="container">
+        <header class="header">
+            <div class="title-container">
+                <h1>Todo List</h1>
+            </div>
+        </header>
         <nav class="nav-projects">
             <ul class="constant-projects">
                 <li><span>Inbox</span></li>
@@ -36,88 +36,91 @@
                 </div>
             </template>
         </nav>
-        <div class="project-content">
-            <div class="project-content-header">
-                <h3 class="project-content-header-text"></h3>
-                <div>
-                    <select name="sort-project-menu" class="sort-project-menu">
-                        <option selected disabled>Sort by</option>
-                        <option value="Priority">Priority</option>
-                        <option value="Date">Date</option>
-                    </select>
+        <main class="main">
+            
+            <div class="project-content">
+                <div class="project-content-header">
+                    <h3 class="project-content-header-text"></h3>
+                    <div>
+                        <select name="sort-project-menu" class="sort-project-menu">
+                            <option selected disabled>Sort by</option>
+                            <option value="Priority">Priority</option>
+                            <option value="Date">Date</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <ul class="todos">
-                <template>
-                    <li class="todo-list-item" data-id="">
-                        <div class="todo-list-item-title-container">
-                            <i class="far fa-circle"></i>
-                            <span class="todo-list-item-title"></span>
-                        </div>
-                        <div class="todo-list-item-priority-date-container">
-                            <span class="todo-list-item-date"></span>
-                            <span class="todo-list-item-priority circle"></span>
-                        </div>
-                    </li>
-                </template>
-                <li class="edit-todo-list-item">
-                    <form id="edit-todo-form" class="edit-todo-form">
-                        <div class="edit-todo-area">
-                            <div class="edit-todo-area-input">
-                                <input type="text" name="title" class="edit-todo-title" placeholder="title"
-                                    required></input>
-                                <textarea name="description" class="edit-todo-description" rows="5"
-                                    placeholder="description"></textarea>
+                <ul class="todos">
+                    <template>
+                        <li class="todo-list-item" data-id="">
+                            <div class="todo-list-item-title-container">
+                                <i class="far fa-circle"></i>
+                                <span class="todo-list-item-title"></span>
                             </div>
-                            <div class="edit-todo-area-date-priority">
-                                <input type="date" name="date" class="edit-todo-date"></input>
-                                <div class="xyz">
-                                    <select name="select-projects" id="select-projects" class="select-projects"
-                                        form="edit-todo-form">
-                                        <option selected disabled>Move to</option>
-                                    </select>
-                                    <div class="vertical-seperator"></div>
-                                    <div class="edit-todo-priorities-container">
-                                        <ul class="edit-todo-priorities-list" data-priority="Low">
-                                            <li data-priority="High"><span class="circle priority-high"></span></li>
-                                            <li data-priority="Medium"><span class="circle priority-medium"></span></li>
-                                            <li data-priority="Low"><span class="circle priority-low"></span></li>
-
-                                        </ul>
+                            <div class="todo-list-item-priority-date-container">
+                                <span class="todo-list-item-date"></span>
+                                <span class="todo-list-item-priority circle"></span>
+                            </div>
+                        </li>
+                    </template>
+                    <li class="edit-todo-list-item">
+                        <form id="edit-todo-form" class="edit-todo-form">
+                            <div class="edit-todo-area">
+                                <div class="edit-todo-area-input">
+                                    <input type="text" name="title" class="edit-todo-title" placeholder="title"
+                                        required></input>
+                                    <textarea name="description" class="edit-todo-description" rows="5"
+                                        placeholder="description"></textarea>
+                                </div>
+                                <div class="edit-todo-area-date-priority">
+                                    <input type="date" name="date" class="edit-todo-date"></input>
+                                    <div class="xyz">
+                                        <select name="select-projects" id="select-projects" class="select-projects"
+                                            form="edit-todo-form">
+                                            <option selected disabled>Move to</option>
+                                        </select>
+                                        <div class="vertical-seperator"></div>
+                                        <div class="edit-todo-priorities-container">
+                                            <ul class="edit-todo-priorities-list" data-priority="Low">
+                                                <li data-priority="High"><span class="circle priority-high"></span></li>
+                                                <li data-priority="Medium"><span class="circle priority-medium"></span></li>
+                                                <li data-priority="Low"><span class="circle priority-low"></span></li>
+    
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="edit-todo-form-btns">
+                                <input type="button" name="submit" value="Done"></input>
+                                <input type="button" name="cancel" value="Cancel"></input>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="add-todo-list-item">
+                        <div class="add-todo-btn">
+                            <span>&#10133</span>
+                            Add task
                         </div>
-                        <div class="edit-todo-form-btns">
-                            <input type="button" name="submit" value="Done"></input>
-                            <input type="button" name="cancel" value="Cancel"></input>
-                        </div>
-                    </form>
-                </li>
-                <li class="add-todo-list-item">
-                    <div class="add-todo-btn">
-                        <span>&#10133</span>
-                        Add task
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <!-- Pop-up form for addin a new poroject. Display none on default with css-->
-
-        <form class="one-input-project-form">
-            <label for="text"></label>
-            <input name="text" type="text" placeholder="project name" required>
-            <input type="submit" value="Done">
-            <input name="cancel" type="button" value="Cancel">
-        </form>
-    </main>
-
-    <footer class="footer">
-        <p>Copyright &copy; 2021 idan-grimberg-damri</p>
-        <a href="https://github.com/idan-grimberg-damri" target="=_blank">
-            <i class="fab fa-github" aria-hidden="true"></i>
-        </a>
-    </footer>
+                    </li>
+                </ul>
+            </div>
+            <!-- Pop-up form for addin a new poroject. Display none on default with css-->
+    
+            <form class="one-input-project-form">
+                <label for="text"></label>
+                <input name="text" type="text" placeholder="project name" required>
+                <input type="submit" value="Done">
+                <input name="cancel" type="button" value="Cancel">
+            </form>
+        </main>
+    
+        <footer class="footer">
+            <p>Copyright &copy; 2021 idan damri</p>
+            <a href="https://github.com/idandam" target="=_blank">
+                <i class="fab fa-github" aria-hidden="true"></i>
+            </a>
+        </footer>
+    </div>
     <script src="main.js"></script>
 </body>
 
